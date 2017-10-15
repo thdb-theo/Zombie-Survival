@@ -8,7 +8,7 @@ from options import Options
 from baseclass import BaseClass
 try:
     from cython_ import collide
-except ModuleNotFoundError:
+except ImportError:
     from python_ import collide
 from miscellaneous import further_than, scale
 from tile import Tile

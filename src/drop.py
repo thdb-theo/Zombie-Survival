@@ -9,7 +9,7 @@ from baseclass import BaseClass
 from survivor import Survivor
 try:
     from cython_ import collide
-except ModuleNotFoundError:
+except ImportError:
     from python_ import collide
 from tile import Tile
 from miscellaneous import scale

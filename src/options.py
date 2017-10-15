@@ -87,8 +87,6 @@ class _Options:
 
     def setmapname(self, new):
         self._mapname = new
-        import sys
-        print(sys.path)
         self.mappath = 'assets/Maps/{}'.format(self.mapname)
         with open(self.mappath) as file:
             file_str = file.read()

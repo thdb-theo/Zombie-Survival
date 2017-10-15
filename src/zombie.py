@@ -14,7 +14,7 @@ from pickup import PickUp
 from maths import Vector
 try:
     from cython_ import angle_between
-except ModuleNotFoundError:
+except ImportError:
     from python_ import angle_between
 from miscellaneous import stats, rotated, further_than, avg_zmb_poses, scale
 from tile import Tile

@@ -12,7 +12,7 @@ from baseclass import BaseClass, get_number
 from survivor import Survivor
 try:
     from cython_ import collide
-except ModuleNotFoundError:
+except ImportError:
     from python_ import collide
 from zombie import Zombie
 from miscellaneous import stats, scale, new_dir_func
