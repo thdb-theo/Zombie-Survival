@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+    <init>
+        <move norsk="WASD for å bevege seg" english="WASD to move"/>
+        <shoot norsk="Piltastene for å skyte" english="Arrow keys to shoot"/>
+        <weapon norsk="e for å bytte våpen" english="e to change weapon"/>
+        <settings_ norsk="s for å endre instillinger" english="s to change settings"/>
+        <begin norsk=" Trykk mellomrom for å starte " english=" Press space to start "/>
+    </init>
+    <settings>
+        <header norsk="Innstillinger" english="Settings"/>
+        <mute norsk="tyst" english="mute"/>
+        <not_log norsk="ikke log" english="not log"/>
+        <no_zombies norsk="ingen zombier" english="no zombies"/>
+        <debug norsk="feilsøkingsmodus" english="debug mode"/>
+        <male norsk="m" english="m"/>
+        <female norsk="k" english="f"/>
+        <norwegian norsk="norsk" english="norwegian"/>
+        <english norsk="engelsk" english="english"/>
+        <fps norsk="Bildefrekvens:" english="FPS:"/>
+        <map norsk="Kart:" english="Map:"/>
+        <tile_length norsk="Flislengde:" english="Tile length:"/>
+        <volum norsk="volum:" english="volum:"/>
+        <div12 norsk="Gjør flislengden delelig med 12" english="Make the tile length divisable by 12"/>
+        <commit norsk="BEKREFT" english="COMMIT"/>
+        <discard norsk="FORKAST" english="DISCARD"/>
+    </settings>
+    <info>
+        <lifes norsk="Liv: {}" english="Lifes: {}"/>
+        <zombies_left norsk="Zombier igjen: {}" english="Zombies left: {}"/>
+        <round norsk="Runde: {}" english="Round: {}"/>
+        <ammo norsk="Ammunisjon: {}" english="Ammo: {}"/>
+        <fps norsk="Bildefrekvens: {:.5}" english="FPS: {:.5}"/>
+        <power_up norsk="Power-Ups: {}" english="Power-Ups: {}"/>
+    </info>
+    <game_over>
+        <killed norsk="Zombier Drept: {}" english="Zombies Killed: {}"/>
+        <fired norsk="Skudd Skutt: {}" english="Shots Fired: {}"/>
+        <accuracy norsk="Treffsikkerhet: {:.4}%" english="Accuracy: {:.4}%"/>
+        <level norsk="Level: {}" english="Level: {}"/>
+        <high_score norsk="Rekord: {}" english="High Score: {}"/>
+    </game_over>
+</data>
