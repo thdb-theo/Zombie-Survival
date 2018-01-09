@@ -3,9 +3,10 @@ from random import random, randint, choice
 
 import pygame
 
-from init import main; main()
-from options import Options
+import init as _
 from baseclass import BaseClass
+from options import Options
+
 try:
     from cython_ import collide
 except ImportError:

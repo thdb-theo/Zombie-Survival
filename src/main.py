@@ -1,10 +1,9 @@
 """This file initiate the game"""
 import logging
-from time import time
 
 import pygame
 
-from init import main; main()
+import init as _
 from options import Options
 from init_screen import main; main()
 from miscellaneous import text, game_over
@@ -23,23 +22,25 @@ display = pygame.display.set_mode(Options.screen_size, pygame.NOFRAME)
 
 
 def main():
+    """initiate tiles, survival, clock and start music and run main loop"""
     Tile.create()
     survivor = Survivor(*Tile.random_open_tile())
     clock = pygame.time.Clock()
     logging.debug('options: %s', Options.__dict__)
+    pygame.mixer.music.play(loops=-1)
     main_loop(survivor, clock)
+    game_over(display, Zombie.level)
 
 
 def main_loop(survivor, clock):
     total_frames = 0
-    pygame.mixer.music.play(loops=-1)
     while survivor.health > 0:
+        Tile.draw_all(display)
         interaction(display, survivor)
         Zombie.spawn(total_frames, survivor)
         survivor.movement()
-        Tile.draw_all(display)
         text(display, survivor.health, Zombie.left_round + len(Zombie.instances),
-             clock.get_fps(), Zombie.level, survivor.ammo, Survivor.power_ups)
+             clock.get_fps(), Zombie.level, survivor.ammo, Drop.actives)
         Bullet.update(display)
         survivor.draw(display)
         Zombie.update(display, survivor)
@@ -48,7 +49,6 @@ def main_loop(survivor, clock):
         clock.tick(Options.fps)
         pygame.display.flip()
         total_frames += 1
-    game_over(display, Zombie.level)
 
 
 if __name__ == '__main__':

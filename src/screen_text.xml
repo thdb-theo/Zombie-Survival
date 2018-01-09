@@ -20,10 +20,16 @@
         <fps norsk="Bildefrekvens:" english="FPS:"/>
         <map norsk="Kart:" english="Map:"/>
         <tile_length norsk="Flislengde:" english="Tile length:"/>
-        <volum norsk="volum:" english="volum:"/>
-        <div12 norsk="Gjør flislengden delelig med 12" english="Make the tile length divisable by 12"/>
+        <volume norsk="Volum:" english="Volume:"/>
+        <div12 norsk="Gjør flislengden og fps delelig med 12" english="Make the tile length and fps divisable by 12"/>
         <commit norsk="BEKREFT" english="COMMIT"/>
         <discard norsk="FORKAST" english="DISCARD"/>
+        <error norsk="Feil: " english="Error"/>
+        <warning norsk="Advarsel {}\nVil du fortsette?" english="Warning {}\nDo you want to continue?"/>
+        <yes norsk="ja" english="yes"/>
+        <no norsk="nei" english="no"/>
+        <fillcolour norsk="Farge på åpne fliser" english="Colour of open tiles"/>
+        <loopcolour norsk="Farge på vegger" english="Colour of walls"/>
     </settings>
     <info>
         <lifes norsk="Liv: {}" english="Lifes: {}"/>

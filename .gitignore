@@ -1,6 +1,9 @@
 build/
-tests/experiment
+tests/experiment/
 __pycache__/
-setup.py
 logging.log
-.vscode
+.vscode/
+high_score.json
+setup.cfg
+idea/
+.idea/

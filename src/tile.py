@@ -1,13 +1,13 @@
 """Includes a class for tiles"""
 
 import random
-import logging
 from itertools import groupby
+import logging
 
 import pygame
 
-from init import main; main()
-from options import Options, Colours
+import init as _
+from options import Options
 from maths import Vector
 
 
@@ -23,7 +23,7 @@ class Tile:
     012
     345
     678"""
-    instances, solids, opens, solids_list = [], set(), set(), []
+    instances, solids, opens, solids_list, loop_set = [], set(), set(), [], set()
     length = Options.tile_length
     size = Vector(length, length)
     amnt_tiles = 0  # Incremented when a tile is created
@@ -32,12 +32,13 @@ class Tile:
         file_str = file.read()
         map_ = [x == '#' for x in file_str.replace('\n', '')]
 
-    solid_nums = set(i for i, x in enumerate(map_) if x)
+    solid_nums = {i for i, x in enumerate(map_) if x}
     # Set of the indices of all solid tiles
 
     @classmethod
     def create(cls):
         """Create tiles and set some class variables when finished"""
+        assert not cls.instances
         map_gen = iter(cls.map_)
         for y in range(0, Options.height, cls.length):
             for x in range(0, Options.width, cls.length):
@@ -58,9 +59,14 @@ class Tile:
     def compress_solids(cls):
         """returns a comressed cls.solids to be used when drawing
         It returns a list of a tuple with the first tile in a long line of solids and
-        then how many solids are after it in the line for all lines on the map
+        then how many solids are after it in the line for all lines on the map.
+        This makes the drawing much faster,
         example:
-        ##..### -> [(tile.Tile object at 0x0..., 2), (tile obj..., 3)]
+        ##..###
+        ####.#.
+           |
+           v
+        {(tile.Tile object at 0x0..., 2), (tile.Tile ..., 3), (tile.Tile ..., 4), (tile.Tile ..., 1)}
         It ignores open tiles
 
         NOTE: A new group starts at a newline
@@ -79,7 +85,7 @@ class Tile:
             for group in groupby(row):
                 compressed_map.append((group[0], len(list(group[1]))))
 
-        filtered_opens = (j for i, j in compressed_map if i)  # filter open tiles
+        filtered_opens = (j for i, j in compressed_map if i)  # filter open tiles and remove the "True"
         solids_iter = iter(cls.solids_list)
         # Map solids onto compressed map
         loop_set = set()
@@ -108,30 +114,51 @@ class Tile:
     def __lt__(self, other):
         """Necesary for the heapq in astar for determeting what path to take if two tiles
         have equal cost. Current implementation favours the tile with the lowest number.
-        In other words the tile furthest up, and if equal, then the one furthest to the left."""
+        In other words the tile furthest up, and then the one furthest to the left."""
         return self.number < other.number
+
+    def __eq__(self, other):
+        return self is other
+
+    def __str__(self):
+        return '%s %s %s' % (self.pos, self.number, self.walkable)
 
     @classmethod
     def random_open_tile(cls):
-        """:return: location of a random walkable tile
-        The tile at the returned coordinate is walkable"""
+        """:return: location of a random walkable tile"""
         return random.choice(tuple(cls.opens)).pos
 
     def get_centre(self):
-        """Return a vector of the pos in the middle of the tile
+        """Return a vector of the pos in the centre of the tile
         >>> Tile.length = 20
-        >>> a = Tile(0, 0, 0)
+        >>> a = Tile(x=0, y=0, is_solid=0)
         >>> a.get_centre()
         Vector(x=10, y=10)"""
         return self.pos + Tile.length // 2
 
+    def closest_open_tile(self):
+        return min(Tile.opens, key=lambda x: (self.pos - x.pos).magnitude_squared())
+
+    @classmethod
+    def on_screen(cls, direction, tile_num):
+        """Return False if the tile is outside of the screen else True
+        A direction is needed as a tile on the right border is outside if the direction is west
+        Params:
+        direction: int of direction in the list NSEW. For example South has index 1.
+        tile_num: index of tile in Tile.instances"""
+        if direction == 2:  # East
+            return tile_num % Options.line_length != 0
+        if direction == 3:
+            return tile_num % Options.line_length != Options.line_length - 1  # West
+        return 0 < tile_num < cls.amnt_tiles  # North and South
+
     @classmethod
     def draw_all(cls, screen):
         """Fill the screen in light tiles, then draws the solid tiles over"""
-        screen.fill(Colours.LIGHT_GREY)
-        length, dark_grey, draw_rect = cls.length, Colours.DARK_GREY, pygame.draw.rect
+        screen.fill(Options.fillcolour)
+        length, loopcolour, draw_rect = cls.length, Options.loopcolour, pygame.draw.rect
         for tile, i in cls.loop_set:
-            draw_rect(screen, dark_grey, (*tile.pos, length * i, length))
+            draw_rect(screen, loopcolour, (*tile.pos, length * i, length))
 
 
 if __name__ == '__main__':

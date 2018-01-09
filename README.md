@@ -1,25 +1,27 @@
-## Zombie Survival 1.2.0
+# Zombie Survival 1.3.0
 
-A simple zombie survival game in pygame, heavily influenced by Call of Duty Zombies, but in 2d
+A simple zombie survival game in pygame, heavily influenced by Call of Duty Zombies, but in 2d.
 
 Tested on Windows and Ubuntu. Works perfectly on Windows, however there are some audio issues on Ubuntu. Perhaps something with .mp3 files?
 
-#### Requirements:
+#### Requirements
 
 * Python 3.x
 * Third Party Libraries:
   * pygame
   * cython (optional)
+  * tkinter or PyQt4
+  * https://github.com/j4321/tkColorPicker if PyQt is unavailable
 
-### Controls:
+### Controls
 
 Move with <kbd>WASD</kbd>  
 Shoot with the arrow keys  
-Change weapon with :kbd:e:kbd:  
+Change weapon with <kbd>e</kbd>
 
-### Credits:
+### Credits
 
-#### Images:
+#### Images
 
 * Pokémon
 * Overwatch
@@ -31,11 +33,13 @@ Change weapon with :kbd:e:kbd:
 * Call of Duty
 * The Legend of Zelda
 
-#### Other
+#### Maps
 
-* Maps:
-  * PacMan
-  * Pokémon
-  * The Legend of Zelda
+* PacMan
+* Pokémon
+* The Legend of Zelda
 
-The awesome Halo font can be found at <http://www.1001fonts.com/halo3-font.html>
+#### Fonts
+
+* Will Turnbow who made the Halo font <http://www.1001fonts.com/halo3-font.html>
+* NAL who made the zombie themed font <http://www.fontspace.com/nal/dead-font-walking>

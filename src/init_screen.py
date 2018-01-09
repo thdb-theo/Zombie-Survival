@@ -1,16 +1,28 @@
 """The intro screen"""
 import sys
-
-import pygame
 import xml.etree.ElementTree as ET
 
-from init import main; main()
-from options import Options, Colours
-import settings
+import pygame
 
+import init as _
+from options import Options, Colours
+
+try:
+    import pyqt_settings as _
+except ModuleNotFoundError:
+    settings_module = 'settings'
+else:
+    settings_module = 'settings' if Options.tk else 'pyqt_settings'
+
+settings = __import__(settings_module)
+# if pyqt is successfull use pyqt unless Options.tk is True. If pyqt is unsuccessfull use tkinter
 
 text_tree = ET.parse('src/screen_text.xml')
 root = text_tree.getroot()
+
+
+def get_text(name):
+    return root.find('./init/{}'.format(name)).get(Options.language)
 
 
 def middle_of_screen(text):
@@ -22,24 +34,19 @@ def main():
     clock = pygame.time.Clock()
     intro_img = pygame.image.load('assets/Images/intro.jpg')
     scaled_intro_img = pygame.transform.scale(intro_img, (Options.width, Options.height))
-    move_text = root.find('./init/move').get(Options.language)
-    shoot_text = root.find('./init/shoot').get(Options.language)
-    weapon_text = root.find('./init/weapon').get(Options.language)
-    settings_text = root.find('./init/settings_').get(Options.language)
-    begin_text = root.find('./init/begin').get(Options.language)
+    move_text = get_text('move')
+    shoot_text = get_text('shoot')
+    weapon_text = get_text('weapon')
+    settings_text = get_text('settings_')
+    begin_text = get_text('begin')
     ctrl_font_size = 100
-    ctrl_font = pygame.font.SysFont('Courier', ctrl_font_size)
-    if 'halo3' in pygame.font.get_fonts():
-        title_font = pygame.font.SysFont('Halo3', 55)
-    else:
-        title_font = pygame.font.SysFont('Courier', 55)
     title_font_size = 100
 
     ctrl_start_y = Options.height // 4
     y_interval = Options.height // 6
     title_y = Options.height // 15
     while ctrl_font_size > 0:
-        ctrl_font = pygame.font.SysFont('Courier', ctrl_font_size)
+        ctrl_font = pygame.font.Font('assets/Fonts/ModifiedDeadFontWalking.otf', ctrl_font_size)
         move = ctrl_font.render(move_text, 1, Colours.WHITE)
         shoot = ctrl_font.render(shoot_text, 1, Colours.WHITE)
         weapon = ctrl_font.render(weapon_text, 1, Colours.WHITE)
@@ -52,10 +59,7 @@ def main():
         pygame.quit()
         raise OverflowError('Couldn\'t fit ctrltext on screen')
     while title_font_size > 0:
-        if 'halo3' in pygame.font.get_fonts():
-            title_font = pygame.font.SysFont('Halo3', title_font_size)
-        else:
-            title_font = pygame.font.SysFont('Courier', title_font_size)
+        title_font = pygame.font.Font('assets/Fonts/Halo3.ttf', title_font_size)
         title = title_font.render(' Zombie Survival ', 1, Colours.WHITE)
         title_font_size -= 1
         if title.get_rect().width < Options.width:
@@ -72,7 +76,11 @@ def main():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_s:
-                    settings.main()
+                    changed = settings.main()
+                    if changed:
+                        del screen
+                        main()
+                        return
                 elif event.key == pygame.K_c and pygame.key.get_mods() & pygame.KMOD_CTRL:
                     pygame.quit()
                     sys.exit()
@@ -90,6 +98,13 @@ def main():
         screen.blit(set_text, (middle_of_screen(set_text), ctrl_start_y + y_interval * 3))
         screen.blit(begin, (middle_of_screen(begin), ctrl_start_y + y_interval * 4))
         pygame.display.flip()
+        if Options.opensettings:
+            Options.opensettings = False
+            changed = settings.main()
+            if changed:
+                del screen
+                main()
+                return
         clock.tick(10)
 
 

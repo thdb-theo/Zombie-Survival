@@ -1,9 +1,10 @@
 import logging
 from math import pi
+import sys, os
 
 import pygame
 
-from init import main; main()
+import init as _
 from options import Options
 from baseclass import BaseClass
 from maths import Vector
@@ -19,29 +20,23 @@ class Survivor(BaseClass):
     Params:
     x: the x coordinate of the survivor
     y: the y coordinate of the survivor"""
-
-    guns = (scale(pygame.image.load('assets/Images/pistol2.png'), Tile.size / (2, 4)),
-            scale(pygame.image.load('assets/Images/shotgun.png'), Tile.size / (2, 4)),
-            scale(pygame.image.load('assets/Images/automatic2.png'), Tile.size / (2, 4)),
-            scale(pygame.image.load('assets/Images/sniper.png'), Tile.size / (2, 4)))
-
+    guns = (scale(pygame.image.load('assets/Images/pistol2.png'), Tile.size.scale(1/2, 1/4)),
+            scale(pygame.image.load('assets/Images/shotgun.png'), Tile.size.scale(1/2, 1/4)),
+            scale(pygame.image.load('assets/Images/automatic2.png'), Tile.size.scale(1/2, 1/4)),
+            scale(pygame.image.load('assets/Images/sniper.png'), Tile.size.scale(1/2, 1/4)))
     imgs = {d: scale(pygame.image.load(
-        'assets/Images/player_{0}_{1}.png'.format(Options.gender, d))) for d in 'nsew'}
+            'assets/Images/player_{0}_{1}.png'.format(Options.gender, d))) for d in 'nsew'}
 
-    init_ammo_count = 100, 50, 150, 50
-    ammo_count = list(init_ammo_count)
-
-    power_ups = {'max_ammo': [None, None], 'double_dmg': [False, 0]}
-    # The first item in power_ups is if said power up is active, second is a countdown
-    # max_ammo doesn't have this as it is instantanious
 
     def __init__(self, x, y):
         self.current_gun = 0
-        self.direction = pi * 3 / 2
+        self.direction = pi * 3 / 1/2
         self.img = Survivor.imgs[dir2chr[self.direction]]
         super().__init__(x, y)
         self.health = 100 << 10 * Options.debug  # 100 if not debug, 10*2**10 if debug
         self.vel = Vector(0, 0)
+        self.init_ammo_count = 100, 50, 150, 50
+        self.ammo_count = list(self.init_ammo_count)
 
     def movement(self):
         """If survivor is between two tiles, or self.to hasn't been updated:
@@ -80,7 +75,7 @@ class Survivor(BaseClass):
         >>> a.current_gun = 2
         >>> a.ammo
         150"""
-        return Survivor.ammo_count[self.current_gun]
+        return self.ammo_count[self.current_gun]
 
     @ammo.setter
     def ammo(self, value):

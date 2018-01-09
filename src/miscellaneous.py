@@ -2,14 +2,16 @@
 
 import math
 import sys
+import os
 from functools import partial
 import logging
 import json
 import xml.etree.ElementTree as ET
+from contextlib import contextmanager
+
 import pygame
 
-from init import main
-main()
+import init as _
 from options import Options, Colours
 from tile import Tile
 
@@ -22,6 +24,13 @@ avg_zmb_poses = []
 survivor_poses = []
 
 clock = pygame.time.Clock()
+
+text_tree = ET.parse('src/screen_text.xml')
+root = text_tree.getroot()
+
+
+def get_text(area, name):
+    return root.find('./{}/{}'.format(area, name)).get(Options.language)
 
 
 def make_partialable(func):
@@ -65,19 +74,18 @@ def scale(img, size=Tile.size):
     else:
         return pygame.transform.scale(img, size)
 
-font = pygame.font.SysFont('Consolas', Options.width // 30)
+
+font = pygame.font.Font('assets/Fonts/ModifiedDeadFontWalking.otf', Options.width // 30)
 
 text_render = partial(lambda x, y, z: font.render(x, y, z), y=1, z=Colours.WHITE)
 *_, text_width, text_height = text_render('T').get_rect()
 
-text_tree = ET.parse('src/screen_text.xml')
-root = text_tree.getroot()
-lifes_text = root.find('./info/lifes').get(Options.language)
-zombies_left_text = root.find('./info/zombies_left').get(Options.language)
-round_text = root.find('./info/round').get(Options.language)
-ammo_text = root.find('./info/ammo').get(Options.language)
-fps_text = root.find('./info/fps').get(Options.language)
-power_up_text = root.find('./info/power_up').get(Options.language)
+lifes_text = get_text('info', 'lifes')
+zombies_left_text = get_text('info', 'zombies_left')
+round_text = get_text('info', 'round')
+ammo_text = get_text('info', 'ammo')
+fps_text = get_text('info', 'fps')
+power_up_text = get_text('info', 'power_up')
 logging.debug('font size: %s, text_height: %s, text_width: %s',
               Options.width // 30, text_height, text_width)
 
@@ -94,7 +102,7 @@ def text(screen, health, len_zombies, fps, level, ammo, power_ups):
     screen.blit(text_render(ammo_text_f), (Options.width - text_width * len(ammo_text_f), Options.height - text_height))
     fps_text_f = fps_text.format(fps)
     screen.blit(text_render(fps_text_f), (0, Options.height - text_height))
-    power_up_text_f = power_up_text.format([k for k, v in power_ups.items() if v[0]])
+    power_up_text_f = power_up_text.format(list(power_ups))
     screen.blit(text_render(power_up_text_f), (0, Options.height - text_height * 2))
 
 
@@ -122,13 +130,13 @@ def game_over(screen, level):
     """The screen after the game is over
     Display stats and all time high score"""
     font_size = 100
-    killed_text = root.find('./game_over/killed').get(Options.language)
-    fired_text = root.find('./game_over/fired').get(Options.language)
-    accuracy_text = root.find('./game_over/accuracy').get(Options.language)
-    level_text = root.find('./game_over/level').get(Options.language)
-    high_score_text = root.find('./game_over/high_score').get(Options.language)
+    killed_text = get_text('game_over', 'killed')
+    fired_text = get_text('game_over', 'fired')
+    accuracy_text = get_text('game_over', 'accuracy')
+    level_text = get_text('game_over', 'level')
+    high_score_text = get_text('game_over', 'high_score')
     killed_text_f = killed_text.format(stats['Zombies Killed'])
-    fired_text_f = 'Skudd Avfyrt: {}'.format(stats['Bullets Fired'])
+    fired_text_f = fired_text.format(stats['Bullets Fired'])
     try:
         accuracy_num = stats['Bullets Hit'] / stats['Bullets Fired'] * 100
     except ZeroDivisionError:
@@ -137,16 +145,16 @@ def game_over(screen, level):
 
     level_text_f = level_text.format(level)
     try:
-        with open('high_score.json', 'r') as file_read_m:
+        with open('src/high_score.json', 'r') as file_read_m:
             file_txt = json.loads(file_read_m.read())  # Read the file
             current_high = file_txt[Options.mapname]  # The the high_score of the map that was played
     except Exception as e:
         high_score = 0 if Options.debug else level
         if isinstance(e, FileNotFoundError):
-            with open('high_score.json', 'w') as file_write_m:
+            with open('src/high_score.json', 'w') as file_write_m:
                 json.dump({Options.mapname: high_score}, file_write_m)
         elif isinstance(e, KeyError):
-            with open('high_score.json', 'rb+') as f:
+            with open('src/high_score.json', 'rb+') as f:
                 f.seek(-1, 2)  # HACK: Places the cursor on the last line and before the '}'
                 string = ', "{0}": {1}}}'.format(Options.mapname, high_score)
                 f.write(bytes(string, 'utf-8'))
@@ -155,7 +163,7 @@ def game_over(screen, level):
     else:
         if level > current_high and not Options.debug:
             file_txt[Options.mapname] = level
-            with open('high_score.json', 'w') as write_file:  # Open file again in write mo
+            with open('src/high_score.json', 'w') as write_file:  # Open file again in write mo
                 json.dump(file_txt, write_file)
             high_score = level
         else:
@@ -185,7 +193,6 @@ def game_over(screen, level):
     killed_pos = Options.width // 15, Options.height // 4 + y_interval
     fired_pos = Options.width // 15, Options.height // 4 + y_interval * 2
     accuracy_pos = Options.width // 15, Options.height // 4 + y_interval * 3
-
 
     while True:
         screen.fill(Colours.BLACK)

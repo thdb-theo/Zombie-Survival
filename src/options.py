@@ -4,7 +4,7 @@
 import argparse
 import warnings
 from random import uniform
-from colorsys import hls_to_rgb
+from colorsys import hls_to_rgb, hsv_to_rgb, rgb_to_hsv
 import os
 
 
@@ -14,10 +14,15 @@ def get_resolution():
             # For Linux, including macOS. Is not tested on Mac
             # HACK: saves resolution to a file, get results and deletes the file
             os.system("xrandr  | grep \* | cut -d' ' -f4 > resolution.txt")
-            file = open('resolution.txt', 'r') 
+            file = open('resolution.txt', 'r')
             try:
                 return tuple(map(int, file.read().split('x')))
             except ValueError:
+                warnings.warn("""This is meant for testing of cython on Ubuntu for Windows
+                              where no screen is available and thus the xrandr returns an
+                              empty string and the previous statement raises a ValueError.
+                              If you didn\'t expect this message, either there is
+                              something wrong with xrandr or it couldn't find a screen.""")
                 return 1280, 720
             finally:
                 file.close()
@@ -29,30 +34,101 @@ def get_resolution():
             user32 = ctypes.windll.user32
             return user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
         else:
-            # Various other OSes, not implemented, just guess
+            # Various other OSes, not implemented
             # TODO: find a cross platform solution
-            raise OSError('Invalid OS')
+            raise OSError('Cannot find screen resolution for this OS')
 
+
+class Colours:
+    """Defines a whole bunch of colours.
+    Also has staticmethods related to colours; getting a random colour
+    and a getting colour in hexadecimal or rgb"""
+    BLACK = 0, 0, 0
+    WHITE = 255, 255, 255
+    DARK_GREY = 40, 40, 40
+    LIGHT_GREY = 105, 105, 105
+    RED = 255, 0, 0
+    GREEN = 0, 255, 0
+    BLUE = 0, 0, 255
+    YELLOW = 255, 255, 0
+    PINK = 255, 0, 255
+    CYAN = 0, 255, 255
+
+    def __new__(cls, *args, **kwargs):
+        raise TypeError('Colour is not callable')
+
+    __call__ = __new__
+
+    @staticmethod
+    def random(h=(0, 1), s=(0, 1), l=(0, 1)):
+        """Returns a random colour in rgb
+        Params:
+        ---------------------------------------------
+        h: The uniform from which it gets a random hue
+        s: The uniform from which it gets a random saturation
+        l: The uniform from which it gets a random lightness
+
+        :rtype: tuple"""
+        hsl = uniform(*h), uniform(*s), uniform(*l)
+        return tuple(int(256 * i) for i in hls_to_rgb(*hsl))
+
+    @classmethod
+    def get_hex(cls, colour):
+        """Get hex value of an rgb tuple or name of a colour
+        if colour is a string: get hex of the class attr with that name
+        if colour is a collection with three ints: get hex value
+        >>> Colours.get_hex('RED')
+        '#ff0000'
+        >>> Colours.get_hex([0, 255, 0])
+        '#00ff00'
+        """
+        if isinstance(colour, str):
+            return '#{0:02x}{1:02x}{2:02x}'.format(*getattr(cls, colour.upper()))
+        elif hasattr(colour, '__getitem__'):
+            return '#{0:02x}{1:02x}{2:02x}'.format(*colour)
+        else:
+            raise ValueError
+
+    @classmethod
+    def get_rgb(cls, colour):
+        if isinstance(colour, str) and colour.startswith('#'):
+            colour = colour.lstrip('#')
+            return tuple(int(colour[i: i + 2], 16) for i in (0, 2, 4))
+
+    @classmethod
+    def contrasting(cls, r, g, b):
+        """return white (#ffffff) if the colour is dark and
+        black (#000000) if the colour is light
+        :returns: hex as a string"""
+        if r + b + g < 255 * 1.5:
+            return '#ffffff'
+        else:
+            return '#000000'
 
 parser = argparse.ArgumentParser('Zombie Survival')
-parser.add_argument('-f',  '--fps',         nargs='?', type=int,   default=60,        help='The FPS cap')
-parser.add_argument('-m',  '--map',         nargs='?',             default='Pac-Man', help='The map, available maps are in the Maps-folder')
-parser.add_argument('-v',  '--volume',      nargs='?', type=float, default=0.3,       help='Volume; a float between 0 and 1')
-parser.add_argument('-tl', '--tile_length', nargs='?', type=int,   default=None,      help='Length of a tile in pixels. 24, 36 and 48 are the best')
-parser.add_argument('-g',  '--gender',      nargs='?',             default='f',       help='Gender of the player; \'m\' for male, \'f\' for female')
-parser.add_argument('-l',  '--language',    nargs='?',             default='norsk',   help='Language of all displayed text; \'norsk\' or \'english\'.')
+parser.add_argument('-f',  '--fps',         nargs='?', type=int,   default=60,                 help='The FPS cap')
+parser.add_argument('-m',  '--map',         nargs='?',             default='Pac-Man',          help='The map, available maps are in the Maps-folder')
+parser.add_argument('-v',  '--volume',      nargs='?', type=float, default=0.3,                help='Volume; a float between 0 and 1')
+parser.add_argument('-tl', '--tile_length', nargs='?', type=int,   default=None,               help='Length of a tile in pixels. 24, 36 and 48 are the best')
+parser.add_argument('-g',  '--gender',      nargs='?',             default='f',                help='Gender of the player; \'m\' for male, \'f\' for female')
+parser.add_argument('-l',  '--language',    nargs='?',             default='norsk',            help='Language of all displayed text; \'norsk\' or \'english\'.')
+parser.add_argument('-fc', '--fillcolour',  nargs='?', type=tuple, default=Colours.LIGHT_GREY, help='The colour of the open tiles')
+parser.add_argument('-lc', '--loopcolour',   nargs='?', type=tuple, default=Colours.DARK_GREY , help='the colour of the walls')
 
 flags = parser.add_argument_group()
-flags.add_argument('-M', '--mute',           action='store_true', help='Mute the game regardless of volume level')
-flags.add_argument('-L', '--not_log',        action='store_true', help='Will log regardless of optimasation mode')
-flags.add_argument('-Z', '--no_zombies',     action='store_true', help='Spawn no zombies, Debug mode must be active')
-flags.add_argument('-d', '--debug',          action='store_true', help='Set debug mode, no high scores can be set')
+flags.add_argument('-M',    '--mute',         action='store_true', help='Mute the game regardless of volume level')
+flags.add_argument('-L',    '--not_log',      action='store_true', help='Will log regardless of optimasation mode')
+flags.add_argument('-Z',    '--no_zombies',   action='store_true', help='Spawn no zombies, Debug mode must be active')
+flags.add_argument('-d',    '--debug',        action='store_true', help='Set debug mode, no high scores can be set')
+flags.add_argument('-s',    '--opensettings', action='store_true', help='open settings automatically')
+flags.add_argument('-tk',   '--tk',           action='store_true', help='Use tkinter even though pyqt is available')
+flags.add_argument('-stfu', '--stfu',         action='store_true', help='disable stdout')
 
 _args, unknown = parser.parse_known_args()
 
 
 class _Options:
-    monitor_w, monitor_h = monitor_size = get_resolution()
+    monitor_w, monitor_h = get_resolution()
 
     def __init__(self):
         self.setmapname(_args.map + '.txt')
@@ -67,6 +143,11 @@ class _Options:
         self.debug = _args.debug
         self.not_log = _args.not_log
         self.language = _args.language
+        self.fillcolour = _args.fillcolour
+        self.loopcolour = _args.loopcolour
+        self.opensettings = _args.opensettings
+        self.tk = _args.tk
+        self.stfu = _args.stfu
         self.assertions()
         try:
             self.warnings()
@@ -162,44 +243,8 @@ class _Options:
 Options = _Options()
 
 
-class Colours:
-    BLACK = 0, 0, 0
-    WHITE = 255, 255, 255
-    DARK_GREY = 40, 40, 40
-    LIGHT_GREY = 105, 105, 105
-    RED = 255, 0, 0
-    GREEN = 0, 255, 0
-    BLUE = 0, 0, 255
-    YELLOW = 255, 255, 0
-    PINK = 255, 0, 255
-    CYAN = 0, 255, 255
-
-    @staticmethod
-    def random(h=(0, 1), s=(0, 1), l=(0, 1)):
-        """Returns a random colour in rgb
-        Params:
-        ---------------------------------------------
-        h: The uniform from which it gets a random hue
-        s: The uniform from which it gets a random saturation
-        l: The uniform from which it gets a random lightness
-
-        :rtype: tuple"""
-        hsl = uniform(*h), uniform(*s), uniform(*l)
-        return tuple(int(256 * i) for i in hls_to_rgb(*hsl))
-
-    @classmethod
-    def get_hex(cls, colour):
-        """Get hex value of an rgb tuple or name of a colour
-        if colour is a string: get hex of the class attr with that name
-        if colour is a collection with three ints: get hex value"""
-        if isinstance(colour, str):
-            return '#{0:02x}{1:02x}{2:02x}'.format(*getattr(cls, colour.upper()))
-        elif hasattr(colour, '__getitem__'):
-            return '#{0:02x}{1:02x}{2:02x}'.format(*colour)
-        else:
-            raise ValueError
-
-
 if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
     print(Colours.get_hex('red'))
     print(Colours.get_hex([255, 0, 0]))

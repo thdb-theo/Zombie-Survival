@@ -1,7 +1,6 @@
 """Includes the Baseclass for Zombie, Survivor, Bullet, and PickUp"""
 
-from init import main
-main()
+import init as _
 from options import Options
 from maths import Vector
 from tile import Tile
@@ -26,7 +25,7 @@ class BaseClass:
         self.pos = Vector(x, y)
 
     def get_centre(self):
-        return self.pos + self._size // 2
+        return self.pos + self._size.scale(1/2)
 
     centre = property(get_centre, doc="""Return a vector of the pos in the middle of self
                                          >>> a = BaseClass(x=0, y=0, width=10, height=10)
@@ -35,6 +34,7 @@ class BaseClass:
 
     def get_number(self):
         """Return the index of tile that self is on"""
+
         return int(self.pos.x // Tile.length + self.pos.y // Tile.length * Options.line_length)
 
     def get_tile(self):

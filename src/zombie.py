@@ -1,17 +1,18 @@
 import logging
 import math
+import threading
 from functools import partial
 from random import randint, choice
-import threading
 
 import pygame
 
-from init import main; main()
-from options import Options, Colours
+import init as _
 from astar import AStar
 from baseclass import BaseClass
-from pickup import PickUp
 from maths import Vector
+from options import Options, Colours
+from pickup import PickUp
+
 try:
     from cython_ import angle_between
 except ImportError:
@@ -37,7 +38,7 @@ def _get_vel_list():
 
     def func(x):
         def cond(x):
-            return Tile.length / x % 1 == 0
+            return Tile.length / x % 1 == 0.
 
         iterable = (Tile.length // x for x in range(1, Tile.length + 1) if cond(x))
         return min(iterable, key=lambda k: abs(k - x))
@@ -57,7 +58,6 @@ class Zombie(BaseClass):
         ]
     imgs = tuple(scale(pygame.image.load('assets/Images/zombie{}.png'.format(i)))
                  for i in range(1, 5))
-
     speed_tuple = _get_vel_list()
     logging.debug('zombie speeds: %s', speed_tuple)
     health_func_tuple = (lambda h: h, lambda h: h / 2,
@@ -79,7 +79,7 @@ class Zombie(BaseClass):
 
     def __init__(self, x, y):
         self.direction = math.pi
-        type_ = choice(range(4))
+        type_ = randint(0, 3)
         self.type = type_
         self.org_img = Zombie.imgs[type_]
         self.img = self.org_img
@@ -134,13 +134,13 @@ class Zombie(BaseClass):
                 if zmb.pos == zmb.to:  # If the zombie is directly on a tile
                     zmb.to = None  # Trigger A-Star, not run between tiles for performance
                 else:
-                    zmb.pos += zmb.vel
+                    if 'freeze' not in Drop.actives:
+                        zmb.pos += zmb.vel
                 if zmb.direction != angle:  # New direction, frame after a turn
                     zmb.rotate(angle)
 
             if cls.AStarThread is not None and threading.active_count() >= 2:
                 # Finish the previous astar
-                
                 cls.AStarThread.join()
 
             if zmb.to is None and zmb_to_survivor_dist > Tile.length:
@@ -176,7 +176,7 @@ class Zombie(BaseClass):
                     )
                     sound.set_volume(Options.volume)
                     sound.play()
-                cls.play_song = not cls.play_song  # Loop True and False
+                cls.play_song = not cls.play_song  # Loop True and False, only play every other spawn
                 further_than_ = partial(
                     further_than, survivor=survivor, min_dist=150)
                 valid_tiles = list(filter(further_than_, cls.spawn_tiles))
@@ -236,15 +236,4 @@ class Zombie(BaseClass):
 
 
 if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
-    for i in range(12, 100, 12):
-        for f in range(1, 100):
-            _divs_of_tl = [i // x for x in range(1, i)
-                           if i / x % 1 == 0]
-            Speed = min(_divs_of_tl, key=lambda x: abs(x - 240 / f))
-            Options.speed = Speed
-            Tile.length = i
-            a = _get_vel_list()
-            if len(set(a)) == 3 and max(a) != Speed:
-                print(a, i, f, Speed)
+    pass

@@ -2,7 +2,7 @@ import heapq
 
 from options import Options
 from tile import Tile
-
+from drop import Drop
 
 class AStar:
     NSEW = -Options.line_length, Options.line_length, 1, -1  # Add to find tile in a direction
@@ -18,31 +18,26 @@ class AStar:
         self.zombie = zombie
         self.start = zombie.get_tile()
         self.end = survivor.get_tile()
+        if 'through walls' in Drop.actives:
+            self.end = self.end.closest_open_tile()
+            if self.end is self.start:
+                self.solve = lambda *_: None  # overwrite solve and make the zombie stay
         heapq.heappush(self.open, (self.start.f, self.start))
 
-    @staticmethod
-    def tile_on_screen(direction, tile_num):
-        if direction == 2:  # East
-            return tile_num % Options.line_length != 0
-        if direction == 3:
-            return tile_num % Options.line_length != Options.line_length - 1  # West
-        return 0 < tile_num < Tile.amnt_tiles  # North and South
-
     def get_neighbours(self, cell):
-        for direction, sur_tile_num in enumerate(cell.number + direction
-                                                 for direction in AStar.NSEW):
+        for direction, sur_tile_num in enumerate(cell.number + direction for direction in AStar.NSEW):
             try:
                 sur_tile = Tile.instances[sur_tile_num]
             except IndexError:
                 continue
             if (sur_tile.walkable and sur_tile not in self.closed and
-                    AStar.tile_on_screen(direction, sur_tile_num)):
+                    Tile.on_screen(direction, sur_tile_num)):
                 yield sur_tile
 
     def get_heuristic(self, cell):
         """:return the Manhattan distance between end and cell
         https://en.wikipedia.org/wiki/Taxicab_geometry"""
-        return self.end.pos.manhattan_dist(cell.pos) / 3
+        return 10 * (self.end.pos - cell.pos).manhattan_dist() / Tile.length
 
     def update_cell(self, neighbour, cell):
         neighbour.g = cell.g + 10

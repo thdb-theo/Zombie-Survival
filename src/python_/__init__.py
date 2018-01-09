@@ -26,7 +26,8 @@ def angle_between(x1, y1, x2, y2):
     :return the angle in radians. No negative angles"""
     return math.atan2(y1 - y2, x2 - x1) % (2 * math.pi)
 
-def collide(x1,  y1,  w1,  h1,  x2,  y2,  w2,  h2):
+
+def collide(x1, y1, w1, h1, x2, y2, w2, h2):
     """Return True if self and other overlap else False
        Returns False if self and other are side by side
 
