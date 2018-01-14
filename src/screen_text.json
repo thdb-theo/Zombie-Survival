@@ -1,0 +1,176 @@
+{
+  "init": {
+    "move": {
+      "norsk": "WASD for \u00E5 bevege seg",
+      "english": "WASD to move"
+    },
+    "shoot": {
+      "norsk": "Piltastene for \u00E5 skyte",
+      "english": "Arrow keys to shoot"
+    },
+    "weapon": {
+      "norsk": "e for \u00E5 bytte v\u00E5pen",
+      "english": "e to change weapon"
+    },
+    "settings_": {
+      "norsk": "s for \u00E5 endre instillinger",
+      "english": "s to change settings"
+    },
+    "begin": {
+      "norsk": " Trykk mellomrom for \u00E5 starte ",
+      "english": " Press space to start "
+    }
+  },
+  "settings": {
+    "header": {
+      "norsk": "Innstillinger",
+      "english": "Settings"
+    },
+    "mute": {
+      "norsk": "stille",
+      "english": "mute"
+    },
+    "not_log": {
+      "norsk": "ikke log",
+      "english": "don't log"
+    },
+    "no_zombies": {
+      "norsk": "ingen zombier",
+      "english": "no zombies"
+    },
+    "debug": {
+      "norsk": "feils\u00F8kingsmodus",
+      "english": "debug mode"
+    },
+    "male": {
+      "norsk": "m",
+      "english": "m"
+    },
+    "female": {
+      "norsk": "k",
+      "english": "f"
+    },
+    "norwegian": {
+      "norsk": "norsk",
+      "english": "Norwegian"
+    },
+    "english": {
+      "norsk": "english",
+      "english": "English"
+    },
+    "fps": {
+      "norsk": "FPS:",
+      "english": "FPS:"
+    },
+    "map": {
+      "norsk": "Kart:",
+      "english": "Map:"
+    },
+    "tile_length": {
+      "norsk": "Flislengde:",
+      "english": "Tile length:"
+    },
+    "volume": {
+      "norsk": "Volum:",
+      "english": "Volume:"
+    },
+    "div12": {
+      "norsk": "Gj\u00F8r flislengden et multiplum av 12",
+      "english": "Make the tile length a multiple of 12"
+    },
+    "commit": {
+      "norsk": "BEKREFT",
+      "english": "COMMIT"
+    },
+    "discard": {
+      "norsk": "FORKAST",
+      "english": "DISCARD"
+    },
+    "error": {
+      "norsk": "Feil: ",
+      "english": "Error: "
+    },
+    "warning": {
+      "norsk": "Advarsel {}\nVil du fortsette?",
+      "english": "Warning {}\nDo you want to continue?"
+    },
+    "yes": {
+      "norsk": "ja",
+      "english": "yes"
+    },
+    "no": {
+      "norsk": "nei",
+      "english": "no"
+    },
+    "fillcolour": {
+      "norsk": "Farge p\u00E5 \u00E5pne fliser",
+      "english": "Colour of open tiles"
+    },
+    "loopcolour": {
+      "norsk": "Farge p\u00E5 vegger",
+      "english": "Colour of walls"
+    }
+  },
+  "info": {
+    "lifes": {
+      "norsk": "Liv: {}",
+      "english": "Lifes: {}"
+    },
+    "zombies_left": {
+      "norsk": "Zombier igjen: {}",
+      "english": "Zombies left: {}"
+    },
+    "round": {
+      "norsk": "Runde: {}",
+      "english": "Round: {}"
+    },
+    "ammo": {
+      "norsk": "Ammunisjon: {}",
+      "english": "Ammo: {}"
+    },
+    "fps": {
+      "norsk": "FPS: {}",
+      "english": "FPS: {}"
+    },
+    "power_up": {
+      "norsk": "Power-Ups: {}",
+      "english": "Power-Ups: {}"
+    }
+  },
+  "game_over": {
+    "killed": {
+      "norsk": "Zombier Drept: {}",
+      "english": "Zombies Killed: {}"
+    },
+    "fired": {
+      "norsk": "Skudd Skutt: {}",
+      "english": "Shots Fired: {}"
+    },
+    "accuracy": {
+      "norsk": "Treffsikkerhet: {:.4}%",
+      "english": "Accuracy: {:.4}%"
+    },
+    "level": {
+      "norsk": "Level: {}",
+      "english": "Level: {}"
+    },
+    "high_score": {
+      "norsk": "Rekord: {}",
+      "english": "High Score: {}"
+    }
+  },
+  "drops": {
+    "trans": {
+      "norsk": "G\u00E5 gjennom vegger",
+      "english": "Walk through walls"
+    },
+    "freeze": {
+      "norsk": "Frost",
+      "english": "Frozen"
+    },
+    "quad": {
+      "norsk": "Firedobbel skade",
+      "english": "Quadruple damage"
+    }
+  }
+}

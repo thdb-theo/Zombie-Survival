@@ -3,34 +3,30 @@
 import math
 import sys
 import os
-from functools import partial
+from functools import partial, reduce
 import logging
 import json
-import xml.etree.ElementTree as ET
-from contextlib import contextmanager
 
 import pygame
 
 import init as _
 from options import Options, Colours
+from maths import Vector
 from tile import Tile
 
 if __name__ == '__main__':
     misc_screen = pygame.display.set_mode((Options.width, Options.height))
+
 stats = {'Zombies Killed': 0,
          'Bullets Fired': 0,
          'Bullets Hit': 0}
-avg_zmb_poses = []
-survivor_poses = []
 
 clock = pygame.time.Clock()
 
-text_tree = ET.parse('src/screen_text.xml')
-root = text_tree.getroot()
-
+data = json.load(open('src/screen_text.json'))
 
 def get_text(area, name):
-    return root.find('./{}/{}'.format(area, name)).get(Options.language)
+    return data[area][name][Options.language]
 
 
 def make_partialable(func):
@@ -129,6 +125,7 @@ def pause(screen, level):
 def game_over(screen, level):
     """The screen after the game is over
     Display stats and all time high score"""
+
     font_size = 100
     killed_text = get_text('game_over', 'killed')
     fired_text = get_text('game_over', 'fired')

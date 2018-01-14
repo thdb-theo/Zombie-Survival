@@ -17,7 +17,7 @@ try:
     from cython_ import angle_between
 except ImportError:
     from python_ import angle_between
-from miscellaneous import stats, rotated, further_than, avg_zmb_poses, scale
+from miscellaneous import stats, rotated, further_than, scale
 from tile import Tile
 from drop import Drop
 
@@ -73,8 +73,6 @@ class Zombie(BaseClass):
     PickUp.zombie_init_round = init_round
     cool_down, play_song = False, True
     spawn_interval = Options.fps * 2  # Frames between spawns, decreses exponentially
-    _info_font = pygame.font.SysFont('Monospace', Tile.length // 4)
-    text = _info_font.render('avg zmb pos', 1, Colours.WHITE)
     AStarThread = None
 
     def __init__(self, x, y):
@@ -109,7 +107,6 @@ class Zombie(BaseClass):
     @classmethod
     def update(cls, screen, survivor):
         del_zmbs = set()
-        avg_pos = Vector(0, 0)
         for zmb in cls.instances:
             if zmb.health <= 0.:
                 Drop.spawn(zmb.pos)
@@ -117,7 +114,6 @@ class Zombie(BaseClass):
                 stats['Zombies Killed'] += 1
                 continue
 
-            avg_pos += zmb.centre
             screen.blit(zmb.img, zmb.pos)
             zmb.health_bar(surface=screen)  # Health bar with rounded edges
             if Options.debug:
@@ -148,16 +144,6 @@ class Zombie(BaseClass):
                                                    daemon=True)
                 cls.AStarThread.start()
         cls.instances -= del_zmbs
-        if not Options.debug:
-            return
-        try:
-            avg_pos //= len(cls.instances)
-        except ZeroDivisionError:
-            return
-        pygame.draw.circle(screen, Colours.BLUE, avg_pos, Tile.length // 4)
-        text_rect = cls.text.get_rect(center=avg_pos)
-        screen.blit(cls.text, text_rect)
-        avg_zmb_poses.append(avg_pos)
 
     @classmethod
     def spawn(cls, totalframes, survivor):

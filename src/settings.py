@@ -1,5 +1,5 @@
 import os
-import xml.etree.ElementTree as ET
+import json
 import tkinter as tk
 from tkinter import messagebox
 
@@ -7,12 +7,12 @@ from tkcolorpicker import askcolor
 
 from options import Options, Colours
 
-text_tree = ET.parse('src/screen_text.xml')
-root = text_tree.getroot()
+
+data = json.load(open('src/screen_text.json'))
 
 
 def get_text(name):
-    return root.find('./settings/{}'.format(name)).get(Options.language)
+    return data['settings'][name][Options.language]
 
 
 class Application(tk.Frame):

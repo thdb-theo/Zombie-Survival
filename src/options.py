@@ -4,7 +4,7 @@
 import argparse
 import warnings
 from random import uniform
-from colorsys import hls_to_rgb, hsv_to_rgb, rgb_to_hsv
+import colorsys
 import os
 
 
@@ -15,18 +15,19 @@ def get_resolution():
             # HACK: saves resolution to a file, get results and deletes the file
             os.system("xrandr  | grep \* | cut -d' ' -f4 > resolution.txt")
             file = open('resolution.txt', 'r')
+            # file looks like this: '1920x1080'
             try:
                 return tuple(map(int, file.read().split('x')))
             except ValueError:
-                warnings.warn("""This is meant for testing of cython on Ubuntu for Windows
+                warnings.warn("""\nThis is meant for testing cython on "Bash on Ubuntu on Windows"
                               where no screen is available and thus the xrandr returns an
                               empty string and the previous statement raises a ValueError.
-                              If you didn\'t expect this message, either there is
+                              If you didn\'t expect this message; either there is
                               something wrong with xrandr or it couldn't find a screen.""")
                 return 1280, 720
             finally:
                 file.close()
-                os.remove('resolution.txt')
+                os.remove('resolution.txt')  # delete the file
 
         elif os.name == 'nt':
             # For Windows
@@ -42,7 +43,11 @@ def get_resolution():
 class Colours:
     """Defines a whole bunch of colours.
     Also has staticmethods related to colours; getting a random colour
-    and a getting colour in hexadecimal or rgb"""
+    and a getting colour in hexadecimal or rgb
+
+    NOTE: Colour is not callable! Think of it a namespace for everything releated to colours
+    RAISES: TypeError: If it is called"""
+
     BLACK = 0, 0, 0
     WHITE = 255, 255, 255
     DARK_GREY = 40, 40, 40
@@ -70,7 +75,7 @@ class Colours:
 
         :rtype: tuple"""
         hsl = uniform(*h), uniform(*s), uniform(*l)
-        return tuple(int(256 * i) for i in hls_to_rgb(*hsl))
+        return tuple(int(256 * i) for i in colorsys.hls_to_rgb(*hsl))
 
     @classmethod
     def get_hex(cls, colour):
@@ -91,9 +96,18 @@ class Colours:
 
     @classmethod
     def get_rgb(cls, colour):
+        """get rgb of hex or name of a colour
+        examples:
+        >>> Colours.get_rgb('#ffff00')
+        (255, 255, 0)
+        >>> Colours.get_rgb('LIGHT_GREY')
+        (105, 105, 105)
+        """
         if isinstance(colour, str) and colour.startswith('#'):
             colour = colour.lstrip('#')
             return tuple(int(colour[i: i + 2], 16) for i in (0, 2, 4))
+        elif isinstance(colour, str):
+            return getattr(cls, colour.upper())
 
     @classmethod
     def contrasting(cls, r, g, b):
@@ -113,7 +127,7 @@ parser.add_argument('-tl', '--tile_length', nargs='?', type=int,   default=None,
 parser.add_argument('-g',  '--gender',      nargs='?',             default='f',                help='Gender of the player; \'m\' for male, \'f\' for female')
 parser.add_argument('-l',  '--language',    nargs='?',             default='norsk',            help='Language of all displayed text; \'norsk\' or \'english\'.')
 parser.add_argument('-fc', '--fillcolour',  nargs='?', type=tuple, default=Colours.LIGHT_GREY, help='The colour of the open tiles')
-parser.add_argument('-lc', '--loopcolour',   nargs='?', type=tuple, default=Colours.DARK_GREY , help='the colour of the walls')
+parser.add_argument('-lc', '--loopcolour',  nargs='?', type=tuple, default=Colours.DARK_GREY,  help='the colour of the walls')
 
 flags = parser.add_argument_group()
 flags.add_argument('-M',    '--mute',         action='store_true', help='Mute the game regardless of volume level')

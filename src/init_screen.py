@@ -1,6 +1,6 @@
 """The intro screen"""
 import sys
-import xml.etree.ElementTree as ET
+import json
 
 import pygame
 
@@ -17,12 +17,12 @@ else:
 settings = __import__(settings_module)
 # if pyqt is successfull use pyqt unless Options.tk is True. If pyqt is unsuccessfull use tkinter
 
-text_tree = ET.parse('src/screen_text.xml')
-root = text_tree.getroot()
+
+data = json.load(open('src/screen_text.json'))
 
 
 def get_text(name):
-    return root.find('./init/{}'.format(name)).get(Options.language)
+    return data['init'][name][Options.language]
 
 
 def middle_of_screen(text):

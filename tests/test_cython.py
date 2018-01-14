@@ -1,7 +1,7 @@
 import unittest
 import math
 from collections import namedtuple
-from random import randint
+from random import randint, random
 import sys
 import os
 sys.path.insert(0, os.getcwd() + '/src')
@@ -15,8 +15,8 @@ point = namedtuple('point', 'x y')
 
 class TestCython(unittest.TestCase):
     def test_cython_equal_python(self):
-        args = 0, randint(1, 100000), -randint(1, 100000), 1000000
-        self.assertEqual(cyangle_between(*args), pyangle_between(*args))
+        args = 0, randint(1, 100000), -randint(1, 100000), random()
+        self.assertTrue(math.isclose(cyangle_between(*args), pyangle_between(*args), abs_tol=1e-5))
         self.assertEqual(cycollide(*args, *args), pycollide(*args, *args))
 
     def test_collide(self):

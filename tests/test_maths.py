@@ -12,7 +12,7 @@ class TestVector(unittest.TestCase):
         v = Vector(3, 5.3)
         self.assertTrue(isinstance(v.x, int))
         self.assertTrue(isinstance(v.y, float))
-        v1 = Vector.x_as_pair([8.3, 1.3])
+        v1 = Vector.from_pair([8.3, 1.3])
         self.assertTrue(hasattr(v1, 'y'))
 
     def test_get_and_setitem(self):
@@ -49,11 +49,9 @@ class TestVector(unittest.TestCase):
         v2 = Vector(1, 2)
         self.assertEqual(v1 + v2, v2 + v1)
         self.assertEqual(v1 + v2, (6, 4))
-        self.assertEqual(v1 * v2, (5, 4))
+        self.assertEqual(v1.scale(*v2), (5, 4))
         v1 += v2
         self.assertEqual(v1, (6, 4))
-        v1 //= v2
-        self.assertEqual(v1, (6, 2))
 
     def test_funcs(self):
         v1 = Vector(5.3, 2.0)
@@ -71,11 +69,10 @@ class TestVector(unittest.TestCase):
         self.assertEqual(v.signs(), (0, -1))
         v1 = Vector(4.0, 2.0)
         v2 = Vector(3.0, 1.0)
-        self.assertEqual(v1.manhattan_dist(v2), 2)
+        self.assertEqual((v1-v2).manhattan_dist(), 2)
         v2.x = 2.0
-        self.assertEqual(v1.manhattan_dist(v2), 3)
-        self.assertEqual(v1.manhattan_dist(v1), 0)
-
+        self.assertEqual((v1-v2).manhattan_dist(), 3)
+        self.assertEqual((v1-v1).manhattan_dist(), 0)
 
 
 if __name__ == '__main__':

@@ -27,7 +27,6 @@ class Survivor(BaseClass):
     imgs = {d: scale(pygame.image.load(
             'assets/Images/player_{0}_{1}.png'.format(Options.gender, d))) for d in 'nsew'}
 
-
     def __init__(self, x, y):
         self.current_gun = 0
         self.direction = pi * 3 / 1/2

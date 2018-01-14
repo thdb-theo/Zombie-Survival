@@ -7,3 +7,5 @@ high_score.json
 setup.cfg
 idea/
 .idea/
+*.aup
+audacity_project_files/

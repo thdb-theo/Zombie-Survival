@@ -20,13 +20,13 @@ pygame.mixer.music.set_volume(Options.volume)
 
 display = pygame.display.set_mode(Options.screen_size, pygame.NOFRAME)
 
-
 def main():
     """initiate tiles, survival, clock and start music and run main loop"""
     Tile.create()
     survivor = Survivor(*Tile.random_open_tile())
     clock = pygame.time.Clock()
     logging.debug('options: %s', Options.__dict__)
+    logging.debug('monitor: w=%s, h=%s' % (Options.monitor_w, Options.monitor_h))
     pygame.mixer.music.play(loops=-1)
     main_loop(survivor, clock)
     game_over(display, Zombie.level)

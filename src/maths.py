@@ -17,18 +17,22 @@ class Vector:
     Vector(x=0, y=1)
 
     Notes:
-    Ternary operators have been overloaded to be element-wise.
+    Pluss and minus are overloaded to be element-wise.
     Examples:
     >>> Vector(4, 2) + Vector(-7, 4)
     Vector(x=-3, y=6)
-    >>> Vector(2, -1) * Vector(6, 4)
-    Vector(x=12, y=-4)
+    >>> Vector(2, -1) - Vector(6, 4)
+    Vector(x=-4, y=-5)
 
     If the other variable of a ternary operator is a number,
     the number is added to x and y
     >>> a = Vector(4, 6)
     >>> a + 3
     Vector(x=7, y=9)
+
+    Division is not defined, and * is overloaded to dot multiplication
+     >>> Vector(-5, 2) * Vector(-1, 8)
+     21
 
     The rich comparion methods, except eq and ne, are based on the length of the vectors
     eq and ne is based on the position
@@ -137,7 +141,7 @@ class Vector:
     def scale(self, x_or_both, y=None):
         if y is None:
             return Vector(self.x * x_or_both, self.y * x_or_both)
-        return Vector(self.x * x_or_both, self.y*y)
+        return Vector(self.x * x_or_both, self.y * y)
 
     def dot(self, other):
         return self.x * other.x + self.y * other.y
@@ -185,8 +189,8 @@ class Vector:
         >>> Vector(x=3, y=2).magnitude_squared()
         13
 
-        Good for find the shortest / longest vector
-        >>> min(Vector(12, 17), Vector(10, 19), key=lambda x: x.magnitude_squared())
+        Good for finding the shortest / longest vector
+        >>> min(Vector(12, 17), Vector(10, 19))
         Vector(x=12, y=17)
 
         Faster than self.magnitude()"""
@@ -197,10 +201,6 @@ class Vector:
         >>> Vector(-3, 9).signs()
         (-1, 1)"""
         return (self.x > 0) - (self.x < 0), (self.y > 0) - (self.y < 0)
-
-    # def manhattan_dist(self, other):
-
-    #     return abs(other[0] - self.x) + abs(other[1] - self.y)
 
     def manhattan_dist(self):
         """returns the Manhattan of the vector
@@ -216,9 +216,16 @@ class Vector:
         """Angle of the vector in radians"""
         return math.atan2(self.y, self.x)
 
+
 if __name__ == '__main__':
     # import doctest
     # doctest.testmod()
-    a = Vector(1, 2)
-    b = Vector(2, 1)
-    print(a * b)
+    from functools import reduce
+    from operator import add
+    v = Vector(-3, 2)
+    u = Vector(2, -1)
+    print(reduce(add, [v, u]))
+    print(reduce(add, [u, v]))
+    # print(sum(v, u))
+    # print(sum(u, v))
+

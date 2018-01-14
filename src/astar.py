@@ -18,7 +18,7 @@ class AStar:
         self.zombie = zombie
         self.start = zombie.get_tile()
         self.end = survivor.get_tile()
-        if 'through walls' in Drop.actives:
+        if 'trans' in Drop.actives:
             self.end = self.end.closest_open_tile()
             if self.end is self.start:
                 self.solve = lambda *_: None  # overwrite solve and make the zombie stay

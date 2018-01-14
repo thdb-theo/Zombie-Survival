@@ -80,6 +80,13 @@ class Bullet(BaseClass):
                 self.pos.x + self.width > Options.width or
                 self.pos.y + self.height > Options.height)
 
+    def calc_dmg(self):
+        dist = (self.orgpos - self.pos).magnitude()
+        dmg = Bullet.dmg_func[self.type](dist)
+        dmg *= self.dmg_drop
+        dmg *= 4 if ('quad' in Drop.actives) else 1
+        return dmg
+
     @classmethod
     def update(cls, screen):
         try:
@@ -92,22 +99,19 @@ class Bullet(BaseClass):
             bullet.pos += bullet.vel
             screen.blit(bullet.img, bullet.pos)
 
-            if get_number(bullet.pos + bullet.vel) in Tile.solid_nums and 'through walls' not in Drop.actives \
+            if get_number(bullet.pos + bullet.vel) in Tile.solid_nums and 'trans' not in Drop.actives \
                     or bullet.offscreen():
                 del_bullets.add(bullet)
                 del bullet
                 continue
             for zombie in Zombie.instances - bullet.hits:
                 if collide(*bullet.pos, *bullet._size, *zombie.pos, *zombie._size):
-                    dist = (bullet.orgpos - bullet.pos).magnitude()
-                    dmg = cls.dmg_func[bullet.type](dist)
-                    dmg *= bullet.dmg_drop
-                    dmg *= ('double damage' in Drop.actives) + 1
+                    dmg = bullet.calc_dmg()
                     assert dmg > 0
                     zombie.health -= dmg
-                    logging.debug('type %s, dist %s, dmg %s, dmg_drop %s, zh %s, 2xd: %s',
-                                  bullet.type, dist, dmg, bullet.dmg_drop, zombie.health,
-                                  'double damage' in Drop.actives)
+                    logging.debug('type %s, dmg %s, dmg_drop %s, zh %s, 4xd: %s',
+                                  bullet.type, dmg, bullet.dmg_drop, zombie.health,
+                                  'quad' in Drop.actives)
                     bullet.dmg_drop /= 1.1
                     if not bullet.hits:
                         stats['Bullets Hit'] += 1

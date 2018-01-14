@@ -26,7 +26,9 @@ class PickUp(BaseClass):
     >>> tile = Tile.instances[PickUp.spawn_tiles[0]]
     >>> a = PickUp(*tile.pos, PickUp.spawn_tiles[0], type_=0.9)
     >>> a.type
-    'health'"""
+    'health'
+
+    TODO: Add more pick ups"""
 
     with open(Options.mappath) as file:
         spawn_tiles = [
@@ -70,7 +72,8 @@ class PickUp(BaseClass):
     def update(cls, screen, survivor, total_frames):
         if cls.left_round:
             try:
-                if total_frames % (Options.fps * cls.zombie_init_round * 2 // cls.init_round) == 0:
+                if total_frames % ((Options.fps * cls.zombie_init_round * 2) //
+                                   cls.init_round) == 0:
                     cls.spawn(survivor)
             except ZeroDivisionError:
                 if total_frames % Options.fps * 10 == 0:

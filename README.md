@@ -1,4 +1,4 @@
-# Zombie Survival 1.3.0
+# Zombie Survival 1.3.1
 
 A simple zombie survival game in pygame, heavily influenced by Call of Duty Zombies, but in 2d.
 
@@ -27,11 +27,13 @@ Change weapon with <kbd>e</kbd>
 * Overwatch
 * Resident Evil
 * Team Fortress 2
+* Schwalbe
 
 #### Sounds and Music
 
 * Call of Duty
 * The Legend of Zelda
+* Quake 3
 
 #### Maps
 
