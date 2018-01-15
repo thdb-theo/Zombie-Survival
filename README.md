@@ -1,4 +1,4 @@
-# Zombie Survival 1.3.1
+# Zombie Survival 1.4.0
 
 A simple zombie survival game in pygame, heavily influenced by Call of Duty Zombies, but in 2d.
 

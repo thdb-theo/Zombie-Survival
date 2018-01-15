@@ -17,7 +17,8 @@ try:
     from cython_ import angle_between
 except ImportError:
     from python_ import angle_between
-from miscellaneous import stats, rotated, further_than, scale
+from miscellaneous import stats, rotated, further_than, scale, \
+    NextRoundCountdown
 from tile import Tile
 from drop import Drop
 
@@ -37,8 +38,8 @@ def _get_vel_list():
     ts = base_speed * 2, base_speed * 3, base_speed * 2, base_speed
 
     def func(x):
-        def cond(x):
-            return Tile.length / x % 1 == 0.
+        def cond(n):
+            return Tile.length / n % 1 == 0.
 
         iterable = (Tile.length // x for x in range(1, Tile.length + 1) if cond(x))
         return min(iterable, key=lambda k: abs(k - x))
@@ -56,15 +57,15 @@ class Zombie(BaseClass):
         spawn_tiles = [
             i for i, x in enumerate(file.read().replace('\n', '')) if x == 'Z'
         ]
-    imgs = tuple(scale(pygame.image.load('assets/Images/zombie{}.png'.format(i)))
+    imgs = tuple(scale(pygame.image.load('assets/Images/Zombies/zombie{}.png'.format(i)))
                  for i in range(1, 5))
     speed_tuple = _get_vel_list()
     logging.debug('zombie speeds: %s', speed_tuple)
     health_func_tuple = (lambda h: h, lambda h: h / 2,
                          lambda h: h * 1.2, lambda h: h * 4)
-    new_round_song = pygame.mixer.Sound('assets/Audio/new_round_short.ogg')
+    new_round_song = pygame.mixer.Sound('assets/Audio/Other/new_round_short.ogg')
     new_round_song.set_volume(Options.volume)
-    new_round_song_length = int(new_round_song.get_length())
+    new_round_song_length = new_round_song.get_length()
     base_health = 100
     attack_range = Tile.length * 1.3  # Max distance from zombie for an attack, in pixels
     level = 1
@@ -146,7 +147,7 @@ class Zombie(BaseClass):
         cls.instances -= del_zmbs
 
     @classmethod
-    def spawn(cls, totalframes, survivor):
+    def spawn(cls, screen, totalframes, survivor):
         """Spawning and rounds"""
         if Options.no_zombies:
             return
@@ -158,7 +159,7 @@ class Zombie(BaseClass):
                     # filenanes are numbered in hexadecimal
                     file_nr = format(randint(0, 19), 'x')
                     sound = pygame.mixer.Sound(
-                        'assets/Audio/zmb_spawn{}.wav'.format(file_nr)
+                        'assets/Audio/Spawn/zmb_spawn{}.wav'.format(file_nr)
                     )
                     sound.set_volume(Options.volume)
                     sound.play()
@@ -174,10 +175,13 @@ class Zombie(BaseClass):
                 logging.debug('spawn_idx: %s, spawn_node: %s, valid: %s, survivor: %s',
                               spawn_idx, spawn_node.pos, valid_tiles, survivor.pos)
         elif not (cls.instances or cls.cool_down):  # Round is over, start cooldown
-            cls.cool_down = totalframes + Options.fps * cls.new_round_song_length
+            cls.cool_down = int(totalframes +
+                                Options.fps * cls.new_round_song_length)
             cls.new_round_song.play()
             pygame.mixer.music.pause()
             cooldown_time = cls.cool_down - totalframes
+            cls.cooldown_counter = NextRoundCountdown(
+                cls.new_round_song_length * Options.fps)
             logging.debug('Round over, start cooldown; cooldown: %s frames, %s sec',
                           cooldown_time, cooldown_time // Options.fps)
 
@@ -194,6 +198,10 @@ class Zombie(BaseClass):
             PickUp.left_round = PickUp.init_round
             logging.debug('level: %s, base health: %s, Zombies: %s, Pick-Ups: %s, Interval: %s',
                           cls.level, cls.base_health, cls.init_round, PickUp.init_round, cls.spawn_interval)
+
+        else:
+            if cls.cool_down:
+                cls.cooldown_counter.update(screen)
 
     def rotate(self, new_dir):
         """Rotate self.img, set self.direction to new_dir

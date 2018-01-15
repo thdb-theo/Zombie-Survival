@@ -5,7 +5,7 @@ from tile import Tile
 from drop import Drop
 
 class AStar:
-    NSEW = -Options.line_length, Options.line_length, 1, -1  # Add to find tile in a direction
+    NSEW = -Options.tiles_x, Options.tiles_x, 1, -1  # Add to find tile in a direction
 
     def __init__(self, zombie, survivor):
         for tile in Tile.instances:  # Reset from last search

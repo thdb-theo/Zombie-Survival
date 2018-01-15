@@ -19,7 +19,7 @@ def walking(survivor, keys, screen):
     if survivor.to is not None:  # If the survivor is between two tiles
         return
     if keys[pygame.K_w]:  # North
-        future_tile_num = survivor.get_number() - Options.line_length
+        future_tile_num = survivor.get_number() - Options.tiles_x
         if Tile.on_screen(0, future_tile_num):
             future_tile = Tile.instances[future_tile_num]
             if future_tile.walkable or 'trans' in Drop.actives:
@@ -28,7 +28,7 @@ def walking(survivor, keys, screen):
                 survivor.vel = Vector(0, -Options.speed)
 
     if keys[pygame.K_s]:  # South
-        future_tile_num = survivor.get_number() + Options.line_length
+        future_tile_num = survivor.get_number() + Options.tiles_x
         if Tile.on_screen(1, future_tile_num):
             future_tile = Tile.instances[future_tile_num]
             if future_tile.walkable or 'trans' in Drop.actives:

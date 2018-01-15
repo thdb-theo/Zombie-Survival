@@ -35,7 +35,7 @@ class BaseClass:
     def get_number(self):
         """Return the index of tile that self is on"""
 
-        return int(self.pos.x // Tile.length + self.pos.y // Tile.length * Options.line_length)
+        return int(self.pos.x // Tile.length + self.pos.y // Tile.length * Options.tiles_x)
 
     def get_tile(self):
         """Return the tile on which self is"""
@@ -48,7 +48,7 @@ def get_number(pos):
     >>> get_number([0, 0])
     0"""
     x, y = pos
-    return x // Tile.length + y // Tile.length * Options.line_length
+    return x // Tile.length + y // Tile.length * Options.tiles_x
 
 
 if __name__ == '__main__':

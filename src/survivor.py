@@ -20,12 +20,12 @@ class Survivor(BaseClass):
     Params:
     x: the x coordinate of the survivor
     y: the y coordinate of the survivor"""
-    guns = (scale(pygame.image.load('assets/Images/pistol2.png'), Tile.size.scale(1/2, 1/4)),
-            scale(pygame.image.load('assets/Images/shotgun.png'), Tile.size.scale(1/2, 1/4)),
-            scale(pygame.image.load('assets/Images/automatic2.png'), Tile.size.scale(1/2, 1/4)),
-            scale(pygame.image.load('assets/Images/sniper.png'), Tile.size.scale(1/2, 1/4)))
+    guns = (scale(pygame.image.load('assets/Images/Weapons/pistol2.png'), Tile.size.scale(1/2, 1/4)),
+            scale(pygame.image.load('assets/Images/Weapons/shotgun.png'), Tile.size.scale(1/2, 1/4)),
+            scale(pygame.image.load('assets/Images/Weapons/automatic2.png'), Tile.size.scale(1/2, 1/4)),
+            scale(pygame.image.load('assets/Images/Weapons/sniper.png'), Tile.size.scale(1/2, 1/4)))
     imgs = {d: scale(pygame.image.load(
-            'assets/Images/player_{0}_{1}.png'.format(Options.gender, d))) for d in 'nsew'}
+            'assets/Images/Players/player_{0}_{1}.png'.format(Options.gender, d))) for d in 'nsew'}
 
     def __init__(self, x, y):
         self.current_gun = 0

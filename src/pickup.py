@@ -38,10 +38,10 @@ class PickUp(BaseClass):
     init_round, left_round = 4, 4
     zombie_init_round = None
 
-    images = {'ammo': scale(pygame.image.load('assets/Images/ammo.png')),
-              'health': scale(pygame.image.load('assets/Images/health.png'))}
-    sounds = {'ammo': pygame.mixer.Sound('assets/Audio/ammo_short.ogg'),
-              'health': pygame.mixer.Sound('assets/Audio/health.ogg')}
+    images = {'ammo': scale(pygame.image.load('assets/Images/PickUps/ammo.png')),
+              'health': scale(pygame.image.load('assets/Images/PickUps/health.png'))}
+    sounds = {'ammo': pygame.mixer.Sound('assets/Audio/PickUp/ammo_short.ogg'),
+              'health': pygame.mixer.Sound('assets/Audio/PickUp/health.ogg')}
     sounds['ammo'].set_volume(Options.volume)
     sounds['health'].set_volume(Options.volume)
     instances = set()

@@ -29,19 +29,29 @@ class Bullet(BaseClass):
     width, height = 7, 9
     instances = set()
     images = (
-        scale(pygame.image.load('assets/Images/pistol_b.png'), Tile.size.scale(1/3, 1/5)),
-        scale(pygame.image.load('assets/Images/shotgun_b2.png'), Tile.size.scale(1/3, 1/5)),
-        scale(pygame.image.load('assets/Images/automatic_b.png'), Tile.size.scale(1/3, 1/5)),
-        scale(pygame.image.load('assets/Images/sniper_b2.png'), Tile.size.scale(1/3, 1/5))
+        scale(pygame.image.load('assets/Images/Bullets/pistol_b.png'), Tile.size.scale(1/3, 1/5)),
+        scale(pygame.image.load('assets/Images/Bullets/shotgun_b2.png'), Tile.size.scale(1/3, 1/5)),
+        scale(pygame.image.load('assets/Images/Bullets/automatic_b.png'), Tile.size.scale(1/3, 1/5)),
+        scale(pygame.image.load('assets/Images/Bullets/sniper_b2.png'), Tile.size.scale(1/3, 1/5))
     )
 
-    dmg_func = (lambda d: max((-0.0144 * d ** 2 + 7.2 * d + 680.4) / Tile.length, 15),
-                lambda d: 4680 / Tile.length * (math.e ** (-0.02 * d)) + 13,
-                lambda d: (-0.36 * d + 792) / Tile.length,
+    sounds = (
+        pygame.mixer.Sound('assets/Audio/Gunshots/pistol.wav'),
+        pygame.mixer.Sound('assets/Audio/Gunshots/shotgun2.wav'),
+        pygame.mixer.Sound('assets/Audio/Gunshots/automatic.wav'),
+        pygame.mixer.Sound('assets/Audio/Gunshots/sniper.wav')
+    )
+    for sound in sounds:
+        sound.set_volume(Options.volume)
+
+    dmg_func = (lambda d: max((-0.00442 * d ** 2 - 1.4273 * d + 1433.3) / Tile.length, 12),
+                lambda d: ((432000 * math.e ** ((-1) / 20 * d) + 720) /
+                          (100 * math.e ** ((-1) / 20 * d) + 1)) / Tile.length,
+                lambda d: max((-2 * d + 1080) / Tile.length, 10),
                 lambda d: 36 / Tile.length * (40 * math.log(d + 40) - 100) / 1.1)
 
-    min_bullet_dist = (Tile.length * 1.11, Tile.length * 1.66,
-                       Tile.length * 0.55, Tile.length * 5)
+    min_bullet_dist = (Tile.length * 2, Tile.length * 3,
+                       Tile.length, Tile.length * 8)
     last_bullet = None
 
     new_keys = (0, -1), (0, 1), (-1, 0), (1, 0)
@@ -58,6 +68,7 @@ class Bullet(BaseClass):
         except TypeError:  # If Bulle.last_bullet hasn't been updated yet. 1st bullet
             dist = None
 
+        Bullet.sounds[type_].play()
         survivor.ammo_count[type_] -= 1
         self.type = type_
         self.orgpos = pos

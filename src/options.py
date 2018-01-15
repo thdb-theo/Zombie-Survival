@@ -6,6 +6,7 @@ import warnings
 from random import uniform
 import colorsys
 import os
+import locale
 
 
 def get_resolution():
@@ -58,6 +59,7 @@ class Colours:
     YELLOW = 255, 255, 0
     PINK = 255, 0, 255
     CYAN = 0, 255, 255
+    LIGHT_BLUE = 26, 99, 206
 
     def __new__(cls, *args, **kwargs):
         raise TypeError('Colour is not callable')
@@ -119,6 +121,7 @@ class Colours:
         else:
             return '#000000'
 
+
 parser = argparse.ArgumentParser('Zombie Survival')
 parser.add_argument('-f',  '--fps',         nargs='?', type=int,   default=60,                 help='The FPS cap')
 parser.add_argument('-m',  '--map',         nargs='?',             default='Pac-Man',          help='The map, available maps are in the Maps-folder')
@@ -156,7 +159,7 @@ class _Options:
         self.no_zombies = _args.no_zombies
         self.debug = _args.debug
         self.not_log = _args.not_log
-        self.language = _args.language
+        self.set_language(_args.language)
         self.fillcolour = _args.fillcolour
         self.loopcolour = _args.loopcolour
         self.opensettings = _args.opensettings
@@ -185,11 +188,11 @@ class _Options:
         self.mappath = 'assets/Maps/{}'.format(self.mapname)
         with open(self.mappath) as file:
             file_str = file.read()
-            self.line_length = file_str.find('\n')
-            if self.line_length == -1:
+            self.tiles_x = file_str.find('\n')
+            if self.tiles_x == -1:
                 # If the file is one line
-                self.line_length = len(file_str)
-            self.amnt_lines = file_str.count('\n') + 1  # +1 because there is no '\n' on the last line
+                self.tiles_x = len(file_str)
+            self.tiles_y = file_str.count('\n') + 1  # +1 because there is no '\n' on the last line
         if hasattr(self, '_tilelength'):
             self.update_size()
 
@@ -200,9 +203,9 @@ class _Options:
 
     def settilelength(self, new):
         if new is None:
-            tile_length_width = _Options.monitor_w // self.line_length
+            tile_length_width = _Options.monitor_w // self.tiles_x
             tile_length_width -= tile_length_width % 12
-            tile_length_height = _Options.monitor_h // self.amnt_lines
+            tile_length_height = _Options.monitor_h // self.tiles_y
             tile_length_height -= tile_length_height % 12
             self._tilelength = min(tile_length_width, tile_length_height)
         else:
@@ -222,6 +225,20 @@ class _Options:
 
     fps = property(getfps, setfps)
 
+    def get_language(self):
+        return self._language
+
+    def set_language(self, lang):
+        self._language = lang
+        if lang == 'norsk':
+            locale.setlocale(locale.LC_ALL, 'NOR')
+        elif lang == 'english':
+            locale.setlocale(locale.LC_NUMERIC, 'GBR')
+        else:
+            raise ValueError(lang)
+
+    language = property(get_language, set_language)
+
     def update_speeds(self):
         _divs_of_tl = [self.tile_length // x for x in range(1, self.tile_length)
                        if self.tile_length / x % 1 == 0]
@@ -229,8 +246,8 @@ class _Options:
         self.bullet_vel = min(max(400 / self.fps, 1), self.tile_length)
 
     def update_size(self):
-        self.width = self.line_length * self.tile_length
-        self.height = self.amnt_lines * self.tile_length
+        self.width = self.tiles_x * self.tile_length
+        self.height = self.tiles_y * self.tile_length
         self.screen_size = self.width, self.height
 
     def assertions(self):
@@ -248,9 +265,9 @@ class _Options:
         assert self.tile_length % 12 == 0, 'Flislengde bør være delelig med 12.'
         assert 20 < self.fps < 69, \
             'FPS bør være mellom 20 og 69 for at zombienes fart er optimal.'
-        assert self.line_length * self.tile_length < _Options.monitor_w, \
+        assert self.tiles_x * self.tile_length < _Options.monitor_w, \
             'Vinduet er bredere enn sjermen.'
-        assert self.amnt_lines * self.tile_length < _Options.monitor_h, \
+        assert self.tiles_y * self.tile_length < _Options.monitor_h, \
             'Vinduet er høyere enn sjermen.'
 
 

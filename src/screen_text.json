@@ -55,7 +55,7 @@
       "english": "Norwegian"
     },
     "english": {
-      "norsk": "english",
+      "norsk": "engelsk",
       "english": "English"
     },
     "fps": {
@@ -135,6 +135,10 @@
     "power_up": {
       "norsk": "Power-Ups: {}",
       "english": "Power-Ups: {}"
+    },
+    "next_round": {
+      "norsk": "Neste runde starter om {} sekunder",
+      "english": "Next round starts in {} seconds"
     }
   },
   "game_over": {

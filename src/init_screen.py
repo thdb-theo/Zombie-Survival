@@ -32,7 +32,7 @@ def middle_of_screen(text):
 def main():
     screen = pygame.display.set_mode(Options.screen_size)
     clock = pygame.time.Clock()
-    intro_img = pygame.image.load('assets/Images/intro.jpg')
+    intro_img = pygame.image.load('assets/Images/Other/intro.jpg')
     scaled_intro_img = pygame.transform.scale(intro_img, (Options.width, Options.height))
     move_text = get_text('move')
     shoot_text = get_text('shoot')

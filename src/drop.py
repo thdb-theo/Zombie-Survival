@@ -58,11 +58,11 @@ class Drop(BaseClass):
 
     instances = set()
 
-    load_img = lambda s: scale(pygame.image.load('assets/Images/%s.png' % s))
+    load_img = lambda s: scale(pygame.image.load('assets/Images/Drops/%s.png' % s))
     imgs = (load_img('max_ammo'), load_img('quad_damage'),
             load_img('freeze'), load_img('through_walls'))
 
-    load_sound = lambda s: pygame.mixer.Sound('assets/Audio/%s.ogg' % s)
+    load_sound = lambda s: pygame.mixer.Sound('assets/Audio/Drop/%s.ogg' % s)
     sounds = (load_sound('max_ammo'),load_sound('quad_damage'),
               load_sound('freeze'),load_sound('through_walls'))
     for sound in sounds:

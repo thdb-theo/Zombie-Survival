@@ -3,6 +3,7 @@
 import math
 import sys
 import os
+import locale
 from functools import partial, reduce
 import logging
 import json
@@ -96,7 +97,7 @@ def text(screen, health, len_zombies, fps, level, ammo, power_ups):
     screen.blit(text_render(round_text_f), (Options.width - text_width * len(round_text_f), 0))
     ammo_text_f = ammo_text.format(ammo)
     screen.blit(text_render(ammo_text_f), (Options.width - text_width * len(ammo_text_f), Options.height - text_height))
-    fps_text_f = fps_text.format(fps)
+    fps_text_f = fps_text.format(locale.format('%0.1f', fps))
     screen.blit(text_render(fps_text_f), (0, Options.height - text_height))
     power_up_text_f = power_up_text.format(list(power_ups))
     screen.blit(text_render(power_up_text_f), (0, Options.height - text_height * 2))
@@ -182,7 +183,7 @@ def game_over(screen, level):
         pygame.quit()
         raise OverflowError('Couldn\'t fit the text on the screen. text_width: {},'
                             'width / 2: {}'.format(accuracy.get_rect().width, Options.width / 2))
-    game_over_img = pygame.image.load('assets/Images/game_over2.png')
+    game_over_img = pygame.image.load('assets/Images/Other/game_over2.png')
     scaled_img = scale(game_over_img, (Options.width, Options.height // 2))
     y_interval = Options.height // 6
     level_pos = Options.width // 15, Options.height // 4
@@ -204,6 +205,38 @@ def game_over(screen, level):
         pygame.event.wait()
         pygame.quit()
         sys.exit()
+
+
+class NextRoundCountdown:
+    """A countdown between rounds
+    params:
+    time: the time of the pause between rounds in frames"""
+    text_x, text_y = None, None
+
+    def __init__(self, time):
+        self.finished = time
+        self.time_passed = 0
+        self.colour = Colours.LIGHT_BLUE
+
+    def update(self, screen):
+        self.time_passed += 1
+        start_angle = math.pi / 2
+        proportion = self.time_passed / self.finished
+        end_angle = -math.pi * (4 * proportion - 5) / 2
+        diameter = Options.width // 5
+        x = Options.width // 2 - diameter // 2
+        y = Options.height // 2 - diameter // 2
+        rect = x, y, diameter, diameter
+        pygame.draw.arc(screen, self.colour, rect, start_angle, end_angle,
+                        diameter // 5)
+        time_left = (self.finished - self.time_passed) / Options.fps
+        formatted = locale.format('%0.1f', time_left)
+        text_ = get_text('info', 'next_round').format(formatted)
+        rendered = text_render(text_)
+        if NextRoundCountdown.text_x is None:
+            NextRoundCountdown.text_x = Options.width // 2 - rendered.get_rect().width // 2
+            NextRoundCountdown.text_y = Options.height // 2 - rendered.get_rect().height // 2
+        screen.blit(rendered, (NextRoundCountdown.text_x, NextRoundCountdown.text_y))
 
 
 if __name__ == '__main__':

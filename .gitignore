@@ -8,4 +8,6 @@ setup.cfg
 idea/
 .idea/
 *.aup
-audacity_project_files/
+assets/Audio/audacity_project_files/
+assets/Help/
+assets/Images/Photoshop_projects/

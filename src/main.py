@@ -5,7 +5,8 @@ import pygame
 
 import init as _
 from options import Options
-from init_screen import main; main()
+from init_screen import main; main()  # This must run before tile.py is run
+
 from miscellaneous import text, game_over
 from zombie import Zombie
 from survivor import Survivor
@@ -15,7 +16,7 @@ from interaction import interaction
 from tile import Tile
 from drop import Drop
 
-pygame.mixer.music.load('assets/Audio/theme.mp3')
+pygame.mixer.music.load('assets/Audio/Other/theme.mp3')
 pygame.mixer.music.set_volume(Options.volume)
 
 display = pygame.display.set_mode(Options.screen_size, pygame.NOFRAME)
@@ -37,7 +38,7 @@ def main_loop(survivor, clock):
     while survivor.health > 0:
         Tile.draw_all(display)
         interaction(display, survivor)
-        Zombie.spawn(total_frames, survivor)
+        Zombie.spawn(display, total_frames, survivor)
         survivor.movement()
         text(display, survivor.health, Zombie.left_round + len(Zombie.instances),
              clock.get_fps(), Zombie.level, survivor.ammo, Drop.actives)
