@@ -42,7 +42,7 @@ class Bullet(BaseClass):
         pygame.mixer.Sound('assets/Audio/Gunshots/sniper.wav')
     )
     for sound in sounds:
-        sound.set_volume(Options.volume)
+        sound.set_volume(Options.volume / 2)
 
     dmg_func = (lambda d: max((-0.00442 * d ** 2 - 1.4273 * d + 1433.3) / Tile.length, 12),
                 lambda d: ((432000 * math.e ** ((-1) / 20 * d) + 720) /
