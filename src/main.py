@@ -21,6 +21,7 @@ pygame.mixer.music.set_volume(Options.volume)
 
 display = pygame.display.set_mode(Options.screen_size, pygame.NOFRAME)
 
+
 def main():
     """initiate tiles, survival, clock and start music and run main loop"""
     Tile.create()

@@ -230,12 +230,6 @@ class _Options:
 
     def set_language(self, lang):
         self._language = lang
-        if lang == 'norsk':
-            locale.setlocale(locale.LC_ALL, 'NOR')
-        elif lang == 'english':
-            locale.setlocale(locale.LC_NUMERIC, 'GBR')
-        else:
-            raise ValueError(lang)
 
     language = property(get_language, set_language)
 

@@ -1,6 +1,5 @@
 import logging
 from math import pi
-import sys, os
 
 import pygame
 

@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import tkinter as tk
 from tkinter import messagebox
@@ -19,19 +20,20 @@ class Application(tk.Frame):
     """
     A settings window with tkinter
     Grid:
-             0       1
-        ---------|--------|
-    0         Settings
-    1       mute | not log
-    2    no zmbs | debug
-    3          m | f
-    4        nor | eng
-    5        FPS | FPS Entry
-    6        Map | Map Entry
-    7   Tile len | Tile len slider
-    8     volume | volume slider
-    9        Div by 12
-    10    Commit | Discard
+              0       1
+         ---------|--------|
+     0         Settings
+     1       mute | not log
+     2    no zmbs | debug
+     3          m | f
+     4        nor | eng
+     5        FPS | FPS Entry
+     6        Map | Map Entry
+     7   Tile len | Tile len slider
+     8     volume | volume slider
+     9        Div by 12
+    10 Fillcolour | Loopcolour
+    11     Commit | Discard
     """
     def __init__(self, master=None):
         super().__init__(master)
@@ -42,6 +44,7 @@ class Application(tk.Frame):
         self.grid_columnconfigure(0, weight=1, uniform='a')
         self.grid_columnconfigure(1, weight=1, uniform='a')
         self.changed = False
+
         self.create_widgets()
 
     def create_widgets(self):
@@ -197,6 +200,7 @@ class Application(tk.Frame):
 
 def main():
     root = tk.Tk()
+    root.bind('<Control-c>', sys.exit)
     app = Application(master=root)
     app.mainloop()
     return app.changed

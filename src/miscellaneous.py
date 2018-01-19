@@ -2,9 +2,7 @@
 
 import math
 import sys
-import os
-import locale
-from functools import partial, reduce
+from functools import partial
 import logging
 import json
 
@@ -12,11 +10,8 @@ import pygame
 
 import init as _
 from options import Options, Colours
-from maths import Vector
 from tile import Tile
 
-if __name__ == '__main__':
-    misc_screen = pygame.display.set_mode((Options.width, Options.height))
 
 stats = {'Zombies Killed': 0,
          'Bullets Fired': 0,
@@ -25,6 +20,7 @@ stats = {'Zombies Killed': 0,
 clock = pygame.time.Clock()
 
 data = json.load(open('src/screen_text.json'))
+
 
 def get_text(area, name):
     return data[area][name][Options.language]
@@ -97,7 +93,7 @@ def text(screen, health, len_zombies, fps, level, ammo, power_ups):
     screen.blit(text_render(round_text_f), (Options.width - text_width * len(round_text_f), 0))
     ammo_text_f = ammo_text.format(ammo)
     screen.blit(text_render(ammo_text_f), (Options.width - text_width * len(ammo_text_f), Options.height - text_height))
-    fps_text_f = fps_text.format(locale.format('%0.1f', fps))
+    fps_text_f = fps_text.format('{0:.2f}'.format(fps))
     screen.blit(text_render(fps_text_f), (0, Options.height - text_height))
     power_up_text_f = power_up_text.format(list(power_ups))
     screen.blit(text_render(power_up_text_f), (0, Options.height - text_height * 2))
@@ -170,12 +166,12 @@ def game_over(screen, level):
     high_score_text_f = high_score_text.format(high_score)
 
     while font_size > 0:
-        font = pygame.font.SysFont('Courier', font_size)
-        killed = font.render(killed_text_f, 1, Colours.WHITE)
-        fired = font.render(fired_text_f, 1, Colours.WHITE)
-        accuracy = font.render(accuracy_text_f, 1, Colours.WHITE)
-        level = font.render(level_text_f, 1, Colours.WHITE)
-        high_score = font.render(high_score_text_f, 1, Colours.WHITE)
+        font_ = pygame.font.SysFont('Courier', font_size)
+        killed = font_.render(killed_text_f, 1, Colours.WHITE)
+        fired = font_.render(fired_text_f, 1, Colours.WHITE)
+        accuracy = font_.render(accuracy_text_f, 1, Colours.WHITE)
+        level = font_.render(level_text_f, 1, Colours.WHITE)
+        high_score = font_.render(high_score_text_f, 1, Colours.WHITE)
         font_size -= 1
         if accuracy.get_rect().width < Options.width // 2:
             break
@@ -230,7 +226,7 @@ class NextRoundCountdown:
         pygame.draw.arc(screen, self.colour, rect, start_angle, end_angle,
                         diameter // 5)
         time_left = (self.finished - self.time_passed) / Options.fps
-        formatted = locale.format('%0.1f', time_left)
+        formatted = '{0:.1f}'.format(time_left)
         text_ = get_text('info', 'next_round').format(formatted)
         rendered = text_render(text_)
         if NextRoundCountdown.text_x is None:
@@ -240,6 +236,7 @@ class NextRoundCountdown:
 
 
 if __name__ == '__main__':
+    misc_screen = pygame.display.set_mode((Options.width, Options.height))
     game_over(misc_screen, 1)
     import doctest
     doctest.testmod()
