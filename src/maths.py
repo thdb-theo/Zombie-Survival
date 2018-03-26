@@ -41,7 +41,7 @@ class Vector:
     >>> a, b = Vector(0, 1), Vector(0, -1)
     >>> assert a != b"""
 
-    __slots__ = 'x', 'y'
+    __slots__ = "x", "y"
 
     def __init__(self, x, y):
         self.x = x
@@ -58,11 +58,11 @@ class Vector:
             elif name == 1 or name == -1:
                 return self.y
             else:
-                raise IndexError('Index out of range')
+                raise IndexError("Index out of range")
         elif isinstance(name, str):
             return getattr(self, name)
         else:
-            raise TypeError('name must be str or int')
+            raise TypeError("name must be str or int")
 
     def __setitem__(self, name, value):
         if isinstance(name, int):
@@ -71,11 +71,11 @@ class Vector:
             elif name == 1 or name == -1:
                 self.y = value
             else:
-                raise IndexError('Index out of range')
+                raise IndexError("Index out of range")
         elif isinstance(name, str):
             setattr(self, name, value)
         else:
-            raise TypeError('name must be str or int')
+            raise TypeError("name must be str or int")
         return self
 
     def __iter__(self):
@@ -89,10 +89,10 @@ class Vector:
         return item == self.x or item == self.y
 
     def __repr__(self):
-        return 'Vector(x=%s, y=%s)' % (self.x, self.y)
+        return "Vector(x=%s, y=%s)" % (self.x, self.y)
 
     def __str__(self):
-        return '<%s, %s>' % (self.x, self.y)
+        return "<%s, %s>" % (self.x, self.y)
 
     def __eq__(self, other):
         return self.x == other[0] and self.y == other[1]
@@ -101,7 +101,7 @@ class Vector:
         return self.x != other[0] or self.y != other[1]
 
     def __add__(self, other):
-        if hasattr(other, '__getitem__'):
+        if hasattr(other, "__getitem__"):
             return Vector(self.x + other[0], self.y + other[1])
         else:
             return Vector(self.x + other, self.y + other)
@@ -109,7 +109,7 @@ class Vector:
     __radd__ = __add__
 
     def __iadd__(self, other):
-        if hasattr(other, '__getitem__'):
+        if hasattr(other, "__getitem__"):
             self.x += other[0]
             self.y += other[1]
         else:
@@ -118,19 +118,19 @@ class Vector:
         return self
 
     def __sub__(self, other):
-        if hasattr(other, '__getitem__'):
+        if hasattr(other, "__getitem__"):
             return Vector(self.x - other[0], self.y - other[1])
         else:
             return Vector(self.x - other, self.y - other)
 
     def __rsub__(self, other):
-        if hasattr(other, '__getitem__'):
+        if hasattr(other, "__getitem__"):
             return Vector(other[0] - self.x, other[1] - self.y)
         else:
             return Vector(other - self.x, other - self.y)
 
     def __isub__(self, other):
-        if hasattr(other, '__getitem__'):
+        if hasattr(other, "__getitem__"):
             self.x -= other[0]
             self.y -= other[1]
         else:
@@ -176,7 +176,7 @@ class Vector:
 
     def magnitude(self):
         """returns length of vector
-        Pythagoras' theorem to find the length
+        Pythagoras" theorem to find the length
         Vector(6, 8).magnitude() = √(6² + 8²) = √100 = 10
         >>> Vector(3, 4).magnitude()
         5.0"""
@@ -217,15 +217,15 @@ class Vector:
         return math.atan2(self.y, self.x)
 
 
-if __name__ == '__main__':
-    # import doctest
-    # doctest.testmod()
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
     from functools import reduce
     from operator import add
     v = Vector(-3, 2)
     u = Vector(2, -1)
     print(reduce(add, [v, u]))
     print(reduce(add, [u, v]))
-    # print(sum(v, u))
-    # print(sum(u, v))
+    print(sum(v, u))
+    print(sum(u, v))
 

@@ -26,24 +26,24 @@ class PickUp(BaseClass):
     >>> tile = Tile.instances[PickUp.spawn_tiles[0]]
     >>> a = PickUp(*tile.pos, PickUp.spawn_tiles[0], type_=0.9)
     >>> a.type
-    'health'
+    "health"
 
     TODO: Add more pick ups"""
 
     with open(Options.mappath) as file:
         spawn_tiles = [
-            i for i, x in enumerate(file.read().replace('\n', '')) if x == 'P'
+            i for i, x in enumerate(file.read().replace("\n", "")) if x == "P"
         ]
 
     init_round, left_round = 4, 4
     zombie_init_round = None
 
-    images = {'ammo': scale(pygame.image.load('assets/Images/PickUps/ammo.png')),
-              'health': scale(pygame.image.load('assets/Images/PickUps/health.png'))}
-    sounds = {'ammo': pygame.mixer.Sound('assets/Audio/PickUp/ammo_short.ogg'),
-              'health': pygame.mixer.Sound('assets/Audio/PickUp/health.ogg')}
-    sounds['ammo'].set_volume(Options.volume)
-    sounds['health'].set_volume(Options.volume)
+    images = {"ammo": scale(pygame.image.load("assets/Images/PickUps/ammo.png")),
+              "health": scale(pygame.image.load("assets/Images/PickUps/health.png"))}
+    sounds = {"ammo": pygame.mixer.Sound("assets/Audio/PickUp/ammo_short.ogg"),
+              "health": pygame.mixer.Sound("assets/Audio/PickUp/health.ogg")}
+    sounds["ammo"].set_volume(Options.volume)
+    sounds["health"].set_volume(Options.volume)
     instances = set()
 
     def __init__(self, x, y, spawn_tile, type_):
@@ -51,7 +51,7 @@ class PickUp(BaseClass):
         PickUp.instances.add(self)
         self.incr = randint(20, 35)
         self.spawn_tile = spawn_tile
-        self.type = 'ammo' if type_ < 2 / 3 else 'health'
+        self.type = "ammo" if type_ < 2 / 3 else "health"
         PickUp.spawn_tiles.remove(spawn_tile)
 
     @classmethod
@@ -59,7 +59,7 @@ class PickUp(BaseClass):
         _further_than = partial(further_than, survivor=survivor, min_dist=150)
         pos_spawn_tiles = list(filter(_further_than, cls.spawn_tiles))
         if not pos_spawn_tiles:  # If no pick-up spawn is far enough away
-            if not cls.spawn_tiles:  # If all pick-up spawns are occupied, don't spawn
+            if not cls.spawn_tiles:  # If all pick-up spawns are occupied, don"t spawn
                 return
             pos_spawn_tiles.extend(cls.spawn_tiles)
         cls.left_round -= 1
@@ -92,7 +92,7 @@ class PickUp(BaseClass):
         cls.instances -= del_pick_up
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     Tile.create()
     import doctest
     doctest.testmod()

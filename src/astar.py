@@ -8,7 +8,7 @@ class AStar:
     NSEW = -Options.tiles_x, Options.tiles_x, 1, -1  # Add to find tile in a direction
 
     def __init__(self, zombie, survivor):
-        for tile in Tile.instances:  # Reset from last search
+        for tile in Tile.opens:  # Reset from last search
             tile.parent = None
             tile.h, tile.f, tile.g = 0, 0, 0
         zombie.path = []
@@ -18,7 +18,7 @@ class AStar:
         self.zombie = zombie
         self.start = zombie.get_tile()
         self.end = survivor.get_tile()
-        if 'trans' in Drop.actives:
+        if "trans" in Drop.actives:
             self.end = self.end.closest_open_tile()
             if self.end is self.start:
                 self.solve = lambda *_: None  # overwrite solve and make the zombie stay
@@ -48,6 +48,7 @@ class AStar:
     def solve(self):
         while self.open and self.end not in self.closed:
             f, cell = heapq.heappop(self.open)
+            assert cell.walkable
             self.closed.add(cell)
             neighbours = self.get_neighbours(cell)
             for neighbour in neighbours:
@@ -66,6 +67,6 @@ class AStar:
         self.zombie.set_target(child)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import doctest
     doctest.testmod()

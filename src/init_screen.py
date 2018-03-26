@@ -9,20 +9,20 @@ from options import Options, Colours
 
 try:
     import pyqt_settings as _
-except ModuleNotFoundError:
-    settings_module = 'settings'
+except ImportError:
+    settings_module = "settings"
 else:
-    settings_module = 'settings' if Options.tk else 'pyqt_settings'
+    settings_module = "settings" if Options.tk else "pyqt_settings"
 
 settings = __import__(settings_module)
 # if pyqt is successfull use pyqt unless Options.tk is True. If pyqt is unsuccessfull use tkinter
 
 
-data = json.load(open('src/screen_text.json'))
+data = json.load(open("src/screen_text.json"))
 
 
 def get_text(name):
-    return data['init'][name][Options.language]
+    return data["init"][name][Options.language]
 
 
 def middle_of_screen(text):
@@ -32,13 +32,13 @@ def middle_of_screen(text):
 def main():
     screen = pygame.display.set_mode(Options.screen_size)
     clock = pygame.time.Clock()
-    intro_img = pygame.image.load('assets/Images/Other/intro.jpg')
+    intro_img = pygame.image.load("assets/Images/Other/intro.jpg")
     scaled_intro_img = pygame.transform.scale(intro_img, (Options.width, Options.height))
-    move_text = get_text('move')
-    shoot_text = get_text('shoot')
-    weapon_text = get_text('weapon')
-    settings_text = get_text('settings_')
-    begin_text = get_text('begin')
+    move_text = get_text("move")
+    shoot_text = get_text("shoot")
+    weapon_text = get_text("weapon")
+    settings_text = get_text("settings_")
+    begin_text = get_text("begin")
     ctrl_font_size = 100
     title_font_size = 100
 
@@ -46,7 +46,7 @@ def main():
     y_interval = Options.height // 6
     title_y = Options.height // 15
     while ctrl_font_size > 0:
-        ctrl_font = pygame.font.Font('assets/Fonts/ModifiedDeadFontWalking.otf', ctrl_font_size)
+        ctrl_font = pygame.font.Font("assets/Fonts/ModifiedDeadFontWalking.otf", ctrl_font_size)
         move = ctrl_font.render(move_text, 1, Colours.WHITE)
         shoot = ctrl_font.render(shoot_text, 1, Colours.WHITE)
         weapon = ctrl_font.render(weapon_text, 1, Colours.WHITE)
@@ -57,16 +57,16 @@ def main():
             break
     else:  # No break
         pygame.quit()
-        raise OverflowError('Couldn\'t fit ctrltext on screen')
+        raise OverflowError("Couldn\"t fit ctrltext on screen")
     while title_font_size > 0:
-        title_font = pygame.font.Font('assets/Fonts/Halo3.ttf', title_font_size)
-        title = title_font.render(' Zombie Survival ', 1, Colours.WHITE)
+        title_font = pygame.font.Font("assets/Fonts/Halo3.ttf", title_font_size)
+        title = title_font.render(" Zombie Survival ", 1, Colours.WHITE)
         title_font_size -= 1
         if title.get_rect().width < Options.width:
             break
     else:
         pygame.quit()
-        raise OverflowError('Couldn\'t fit titletext on screen')
+        raise OverflowError("Couldn\"t fit titletext on screen")
 
     while True:
         for event in pygame.event.get():
@@ -108,5 +108,5 @@ def main():
         clock.tick(10)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

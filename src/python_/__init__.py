@@ -15,7 +15,7 @@ def angle_between(x1, y1, x2, y2):
     >>> angle_between(v1, v2)
     0.6202494859828215
 
-    NB: Takes in mind pygame's flipped y-axis
+    NB: Takes in mind pygame"s flipped y-axis
     angles appears anti-clockwise on normal coordinate systems
     Examples:
     >>> angle_between(Vector(1, 0), Vector(1, 1))
@@ -41,7 +41,7 @@ def collide(x1, y1, w1, h1, x2, y2, w2, h2):
        True
 
        True if rect1 and rect2 are identical
-       >>> a = 0, 0, 1, 1)
+       >>> a = 0, 0, 1, 1
        >>> collide(a, a)
        True
 
@@ -62,3 +62,7 @@ def collide(x1, y1, w1, h1, x2, y2, w2, h2):
        False"""
     return ((x1 + w1 > x2) and (y1 < y2 + h2) and
             (y1 + h1 > y2) and (x1 < x2 + w2))
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()

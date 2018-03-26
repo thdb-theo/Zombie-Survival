@@ -3,12 +3,12 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {
-        "name": "zs.cython_.collide",
+        "name": "src.cython_.collide",
         "sources": [
-            "collide.pyx"
+            "src/cython_/collide.pyx"
         ]
     },
-    "module_name": "zs.cython_.collide"
+    "module_name": "src.cython_.collide"
 }
 END: Cython Metadata */
 
@@ -522,8 +522,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__zs__cython___collide
-#define __PYX_HAVE_API__zs__cython___collide
+#define __PYX_HAVE__src__cython___collide
+#define __PYX_HAVE_API__src__cython___collide
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -727,7 +727,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "collide.pyx",
+  "src\\cython_\\collide.pyx",
 };
 
 /*--- Type declarations ---*/
@@ -908,12 +908,12 @@ static int __Pyx_check_binary_version(void);
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 
-/* Module declarations from 'zs.cython_.collide' */
-static int __pyx_f_2zs_9cython__7collide_collide(int, int, int, int, int, int, int, int, int __pyx_skip_dispatch); /*proto*/
-#define __Pyx_MODULE_NAME "zs.cython_.collide"
-int __pyx_module_is_main_zs__cython___collide = 0;
+/* Module declarations from 'src.cython_.collide' */
+static int __pyx_f_3src_7cython__7collide_collide(int, int, int, int, int, int, int, int, int __pyx_skip_dispatch); /*proto*/
+#define __Pyx_MODULE_NAME "src.cython_.collide"
+int __pyx_module_is_main_src__cython___collide = 0;
 
-/* Implementation of 'zs.cython_.collide' */
+/* Implementation of 'src.cython_.collide' */
 static const char __pyx_k_h1[] = "h1";
 static const char __pyx_k_h2[] = "h2";
 static const char __pyx_k_w1[] = "w1";
@@ -940,23 +940,23 @@ static PyObject *__pyx_n_s_x1;
 static PyObject *__pyx_n_s_x2;
 static PyObject *__pyx_n_s_y1;
 static PyObject *__pyx_n_s_y2;
-static PyObject *__pyx_pf_2zs_9cython__7collide_collide(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_x1, int __pyx_v_y1, int __pyx_v_w1, int __pyx_v_h1, int __pyx_v_x2, int __pyx_v_y2, int __pyx_v_w2, int __pyx_v_h2); /* proto */
+static PyObject *__pyx_pf_3src_7cython__7collide_collide(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_x1, int __pyx_v_y1, int __pyx_v_w1, int __pyx_v_h1, int __pyx_v_x2, int __pyx_v_y2, int __pyx_v_w2, int __pyx_v_h2); /* proto */
 
-/* "zs/cython_/collide.pyx":1
+/* "src/cython_/collide.pyx":1
  * cpdef bint collide(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2):             # <<<<<<<<<<<<<<
  *     """Return True if self and other overlap else False
  *        Returns False if self and other are side by side
  */
 
-static PyObject *__pyx_pw_2zs_9cython__7collide_1collide(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_f_2zs_9cython__7collide_collide(int __pyx_v_x1, int __pyx_v_y1, int __pyx_v_w1, int __pyx_v_h1, int __pyx_v_x2, int __pyx_v_y2, int __pyx_v_w2, int __pyx_v_h2, CYTHON_UNUSED int __pyx_skip_dispatch) {
+static PyObject *__pyx_pw_3src_7cython__7collide_1collide(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_f_3src_7cython__7collide_collide(int __pyx_v_x1, int __pyx_v_y1, int __pyx_v_w1, int __pyx_v_h1, int __pyx_v_x2, int __pyx_v_y2, int __pyx_v_w2, int __pyx_v_h2, CYTHON_UNUSED int __pyx_skip_dispatch) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("collide", 0);
 
-  /* "zs/cython_/collide.pyx":34
+  /* "src/cython_/collide.pyx":34
  *        >>> b.collide(a)
  *        False"""
  *     return ((x1 + w1 > x2) and (y1 < y2 + h2) and             # <<<<<<<<<<<<<<
@@ -975,7 +975,7 @@ static int __pyx_f_2zs_9cython__7collide_collide(int __pyx_v_x1, int __pyx_v_y1,
     goto __pyx_L3_bool_binop_done;
   }
 
-  /* "zs/cython_/collide.pyx":35
+  /* "src/cython_/collide.pyx":35
  *        False"""
  *     return ((x1 + w1 > x2) and (y1 < y2 + h2) and
  *             (y1 + h1 > y2) and (x1 < x2 + w2))             # <<<<<<<<<<<<<<
@@ -992,7 +992,7 @@ static int __pyx_f_2zs_9cython__7collide_collide(int __pyx_v_x1, int __pyx_v_y1,
   __pyx_r = __pyx_t_1;
   goto __pyx_L0;
 
-  /* "zs/cython_/collide.pyx":1
+  /* "src/cython_/collide.pyx":1
  * cpdef bint collide(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2):             # <<<<<<<<<<<<<<
  *     """Return True if self and other overlap else False
  *        Returns False if self and other are side by side
@@ -1005,9 +1005,9 @@ static int __pyx_f_2zs_9cython__7collide_collide(int __pyx_v_x1, int __pyx_v_y1,
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2zs_9cython__7collide_1collide(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_2zs_9cython__7collide_collide[] = "Return True if self and other overlap else False\n       Returns False if self and other are side by side\n\n       Examples:\n       True if self and other partially covers eachother\n       >>> a = BaseClass(x=0, y=0, width=10, height=10)\n       >>> b = BaseClass(x=9, y=9, width=10, height=10)\n       >>> a.collide(b)\n       True\n       >>> b.collide(a)\n       True\n\n       True if self and other are identical\n       >>> a = BaseClass(x=0, y=0, width=None, height=None)\n       >>> a.collide(a)\n       True\n\n       True if self or other entirely incaptures the other\n       >>> a = BaseClass(x=0, y=0, width=3, height=3)\n       >>> b = BaseClass(x=1, y=1, width=1, height=1)\n       >>> a.collide(b)\n       True\n       >>> b.collide(a)\n       True\n\n       False if self and other are side by side\n       >>> a = BaseClass(x=0, y=0, width=10, height=10)\n       >>> b = BaseClass(x=10, y=0, width=10, height=10)\n       >>> a.collide(b)\n       False\n       >>> b.collide(a)\n       False";
-static PyObject *__pyx_pw_2zs_9cython__7collide_1collide(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_3src_7cython__7collide_1collide(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_3src_7cython__7collide_collide[] = "Return True if self and other overlap else False\n       Returns False if self and other are side by side\n\n       Examples:\n       True if self and other partially covers eachother\n       >>> a = BaseClass(x=0, y=0, width=10, height=10)\n       >>> b = BaseClass(x=9, y=9, width=10, height=10)\n       >>> a.collide(b)\n       True\n       >>> b.collide(a)\n       True\n\n       True if self and other are identical\n       >>> a = BaseClass(x=0, y=0, width=None, height=None)\n       >>> a.collide(a)\n       True\n\n       True if self or other entirely incaptures the other\n       >>> a = BaseClass(x=0, y=0, width=3, height=3)\n       >>> b = BaseClass(x=1, y=1, width=1, height=1)\n       >>> a.collide(b)\n       True\n       >>> b.collide(a)\n       True\n\n       False if self and other are side by side\n       >>> a = BaseClass(x=0, y=0, width=10, height=10)\n       >>> b = BaseClass(x=10, y=0, width=10, height=10)\n       >>> a.collide(b)\n       False\n       >>> b.collide(a)\n       False";
+static PyObject *__pyx_pw_3src_7cython__7collide_1collide(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   int __pyx_v_x1;
   int __pyx_v_y1;
   int __pyx_v_w1;
@@ -1121,24 +1121,24 @@ static PyObject *__pyx_pw_2zs_9cython__7collide_1collide(PyObject *__pyx_self, P
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("collide", 1, 8, 8, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 1, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("zs.cython_.collide.collide", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.cython_.collide.collide", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2zs_9cython__7collide_collide(__pyx_self, __pyx_v_x1, __pyx_v_y1, __pyx_v_w1, __pyx_v_h1, __pyx_v_x2, __pyx_v_y2, __pyx_v_w2, __pyx_v_h2);
+  __pyx_r = __pyx_pf_3src_7cython__7collide_collide(__pyx_self, __pyx_v_x1, __pyx_v_y1, __pyx_v_w1, __pyx_v_h1, __pyx_v_x2, __pyx_v_y2, __pyx_v_w2, __pyx_v_h2);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2zs_9cython__7collide_collide(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_x1, int __pyx_v_y1, int __pyx_v_w1, int __pyx_v_h1, int __pyx_v_x2, int __pyx_v_y2, int __pyx_v_w2, int __pyx_v_h2) {
+static PyObject *__pyx_pf_3src_7cython__7collide_collide(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_x1, int __pyx_v_y1, int __pyx_v_w1, int __pyx_v_h1, int __pyx_v_x2, int __pyx_v_y2, int __pyx_v_w2, int __pyx_v_h2) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("collide", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_f_2zs_9cython__7collide_collide(__pyx_v_x1, __pyx_v_y1, __pyx_v_w1, __pyx_v_h1, __pyx_v_x2, __pyx_v_y2, __pyx_v_w2, __pyx_v_h2, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_f_3src_7cython__7collide_collide(__pyx_v_x1, __pyx_v_y1, __pyx_v_w1, __pyx_v_h1, __pyx_v_x2, __pyx_v_y2, __pyx_v_w2, __pyx_v_h2, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -1147,7 +1147,7 @@ static PyObject *__pyx_pf_2zs_9cython__7collide_collide(CYTHON_UNUSED PyObject *
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("zs.cython_.collide.collide", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.cython_.collide.collide", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1156,7 +1156,7 @@ static PyObject *__pyx_pf_2zs_9cython__7collide_collide(CYTHON_UNUSED PyObject *
 }
 
 static PyMethodDef __pyx_methods[] = {
-  {"collide", (PyCFunction)__pyx_pw_2zs_9cython__7collide_1collide, METH_VARARGS|METH_KEYWORDS, __pyx_doc_2zs_9cython__7collide_collide},
+  {"collide", (PyCFunction)__pyx_pw_3src_7cython__7collide_1collide, METH_VARARGS|METH_KEYWORDS, __pyx_doc_3src_7cython__7collide_collide},
   {0, 0, 0, 0}
 };
 
@@ -1344,14 +1344,14 @@ static int __pyx_pymod_exec_collide(PyObject *__pyx_pyinit_module)
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_zs__cython___collide) {
+  if (__pyx_module_is_main_src__cython___collide) {
     if (PyObject_SetAttrString(__pyx_m, "__name__", __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "zs.cython_.collide")) {
-      if (unlikely(PyDict_SetItemString(modules, "zs.cython_.collide", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "src.cython_.collide")) {
+      if (unlikely(PyDict_SetItemString(modules, "src.cython_.collide", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -1371,7 +1371,7 @@ static int __pyx_pymod_exec_collide(PyObject *__pyx_pyinit_module)
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "zs/cython_/collide.pyx":1
+  /* "src/cython_/collide.pyx":1
  * cpdef bint collide(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2):             # <<<<<<<<<<<<<<
  *     """Return True if self and other overlap else False
  *        Returns False if self and other are side by side
@@ -1389,11 +1389,11 @@ static int __pyx_pymod_exec_collide(PyObject *__pyx_pyinit_module)
   __Pyx_XDECREF(__pyx_t_1);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init zs.cython_.collide", 0, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init src.cython_.collide", 0, __pyx_lineno, __pyx_filename);
     }
     Py_DECREF(__pyx_m); __pyx_m = 0;
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init zs.cython_.collide");
+    PyErr_SetString(PyExc_ImportError, "init src.cython_.collide");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

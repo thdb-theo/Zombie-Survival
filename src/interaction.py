@@ -15,14 +15,14 @@ from tile import Tile
 from drop import full_ammo, Drop
 
 
-def walking(survivor, keys, screen):
+def walking(survivor, keys):
     if survivor.to is not None:  # If the survivor is between two tiles
         return
     if keys[pygame.K_w]:  # North
         future_tile_num = survivor.get_number() - Options.tiles_x
         if Tile.on_screen(0, future_tile_num):
             future_tile = Tile.instances[future_tile_num]
-            if future_tile.walkable or 'trans' in Drop.actives:
+            if future_tile.walkable or "trans" in Drop.actives:
                 survivor.set_target(future_tile)
                 survivor.rotate(pi / 2)
                 survivor.vel = Vector(0, -Options.speed)
@@ -31,7 +31,7 @@ def walking(survivor, keys, screen):
         future_tile_num = survivor.get_number() + Options.tiles_x
         if Tile.on_screen(1, future_tile_num):
             future_tile = Tile.instances[future_tile_num]
-            if future_tile.walkable or 'trans' in Drop.actives:
+            if future_tile.walkable or "trans" in Drop.actives:
                 survivor.set_target(future_tile)
                 survivor.rotate(pi * 3 / 2)
                 survivor.vel = Vector(0, Options.speed)
@@ -40,7 +40,7 @@ def walking(survivor, keys, screen):
         future_tile_num = survivor.get_number() + 1
         if Tile.on_screen(2, future_tile_num):
             future_tile = Tile.instances[future_tile_num]
-            if future_tile.walkable or 'trans' in Drop.actives:
+            if future_tile.walkable or "trans" in Drop.actives:
                 survivor.set_target(future_tile)
                 survivor.rotate(0)
                 survivor.vel = Vector(Options.speed, 0)
@@ -49,7 +49,7 @@ def walking(survivor, keys, screen):
         future_tile_num = survivor.get_number() - 1
         if Tile.on_screen(3, future_tile_num):
             future_tile = Tile.instances[future_tile_num]
-            if future_tile.walkable or 'trans' in Drop.actives:
+            if future_tile.walkable or "trans" in Drop.actives:
                 survivor.set_target(future_tile)
                 survivor.rotate(pi)
                 survivor.vel = Vector(-Options.speed, 0)
@@ -61,7 +61,7 @@ def other(screen, survivor):
             pygame.quit()
             sys.exit()
         if event.type == pygame.KEYDOWN:
-            logging.debug('key %s', pygame.key.name(event.key))
+            logging.debug("key %s", pygame.key.name(event.key))
             if event.key == pygame.K_e:
                 survivor.current_gun += 1
                 survivor.current_gun %= 4  # loop 0, 1, 2, 3
@@ -99,5 +99,5 @@ def shooting(survivor, keys):
 def interaction(screen, survivor):
     other(screen, survivor)
     keys = pygame.key.get_pressed()
-    walking(survivor, keys, screen)
+    walking(survivor, keys)
     shooting(survivor, keys)

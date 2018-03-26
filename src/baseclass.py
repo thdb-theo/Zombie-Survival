@@ -51,7 +51,7 @@ def get_number(pos):
     return x // Tile.length + y // Tile.length * Options.tiles_x
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import doctest
     doctest.testmod()
     from timeit import timeit
@@ -62,4 +62,4 @@ a = BaseClass(45, 91)
 b = BaseClass(45, 90)
 Options = Tile.instances[34]
 """
-    print(timeit('a.collide(b)', setup=setup))
+    print(timeit("a.collide(b)", setup=setup))

@@ -1,7 +1,7 @@
 import unittest
 import sys
 import os
-sys.path.insert(0, os.getcwd() + '/src')
+sys.path.insert(0, os.getcwd() + "/src")
 from tile import Tile
 from maths import Vector
 
@@ -26,10 +26,10 @@ class TileTest(unittest.TestCase):
 
     def test_funcs(self):
         a = Tile.instances[0]
-        self.assertTrue(hasattr(a, '__hash__'))
+        self.assertTrue(hasattr(a, "__hash__"))
         b = Tile.instances[1]
         self.assertTrue(b > a)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

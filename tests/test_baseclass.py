@@ -1,7 +1,7 @@
 import unittest
 import sys
 import os
-sys.path.insert(0, os.getcwd() + '/src')
+sys.path.insert(0, os.getcwd() + "/src")
 from baseclass import BaseClass
 from tile import Tile
 from maths import Vector
@@ -33,5 +33,5 @@ class BaseClassTest(unittest.TestCase):
         self.assertIs(b.get_tile(), Tile.instances[0])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

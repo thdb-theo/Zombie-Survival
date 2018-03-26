@@ -29,17 +29,17 @@ class Bullet(BaseClass):
     width, height = 7, 9
     instances = set()
     images = (
-        scale(pygame.image.load('assets/Images/Bullets/pistol_b.png'), Tile.size.scale(1/3, 1/5)),
-        scale(pygame.image.load('assets/Images/Bullets/shotgun_b2.png'), Tile.size.scale(1/3, 1/5)),
-        scale(pygame.image.load('assets/Images/Bullets/automatic_b.png'), Tile.size.scale(1/3, 1/5)),
-        scale(pygame.image.load('assets/Images/Bullets/sniper_b2.png'), Tile.size.scale(1/3, 1/5))
+        scale(pygame.image.load("assets/Images/Bullets/pistol_b.png"), Tile.size.scale(1/3, 1/5)),
+        scale(pygame.image.load("assets/Images/Bullets/shotgun_b2.png"), Tile.size.scale(1/3, 1/5)),
+        scale(pygame.image.load("assets/Images/Bullets/automatic_b.png"), Tile.size.scale(1/3, 1/5)),
+        scale(pygame.image.load("assets/Images/Bullets/sniper_b2.png"), Tile.size.scale(1/3, 1/5))
     )
 
     sounds = (
-        pygame.mixer.Sound('assets/Audio/Gunshots/pistol.wav'),
-        pygame.mixer.Sound('assets/Audio/Gunshots/shotgun2.wav'),
-        pygame.mixer.Sound('assets/Audio/Gunshots/automatic.wav'),
-        pygame.mixer.Sound('assets/Audio/Gunshots/sniper.wav')
+        pygame.mixer.Sound("assets/Audio/Gunshots/pistol.wav"),
+        pygame.mixer.Sound("assets/Audio/Gunshots/shotgun2.wav"),
+        pygame.mixer.Sound("assets/Audio/Gunshots/automatic.wav"),
+        pygame.mixer.Sound("assets/Audio/Gunshots/sniper.wav")
     )
     for sound in sounds:
         sound.set_volume(Options.volume / 2)
@@ -60,12 +60,12 @@ class Bullet(BaseClass):
 
     def __init__(self, pos, vel, type_, survivor):
         if survivor.ammo_count[type_] <= 0:
-            return  # Don't create bullet if there is no ammo
+            return  # Don"t create bullet if there is no ammo
         try:
             dist = (Bullet.last_bullet[1] - Bullet.last_bullet[0]).magnitude()
             if Bullet.min_bullet_dist[type_] >= dist:
-                return  # Don't create bullet if last_bullet is too close
-        except TypeError:  # If Bulle.last_bullet hasn't been updated yet. 1st bullet
+                return  # Don"t create bullet if last_bullet is too close
+        except TypeError:  # If Bulle.last_bullet hasn"t been updated yet. 1st bullet
             dist = None
 
         Bullet.sounds[type_].play()
@@ -76,13 +76,13 @@ class Bullet(BaseClass):
         self.dmg_drop = 1
         self.hits = set()
         Bullet.instances.add(self)
-        stats['Bullets Fired'] += 1
+        stats["Bullets Fired"] += 1
         self.vel_as_signs = vel.signs()  # Eg. (-3, 0) -> (-1, 0)
         self.img = Bullet.vel2img[self.vel_as_signs](Bullet.images[type_])
         super().__init__(*pos, Bullet.width, Bullet.height)
         Bullet.last_bullet = pos, pos.copy(), vel
-        logging.debug('pos: %s, vel: %s, type: %s, dist: %s, last_bullet: %s, sign: %s' +
-                      'survivor pos: %s',
+        logging.debug("pos: %s, vel: %s, type: %s, dist: %s, last_bullet: %s, sign: %s" +
+                      "survivor pos: %s",
                       pos, vel, type_, dist, Bullet.last_bullet, self.vel_as_signs, survivor.pos)
 
     def offscreen(self):
@@ -95,7 +95,7 @@ class Bullet(BaseClass):
         dist = (self.orgpos - self.pos).magnitude()
         dmg = Bullet.dmg_func[self.type](dist)
         dmg *= self.dmg_drop
-        dmg *= 4 if ('quad' in Drop.actives) else 1
+        dmg *= 4 if "quad" in Drop.actives else 1
         return dmg
 
     @classmethod
@@ -110,7 +110,7 @@ class Bullet(BaseClass):
             bullet.pos += bullet.vel
             screen.blit(bullet.img, bullet.pos)
 
-            if get_number(bullet.pos + bullet.vel) in Tile.solid_nums and 'trans' not in Drop.actives \
+            if get_number(bullet.pos + bullet.vel) in Tile.solid_nums and "trans" not in Drop.actives \
                     or bullet.offscreen():
                 del_bullets.add(bullet)
                 del bullet
@@ -120,12 +120,12 @@ class Bullet(BaseClass):
                     dmg = bullet.calc_dmg()
                     assert dmg > 0
                     zombie.health -= dmg
-                    logging.debug('type %s, dmg %s, dmg_drop %s, zh %s, 4xd: %s',
+                    logging.debug("type %s, dmg %s, dmg_drop %s, zh %s, 4xd: %s",
                                   bullet.type, dmg, bullet.dmg_drop, zombie.health,
-                                  'quad' in Drop.actives)
+                                  "quad" in Drop.actives)
                     bullet.dmg_drop /= 1.1
                     if not bullet.hits:
-                        stats['Bullets Hit'] += 1
+                        stats["Bullets Hit"] += 1
                     bullet.hits.add(zombie)
 
         cls.instances -= del_bullets

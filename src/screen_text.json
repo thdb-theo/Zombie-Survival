@@ -139,6 +139,10 @@
     "next_round": {
       "norsk": "Neste runde starter om {} sekunder",
       "english": "Next round starts in {} seconds"
+    },
+    "next_round_1_sec": {
+      "norsk": "Neste runde starter om 1 sekund",
+      "english": "Next round starts in 1 second"
     }
   },
   "game_over": {

@@ -4,13 +4,13 @@ from collections import namedtuple
 from random import randint, random
 import sys
 import os
-sys.path.insert(0, os.getcwd() + '/src')
+sys.path.insert(0, os.getcwd() + "/src")
 from cython_ import angle_between as cyangle_between, collide as cycollide
 from python_ import angle_between as pyangle_between, collide as pycollide
 
 
-rect = namedtuple('rect', 'x y w h')
-point = namedtuple('point', 'x y')
+rect = namedtuple("rect", "x y w h")
+point = namedtuple("point", "x y")
 
 
 class TestCython(unittest.TestCase):
@@ -37,5 +37,5 @@ class TestCython(unittest.TestCase):
         self.assertEqual(cyangle_between(*a, *b), math.pi * 3 / 2)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
