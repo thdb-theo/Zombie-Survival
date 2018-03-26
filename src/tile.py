@@ -30,7 +30,7 @@ class Tile:
 
     with open(Options.mappath) as file:
         file_str = file.read()
-        map_ = [x == '#' for x in file_str.replace('\n', '')]
+        map_ = [x == "#" for x in file_str.replace("\n", "")]
 
     solid_nums = {i for i, x in enumerate(map_) if x}
     # Set of the indices of all solid tiles
@@ -38,12 +38,15 @@ class Tile:
     @classmethod
     def create(cls):
         """Create tiles and set some class variables when finished"""
-        error_msg = """len(cls.map_) is not equal to the amount of 
+        error_msg = """len(cls.map_) is not equal to the amount of
         tiles vertically multiplied by the amount of tiles horizontally.
 
         This is usually caused by tile.py being initiated before
         init_screen.py or options.py.
-        note that tile.py is initiated by e.g. miscellaneous.py"""
+        note that tile.py is initiated by e.g. miscellaneous.py
+        
+        It could also be caused by the map file having a blank line at
+        the end, or some lines are longer than others."""
         assert len(cls.map_) == Options.tiles_x * Options.tiles_y, dedent(error_msg)
         map_gen = iter(cls.map_)
         for y in range(0, Options.height, cls.length):
@@ -74,10 +77,11 @@ class Tile:
            v
         {(tile.Tile object at 0x0..., 2), (tile.Tile ..., 3), (tile.Tile ..., 4), (tile.Tile ..., 1)}
         It ignores open tiles
+        It is not necessary to compress opens since they are drawn by
+        filling the screen.
 
         NOTE: A new group starts at a newline
         TODO: Make it so the loop_list is the type of tile with the fewest intances
-
         rtype: set
         """
 
@@ -127,7 +131,7 @@ class Tile:
         return self is other
 
     def __str__(self):
-        return 'Tile: pos=%s, num=%s, walkable=%s' \
+        return "Tile: pos=%s, num=%s, walkable=%s" \
                % (self.pos, self.number, self.walkable)
 
     @classmethod
@@ -144,12 +148,14 @@ class Tile:
         return self.pos + Tile.length // 2
 
     def closest_open_tile(self):
-        return min(Tile.opens, key=lambda x: (self.pos - x.pos).magnitude_squared())
+        return min(Tile.opens,
+                   key=lambda x: (self.pos - x.pos).magnitude_squared())
 
     @classmethod
     def on_screen(cls, direction, tile_num):
         """Return False if the tile is outside of the screen else True
-        A direction is needed as a tile on the right border is outside if the direction is west
+        A direction is needed as a tile on the right border is outside
+        if the direction is west
         Params:
         direction: int of direction in the list NSEW. For example South has index 1.
         tile_num: index of tile in Tile.instances"""
@@ -168,7 +174,7 @@ class Tile:
             draw_rect(screen, loopcolour, (*tile.pos, length * i, length))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     Tile.create()
     import doctest
     doctest.testmod()

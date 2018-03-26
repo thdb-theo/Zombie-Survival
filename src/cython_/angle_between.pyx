@@ -1,4 +1,4 @@
-"""Cython code for function that are import to run fast
+"""Cython code for functions that are important to run fast
 Pure python version is run if import fail"""
 
 

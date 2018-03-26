@@ -1,17 +1,31 @@
-# Zombie Survival 1.4.1
+# Zombie Survival 1.5.0
 
 A simple zombie survival game in pygame, heavily influenced by Call of Duty Zombies, but in 2d.
 
 Tested on Windows and Ubuntu. Works perfectly on Windows, however there are some audio issues on Ubuntu. Perhaps something with .mp3 files?
 
-#### Requirements
+### Installation
 
-* Python 3.x
-* Third Party Libraries:
-  * pygame
-  * cython (optional)
-  * tkinter or PyQt4
-  * https://github.com/j4321/tkColorPicker if PyQt is unavailable
+Clone the package with:
+`git clone <https://github.com/thdb-theo/Zombie-Survival>`
+
+Then enter the folder install the dependencies with `pip install -r requirements.txt`
+
+#### Install PyQt4 for Windows
+
+Download PyQt4 for Python 3.6 64 bit called `PyQt4‑4.11.4‑cp36‑cp36m‑win_amd64.whl` from <https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyqt4>
+
+Then run `pip install PyQt4‑4.11.4‑cp36‑cp36m‑win_amd64.whl`
+
+If you have 32 bit Python, use `PyQt4‑4.11.4‑cp36‑cp36m‑win32.whl`
+
+#### Install PyQt4 for Linux
+
+Run `sudo apt-get install python-qt4`
+
+---
+
+To run the game try running the following: `python src/main.py`
 
 ### Controls
 
@@ -27,7 +41,7 @@ Change weapon with <kbd>e</kbd>
 * Overwatch
 * Resident Evil
 * Team Fortress 2
-* Schwalbe
+* British 4x
 
 #### Sounds and Music
 

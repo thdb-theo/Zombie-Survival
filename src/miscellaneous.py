@@ -1,4 +1,4 @@
-"""various functions that don't fit in any other file"""
+"""various functions that don"t fit in any other file"""
 
 import math
 import sys
@@ -13,13 +13,13 @@ from options import Options, Colours
 from tile import Tile
 
 
-stats = {'Zombies Killed': 0,
-         'Bullets Fired': 0,
-         'Bullets Hit': 0}
+stats = {"Zombies Killed": 0,
+         "Bullets Fired": 0,
+         "Bullets Hit": 0}
 
 clock = pygame.time.Clock()
 
-data = json.load(open('src/screen_text.json'))
+data = json.load(open("src/screen_text.json"))
 
 
 def get_text(area, name):
@@ -46,7 +46,7 @@ new_dir_func = {math.pi / 2: partial(rotate, b=270),
 # transform image from angle in radians
 # Because the zombie image is facing east the rotation angle is π rad less.
 # rotating upwards would be π/2 - π = -π/2 which when is equivalent of rotating by 3π/2
-# because pygame doesn't allow negative angles
+# because pygame doesn"t allow negative angles
 
 
 def rotated(img, new_dir):
@@ -68,18 +68,18 @@ def scale(img, size=Tile.size):
         return pygame.transform.scale(img, size)
 
 
-font = pygame.font.Font('assets/Fonts/ModifiedDeadFontWalking.otf', Options.width // 30)
+font = pygame.font.Font("assets/Fonts/ModifiedDeadFontWalking.otf", Options.width // 30)
 
 text_render = partial(lambda x, y, z: font.render(x, y, z), y=1, z=Colours.WHITE)
-*_, text_width, text_height = text_render('T').get_rect()
+*_, text_width, text_height = text_render("T").get_rect()
 
-lifes_text = get_text('info', 'lifes')
-zombies_left_text = get_text('info', 'zombies_left')
-round_text = get_text('info', 'round')
-ammo_text = get_text('info', 'ammo')
-fps_text = get_text('info', 'fps')
-power_up_text = get_text('info', 'power_up')
-logging.debug('font size: %s, text_height: %s, text_width: %s',
+lifes_text = get_text("info", "lifes")
+zombies_left_text = get_text("info", "zombies_left")
+round_text = get_text("info", "round")
+ammo_text = get_text("info", "ammo")
+fps_text = get_text("info", "fps")
+power_up_text = get_text("info", "power_up")
+logging.debug("font size: %s, text_height: %s, text_width: %s",
               Options.width // 30, text_height, text_width)
 
 
@@ -93,9 +93,9 @@ def text(screen, health, len_zombies, fps, level, ammo, power_ups):
     screen.blit(text_render(round_text_f), (Options.width - text_width * len(round_text_f), 0))
     ammo_text_f = ammo_text.format(ammo)
     screen.blit(text_render(ammo_text_f), (Options.width - text_width * len(ammo_text_f), Options.height - text_height))
-    fps_text_f = fps_text.format('{0:.2f}'.format(fps))
+    fps_text_f = fps_text.format("{0:.2f}".format(fps))
     screen.blit(text_render(fps_text_f), (0, Options.height - text_height))
-    power_up_text_f = power_up_text.format(list(power_ups))
+    power_up_text_f = power_up_text.format([get_text("drops", d) for d in power_ups])
     screen.blit(text_render(power_up_text_f), (0, Options.height - text_height * 2))
 
 
@@ -124,40 +124,40 @@ def game_over(screen, level):
     Display stats and all time high score"""
 
     font_size = 100
-    killed_text = get_text('game_over', 'killed')
-    fired_text = get_text('game_over', 'fired')
-    accuracy_text = get_text('game_over', 'accuracy')
-    level_text = get_text('game_over', 'level')
-    high_score_text = get_text('game_over', 'high_score')
-    killed_text_f = killed_text.format(stats['Zombies Killed'])
-    fired_text_f = fired_text.format(stats['Bullets Fired'])
+    killed_text = get_text("game_over", "killed")
+    fired_text = get_text("game_over", "fired")
+    accuracy_text = get_text("game_over", "accuracy")
+    level_text = get_text("game_over", "level")
+    high_score_text = get_text("game_over", "high_score")
+    killed_text_f = killed_text.format(stats["Zombies Killed"])
+    fired_text_f = fired_text.format(stats["Bullets Fired"])
     try:
-        accuracy_num = stats['Bullets Hit'] / stats['Bullets Fired'] * 100
+        accuracy_num = stats["Bullets Hit"] / stats["Bullets Fired"] * 100
     except ZeroDivisionError:
-        accuracy_num = 0.0
+        accuracy_num = math.nan
     accuracy_text_f = accuracy_text.format(accuracy_num)
 
     level_text_f = level_text.format(level)
     try:
-        with open('src/high_score.json', 'r') as file_read_m:
+        with open("src/high_score.json", "r") as file_read_m:
             file_txt = json.loads(file_read_m.read())  # Read the file
             current_high = file_txt[Options.mapname]  # The the high_score of the map that was played
     except Exception as e:
         high_score = 0 if Options.debug else level
         if isinstance(e, FileNotFoundError):
-            with open('src/high_score.json', 'w') as file_write_m:
+            with open("src/high_score.json", "w") as file_write_m:
                 json.dump({Options.mapname: high_score}, file_write_m)
         elif isinstance(e, KeyError):
-            with open('src/high_score.json', 'rb+') as f:
-                f.seek(-1, 2)  # HACK: Places the cursor on the last line and before the '}'
-                string = ', "{0}": {1}}}'.format(Options.mapname, high_score)
-                f.write(bytes(string, 'utf-8'))
+            with open("src/high_score.json", "rb+") as f:
+                f.seek(-1, 2)  # HACK: Places the cursor on the last line and before the "}"
+                string = ", '{0}': {1}}}".format(Options.mapname, high_score)
+                f.write(bytes(string, "utf-8"))
         else:
             raise e
     else:
         if level > current_high and not Options.debug:
             file_txt[Options.mapname] = level
-            with open('src/high_score.json', 'w') as write_file:  # Open file again in write mo
+            with open("src/high_score.json", "w") as write_file:  # Open file again in write mo
                 json.dump(file_txt, write_file)
             high_score = level
         else:
@@ -166,7 +166,7 @@ def game_over(screen, level):
     high_score_text_f = high_score_text.format(high_score)
 
     while font_size > 0:
-        font_ = pygame.font.SysFont('Courier', font_size)
+        font_ = pygame.font.SysFont("Courier", font_size)
         killed = font_.render(killed_text_f, 1, Colours.WHITE)
         fired = font_.render(fired_text_f, 1, Colours.WHITE)
         accuracy = font_.render(accuracy_text_f, 1, Colours.WHITE)
@@ -177,9 +177,9 @@ def game_over(screen, level):
             break
     else:  # No break
         pygame.quit()
-        raise OverflowError('Couldn\'t fit the text on the screen. text_width: {},'
-                            'width / 2: {}'.format(accuracy.get_rect().width, Options.width / 2))
-    game_over_img = pygame.image.load('assets/Images/Other/game_over2.png')
+        raise OverflowError("Couldn\"t fit the text on the screen. text_width: {},"
+                            "width / 2: {}".format(accuracy.get_rect().width, Options.width / 2))
+    game_over_img = pygame.image.load("assets/Images/Other/game_over2.png")
     scaled_img = scale(game_over_img, (Options.width, Options.height // 2))
     y_interval = Options.height // 6
     level_pos = Options.width // 15, Options.height // 4
@@ -225,9 +225,11 @@ class NextRoundCountdown:
         rect = x, y, diameter, diameter
         pygame.draw.arc(screen, self.colour, rect, start_angle, end_angle,
                         diameter // 5)
-        time_left = (self.finished - self.time_passed) / Options.fps
-        formatted = '{0:.1f}'.format(time_left)
-        text_ = get_text('info', 'next_round').format(formatted)
+        time_left = (self.finished - self.time_passed) // Options.fps
+        formatted = "{0}".format(time_left + 1)
+        text_: str = get_text("info", "next_round").format(formatted)
+        if formatted == "1":
+            text_ = get_text("info", "next_round_1_sec")
         rendered = text_render(text_)
         if NextRoundCountdown.text_x is None:
             NextRoundCountdown.text_x = Options.width // 2 - rendered.get_rect().width // 2
@@ -235,7 +237,7 @@ class NextRoundCountdown:
         screen.blit(rendered, (NextRoundCountdown.text_x, NextRoundCountdown.text_y))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     misc_screen = pygame.display.set_mode((Options.width, Options.height))
     game_over(misc_screen, 1)
     import doctest

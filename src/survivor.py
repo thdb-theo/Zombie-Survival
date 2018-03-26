@@ -10,7 +10,7 @@ from maths import Vector
 from miscellaneous import rotated, scale
 from tile import Tile
 
-dir2chr = {0: 'e', pi: 'w', pi / 2: 'n', pi * 3 / 2: 's'}
+dir2chr = {0: "e", pi: "w", pi / 2: "n", pi * 3 / 2: "s"}
 # Convert dir in radians to cardinal direction (nsew) because of file names
 
 
@@ -19,12 +19,13 @@ class Survivor(BaseClass):
     Params:
     x: the x coordinate of the survivor
     y: the y coordinate of the survivor"""
-    guns = (scale(pygame.image.load('assets/Images/Weapons/pistol2.png'), Tile.size.scale(1/2, 1/4)),
-            scale(pygame.image.load('assets/Images/Weapons/shotgun.png'), Tile.size.scale(1/2, 1/4)),
-            scale(pygame.image.load('assets/Images/Weapons/automatic2.png'), Tile.size.scale(1/2, 1/4)),
-            scale(pygame.image.load('assets/Images/Weapons/sniper.png'), Tile.size.scale(1/2, 1/4)))
+    guns = (scale(pygame.image.load("assets/Images/Weapons/pistol2.png"), Tile.size.scale(1/2, 1/4)),
+            scale(pygame.image.load("assets/Images/Weapons/shotgun.png"), Tile.size.scale(1/2, 1/4)),
+            scale(pygame.image.load("assets/Images/Weapons/automatic2.png"), Tile.size.scale(1/2, 1/4)),
+            scale(pygame.image.load("assets/Images/Weapons/sniper.png"), Tile.size.scale(1/2, 1/4)))
     imgs = {d: scale(pygame.image.load(
-            'assets/Images/Players/player_{0}_{1}.png'.format(Options.gender, d))) for d in 'nsew'}
+        "assets/Images/Players/player_{0}_{1}.png"
+            .format(Options.gender, d))) for d in "nsew"}
 
     def __init__(self, x, y):
         self.current_gun = 0
@@ -37,7 +38,7 @@ class Survivor(BaseClass):
         self.ammo_count = list(self.init_ammo_count)
 
     def movement(self):
-        """If survivor is between two tiles, or self.to hasn't been updated:
+        """If survivor is between two tiles, or self.to hasn"t been updated:
               if survivor is on tile: Set self.to to None
               if survivor is between tile: Add self.vel to self.pos (Move)"""
         if self.to is not None:
@@ -47,7 +48,7 @@ class Survivor(BaseClass):
                 self.pos += self.vel
 
     def draw(self, screen):
-        """Draw survivor and survivor's gun"""
+        """Draw survivor and survivor"s gun"""
         screen.blit(self.img, self.pos.as_ints())
         w = self.width
         h, q = w >> 1, w >> 2  # fractions of width for placing gun_img
@@ -57,7 +58,7 @@ class Survivor(BaseClass):
         screen.blit(gun_img_rotated, self.pos + gun_pos[self.direction])
 
     def rotate(self, new_dir):
-        """If new_dir isn't self.direction, update self.img to new_dir
+        """If new_dir isn"t self.direction, update self.img to new_dir
         :param new_dir: direction of player in radians"""
         if self.direction != new_dir:
             self.img = Survivor.imgs[dir2chr[new_dir]]
@@ -65,7 +66,7 @@ class Survivor(BaseClass):
 
     @property
     def ammo(self):
-        """Returns the ammo of the survivor's current gun
+        """Returns the ammo of the survivor"s current gun
         >>> a = Survivor(0, 0)
         >>> a.current_gun = 0
         >>> a.ammo
@@ -83,9 +84,9 @@ class Survivor(BaseClass):
     def set_target(self, next_tile):
         """Set the tile to which the survivor will be moving to next_tile"""
         self.to = next_tile.pos
-        logging.debug('self.pos: %s, self.to: %s', self.to, self.pos)
+        logging.debug("self.pos: %s, self.to: %s", self.to, self.pos)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import doctest
     doctest.testmod()

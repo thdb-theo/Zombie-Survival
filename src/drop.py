@@ -30,15 +30,15 @@ def full_ammo(survivor, *_):
 
 
 def quad_dmg(*_):
-    Drop.actives['quad'] = Options.fps * 5
+    Drop.actives["quad"] = Options.fps * 5
 
 
 def freeze(*_):
-    Drop.actives['freeze'] = Options.fps * 5
+    Drop.actives["freeze"] = Options.fps * 5
 
 
 def through_walls(*_):
-    Drop.actives['trans'] = Options.fps * 5
+    Drop.actives["trans"] = Options.fps * 5
 
 
 class Drop(BaseClass):
@@ -58,13 +58,13 @@ class Drop(BaseClass):
 
     instances = set()
 
-    load_img = lambda s: scale(pygame.image.load('assets/Images/Drops/%s.png' % s))
-    imgs = (load_img('max_ammo'), load_img('quad_damage'),
-            load_img('freeze'), load_img('through_walls'))
+    load_img = lambda s: scale(pygame.image.load("assets/Images/Drops/%s.png" % s))
+    imgs = (load_img("max_ammo"), load_img("quad_damage"),
+            load_img("freeze"), load_img("through_walls"))
 
-    load_sound = lambda s: pygame.mixer.Sound('assets/Audio/Drop/%s.ogg' % s)
-    sounds = (load_sound('max_ammo'),load_sound('quad_damage'),
-              load_sound('freeze'),load_sound('through_walls'))
+    load_sound = lambda s: pygame.mixer.Sound("assets/Audio/Drop/%s.ogg" % s)
+    sounds = (load_sound("max_ammo"),load_sound("quad_damage"),
+              load_sound("freeze"),load_sound("through_walls"))
     for sound in sounds:
         sound.set_volume(Options.volume)
 
@@ -103,7 +103,7 @@ class Drop(BaseClass):
         for power_up, value in tuple(cls.actives.items()):
             cls.actives[power_up] -= 1
             if value == 0:
-                if power_up == 'trans':
+                if power_up == "trans":
                     new_tile = survivor.get_tile().closest_open_tile()
                     survivor.pos = new_tile.pos.copy()
                     survivor.to = None

@@ -1,4 +1,6 @@
 build/
+dist/
+ZombieSurvival.egg-info/
 tests/experiment/
 __pycache__/
 logging.log

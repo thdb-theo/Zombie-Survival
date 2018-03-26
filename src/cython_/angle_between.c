@@ -4,12 +4,12 @@
 {
     "distutils": {
         "depends": [],
-        "name": "zs.cython_.angle_between",
+        "name": "src.cython_.angle_between",
         "sources": [
-            "angle_between.pyx"
+            "src/cython_/angle_between.pyx"
         ]
     },
-    "module_name": "zs.cython_.angle_between"
+    "module_name": "src.cython_.angle_between"
 }
 END: Cython Metadata */
 
@@ -523,8 +523,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__zs__cython___angle_between
-#define __PYX_HAVE_API__zs__cython___angle_between
+#define __PYX_HAVE__src__cython___angle_between
+#define __PYX_HAVE_API__src__cython___angle_between
 #include <math.h>
 #ifdef _OPENMP
 #include <omp.h>
@@ -729,7 +729,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "angle_between.pyx",
+  "src\\cython_\\angle_between.pyx",
 };
 
 /*--- Type declarations ---*/
@@ -918,12 +918,12 @@ static int __Pyx_check_binary_version(void);
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 
-/* Module declarations from 'zs.cython_.angle_between' */
-static double __pyx_f_2zs_9cython__13angle_between_angle_between(int, int, int, int, int __pyx_skip_dispatch); /*proto*/
-#define __Pyx_MODULE_NAME "zs.cython_.angle_between"
-int __pyx_module_is_main_zs__cython___angle_between = 0;
+/* Module declarations from 'src.cython_.angle_between' */
+static double __pyx_f_3src_7cython__13angle_between_angle_between(int, int, int, int, int __pyx_skip_dispatch); /*proto*/
+#define __Pyx_MODULE_NAME "src.cython_.angle_between"
+int __pyx_module_is_main_src__cython___angle_between = 0;
 
-/* Implementation of 'zs.cython_.angle_between' */
+/* Implementation of 'src.cython_.angle_between' */
 static const char __pyx_k_x1[] = "x1";
 static const char __pyx_k_x2[] = "x2";
 static const char __pyx_k_y1[] = "y1";
@@ -932,7 +932,7 @@ static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_angle_between_line_11[] = "angle_between (line 11)";
-static const char __pyx_k_Cython_code_for_function_that_ar[] = "Cython code for function that are import to run fast\nPure python version is run if import fail";
+static const char __pyx_k_Cython_code_for_functions_that_a[] = "Cython code for functions that are important to run fast\nPure python version is run if import fail";
 static const char __pyx_k_Get_angle_of_the_hypotenuse_to_t[] = "Get angle of the hypotenuse to the adjecent side of v1 in a\n    rigth triangle where v1 and v2 are the non-right angled corners\n\n          v2\n         / |\n        /  |\n       /   |\n      /\316\270   |\n    v1------\n\n    >>> v1, v2 = Vector(1, 5), Vector(8, 0)\n    >>> angle_between(v1, v2)\n    0.6202494859828215\n\n    NB: Takes in mind pygame's flipped y-axis\n    angles appears anti-clockwise on normal coordinate systems\n    Examples:\n    >>> angle_between(Vector(1, 0), Vector(1, 1))\n    4.71238898038469\n    >>> angle_between(Vector(1, 1), (2, 0))\n    0.7853981633974483\n\n    :return the angle in radians. No negative angles";
 static PyObject *__pyx_kp_u_Get_angle_of_the_hypotenuse_to_t;
 static PyObject *__pyx_kp_u_angle_between_line_11;
@@ -943,9 +943,9 @@ static PyObject *__pyx_n_s_x1;
 static PyObject *__pyx_n_s_x2;
 static PyObject *__pyx_n_s_y1;
 static PyObject *__pyx_n_s_y2;
-static PyObject *__pyx_pf_2zs_9cython__13angle_between_angle_between(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_x1, int __pyx_v_y1, int __pyx_v_x2, int __pyx_v_y2); /* proto */
+static PyObject *__pyx_pf_3src_7cython__13angle_between_angle_between(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_x1, int __pyx_v_y1, int __pyx_v_x2, int __pyx_v_y2); /* proto */
 
-/* "zs/cython_/angle_between.pyx":11
+/* "src/cython_/angle_between.pyx":11
  * 
  * 
  * cpdef double angle_between(int x1, int y1, int x2, int y2):             # <<<<<<<<<<<<<<
@@ -953,15 +953,15 @@ static PyObject *__pyx_pf_2zs_9cython__13angle_between_angle_between(CYTHON_UNUS
  *     rigth triangle where v1 and v2 are the non-right angled corners
  */
 
-static PyObject *__pyx_pw_2zs_9cython__13angle_between_1angle_between(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static double __pyx_f_2zs_9cython__13angle_between_angle_between(int __pyx_v_x1, int __pyx_v_y1, int __pyx_v_x2, int __pyx_v_y2, CYTHON_UNUSED int __pyx_skip_dispatch) {
+static PyObject *__pyx_pw_3src_7cython__13angle_between_1angle_between(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static double __pyx_f_3src_7cython__13angle_between_angle_between(int __pyx_v_x1, int __pyx_v_y1, int __pyx_v_x2, int __pyx_v_y2, CYTHON_UNUSED int __pyx_skip_dispatch) {
   double __pyx_r;
   __Pyx_RefNannyDeclarations
   double __pyx_t_1;
   double __pyx_t_2;
   __Pyx_RefNannySetupContext("angle_between", 0);
 
-  /* "zs/cython_/angle_between.pyx":35
+  /* "src/cython_/angle_between.pyx":35
  * 
  *     :return the angle in radians. No negative angles"""
  *     return atan2(y1 - y2, x2 - x1) % (2 * pi)             # <<<<<<<<<<<<<<
@@ -975,7 +975,7 @@ static double __pyx_f_2zs_9cython__13angle_between_angle_between(int __pyx_v_x1,
   __pyx_r = __Pyx_mod_double(__pyx_t_1, __pyx_t_2);
   goto __pyx_L0;
 
-  /* "zs/cython_/angle_between.pyx":11
+  /* "src/cython_/angle_between.pyx":11
  * 
  * 
  * cpdef double angle_between(int x1, int y1, int x2, int y2):             # <<<<<<<<<<<<<<
@@ -985,7 +985,7 @@ static double __pyx_f_2zs_9cython__13angle_between_angle_between(int __pyx_v_x1,
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_WriteUnraisable("zs.cython_.angle_between.angle_between", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __Pyx_WriteUnraisable("src.cython_.angle_between.angle_between", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -993,9 +993,9 @@ static double __pyx_f_2zs_9cython__13angle_between_angle_between(int __pyx_v_x1,
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2zs_9cython__13angle_between_1angle_between(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_2zs_9cython__13angle_between_angle_between[] = "Get angle of the hypotenuse to the adjecent side of v1 in a\n    rigth triangle where v1 and v2 are the non-right angled corners\n\n          v2\n         / |\n        /  |\n       /   |\n      /\316\270   |\n    v1------\n\n    >>> v1, v2 = Vector(1, 5), Vector(8, 0)\n    >>> angle_between(v1, v2)\n    0.6202494859828215\n\n    NB: Takes in mind pygame's flipped y-axis\n    angles appears anti-clockwise on normal coordinate systems\n    Examples:\n    >>> angle_between(Vector(1, 0), Vector(1, 1))\n    4.71238898038469\n    >>> angle_between(Vector(1, 1), (2, 0))\n    0.7853981633974483\n\n    :return the angle in radians. No negative angles";
-static PyObject *__pyx_pw_2zs_9cython__13angle_between_1angle_between(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_3src_7cython__13angle_between_1angle_between(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_3src_7cython__13angle_between_angle_between[] = "Get angle of the hypotenuse to the adjecent side of v1 in a\n    rigth triangle where v1 and v2 are the non-right angled corners\n\n          v2\n         / |\n        /  |\n       /   |\n      /\316\270   |\n    v1------\n\n    >>> v1, v2 = Vector(1, 5), Vector(8, 0)\n    >>> angle_between(v1, v2)\n    0.6202494859828215\n\n    NB: Takes in mind pygame's flipped y-axis\n    angles appears anti-clockwise on normal coordinate systems\n    Examples:\n    >>> angle_between(Vector(1, 0), Vector(1, 1))\n    4.71238898038469\n    >>> angle_between(Vector(1, 1), (2, 0))\n    0.7853981633974483\n\n    :return the angle in radians. No negative angles";
+static PyObject *__pyx_pw_3src_7cython__13angle_between_1angle_between(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   int __pyx_v_x1;
   int __pyx_v_y1;
   int __pyx_v_x2;
@@ -1065,24 +1065,24 @@ static PyObject *__pyx_pw_2zs_9cython__13angle_between_1angle_between(PyObject *
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("angle_between", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 11, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("zs.cython_.angle_between.angle_between", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.cython_.angle_between.angle_between", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2zs_9cython__13angle_between_angle_between(__pyx_self, __pyx_v_x1, __pyx_v_y1, __pyx_v_x2, __pyx_v_y2);
+  __pyx_r = __pyx_pf_3src_7cython__13angle_between_angle_between(__pyx_self, __pyx_v_x1, __pyx_v_y1, __pyx_v_x2, __pyx_v_y2);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2zs_9cython__13angle_between_angle_between(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_x1, int __pyx_v_y1, int __pyx_v_x2, int __pyx_v_y2) {
+static PyObject *__pyx_pf_3src_7cython__13angle_between_angle_between(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_x1, int __pyx_v_y1, int __pyx_v_x2, int __pyx_v_y2) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("angle_between", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_f_2zs_9cython__13angle_between_angle_between(__pyx_v_x1, __pyx_v_y1, __pyx_v_x2, __pyx_v_y2, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 11, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_f_3src_7cython__13angle_between_angle_between(__pyx_v_x1, __pyx_v_y1, __pyx_v_x2, __pyx_v_y2, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 11, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -1091,7 +1091,7 @@ static PyObject *__pyx_pf_2zs_9cython__13angle_between_angle_between(CYTHON_UNUS
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("zs.cython_.angle_between.angle_between", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.cython_.angle_between.angle_between", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1100,7 +1100,7 @@ static PyObject *__pyx_pf_2zs_9cython__13angle_between_angle_between(CYTHON_UNUS
 }
 
 static PyMethodDef __pyx_methods[] = {
-  {"angle_between", (PyCFunction)__pyx_pw_2zs_9cython__13angle_between_1angle_between, METH_VARARGS|METH_KEYWORDS, __pyx_doc_2zs_9cython__13angle_between_angle_between},
+  {"angle_between", (PyCFunction)__pyx_pw_3src_7cython__13angle_between_1angle_between, METH_VARARGS|METH_KEYWORDS, __pyx_doc_3src_7cython__13angle_between_angle_between},
   {0, 0, 0, 0}
 };
 
@@ -1118,7 +1118,7 @@ static PyModuleDef_Slot __pyx_moduledef_slots[] = {
 static struct PyModuleDef __pyx_moduledef = {
     PyModuleDef_HEAD_INIT,
     "angle_between",
-    __pyx_k_Cython_code_for_function_that_ar, /* m_doc */
+    __pyx_k_Cython_code_for_functions_that_a, /* m_doc */
   #if CYTHON_PEP489_MULTI_PHASE_INIT
     0, /* m_size */
   #else
@@ -1265,7 +1265,7 @@ static int __pyx_pymod_exec_angle_between(PyObject *__pyx_pyinit_module)
   Py_INCREF(__pyx_m);
   #else
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("angle_between", __pyx_methods, __pyx_k_Cython_code_for_function_that_ar, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("angle_between", __pyx_methods, __pyx_k_Cython_code_for_functions_that_a, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
@@ -1284,14 +1284,14 @@ static int __pyx_pymod_exec_angle_between(PyObject *__pyx_pyinit_module)
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_zs__cython___angle_between) {
+  if (__pyx_module_is_main_src__cython___angle_between) {
     if (PyObject_SetAttrString(__pyx_m, "__name__", __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "zs.cython_.angle_between")) {
-      if (unlikely(PyDict_SetItemString(modules, "zs.cython_.angle_between", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "src.cython_.angle_between")) {
+      if (unlikely(PyDict_SetItemString(modules, "src.cython_.angle_between", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -1311,8 +1311,8 @@ static int __pyx_pymod_exec_angle_between(PyObject *__pyx_pyinit_module)
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "zs/cython_/angle_between.pyx":1
- * """Cython code for function that are import to run fast             # <<<<<<<<<<<<<<
+  /* "src/cython_/angle_between.pyx":1
+ * """Cython code for functions that are important to run fast             # <<<<<<<<<<<<<<
  * Pure python version is run if import fail"""
  * 
  */
@@ -1329,11 +1329,11 @@ static int __pyx_pymod_exec_angle_between(PyObject *__pyx_pyinit_module)
   __Pyx_XDECREF(__pyx_t_1);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init zs.cython_.angle_between", 0, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init src.cython_.angle_between", 0, __pyx_lineno, __pyx_filename);
     }
     Py_DECREF(__pyx_m); __pyx_m = 0;
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init zs.cython_.angle_between");
+    PyErr_SetString(PyExc_ImportError, "init src.cython_.angle_between");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

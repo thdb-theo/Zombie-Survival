@@ -3,7 +3,7 @@ import math
 from collections import Container, Iterable
 import sys
 import os
-sys.path.insert(0, os.getcwd() + '/src')
+sys.path.insert(0, os.getcwd() + "/src")
 from maths import Vector
 
 
@@ -13,20 +13,20 @@ class TestVector(unittest.TestCase):
         self.assertTrue(isinstance(v.x, int))
         self.assertTrue(isinstance(v.y, float))
         v1 = Vector.from_pair([8.3, 1.3])
-        self.assertTrue(hasattr(v1, 'y'))
+        self.assertTrue(hasattr(v1, "y"))
 
     def test_get_and_setitem(self):
         v = Vector(3, 5.3)
-        self.assertEqual(v.x, v[0], v['x'])
-        self.assertEqual(v.y, v[1], v['y'])
+        self.assertEqual(v.x, v[0], v["x"])
+        self.assertEqual(v.y, v[1], v["y"])
         v.x = 3.2
         v.y = 5
-        self.assertEqual(v.x, v[0], v['x'])
-        self.assertEqual(v.y, v[1], v['y'])
+        self.assertEqual(v.x, v[0], v["x"])
+        self.assertEqual(v.y, v[1], v["y"])
         v[0] = 0.9
-        self.assertEqual(v.x, v[0], v['x'])
-        v['x'] = 4.6
-        self.assertEqual(v.x, v[0], v['x'])
+        self.assertEqual(v.x, v[0], v["x"])
+        v["x"] = 4.6
+        self.assertEqual(v.x, v[0], v["x"])
 
     def test_iter(self):
         v = Vector(2.0, 5.0)
@@ -75,5 +75,5 @@ class TestVector(unittest.TestCase):
         self.assertEqual((v1-v1).manhattan_dist(), 0)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main(verbosity=3)
