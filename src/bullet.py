@@ -60,12 +60,12 @@ class Bullet(BaseClass):
 
     def __init__(self, pos, vel, type_, survivor):
         if survivor.ammo_count[type_] <= 0:
-            return  # Don"t create bullet if there is no ammo
+            return  # Don't create bullet if there is no ammo
         try:
             dist = (Bullet.last_bullet[1] - Bullet.last_bullet[0]).magnitude()
             if Bullet.min_bullet_dist[type_] >= dist:
-                return  # Don"t create bullet if last_bullet is too close
-        except TypeError:  # If Bulle.last_bullet hasn"t been updated yet. 1st bullet
+                return  # Don't create bullet if last_bullet is too close
+        except TypeError:  # If Bulle.last_bullet hasn't been updated yet. 1st bullet
             dist = None
 
         Bullet.sounds[type_].play()

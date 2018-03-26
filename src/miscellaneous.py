@@ -1,4 +1,4 @@
-"""various functions that don"t fit in any other file"""
+"""various functions that don't fit in any other file"""
 
 import math
 import sys
@@ -46,7 +46,7 @@ new_dir_func = {math.pi / 2: partial(rotate, b=270),
 # transform image from angle in radians
 # Because the zombie image is facing east the rotation angle is π rad less.
 # rotating upwards would be π/2 - π = -π/2 which when is equivalent of rotating by 3π/2
-# because pygame doesn"t allow negative angles
+# because pygame doesn't allow negative angles
 
 
 def rotated(img, new_dir):
@@ -132,7 +132,7 @@ def game_over(screen, level):
     killed_text_f = killed_text.format(stats["Zombies Killed"])
     fired_text_f = fired_text.format(stats["Bullets Fired"])
     try:
-        accuracy_num = stats["Bullets Hit"] / stats["Bullets Fired"] * 100
+        accuracy_num = 100 * stats["Bullets Hit"] / stats["Bullets Fired"]
     except ZeroDivisionError:
         accuracy_num = math.nan
     accuracy_text_f = accuracy_text.format(accuracy_num)
@@ -177,7 +177,7 @@ def game_over(screen, level):
             break
     else:  # No break
         pygame.quit()
-        raise OverflowError("Couldn\"t fit the text on the screen. text_width: {},"
+        raise OverflowError("Couldn't fit the text on the screen. text_width: {},"
                             "width / 2: {}".format(accuracy.get_rect().width, Options.width / 2))
     game_over_img = pygame.image.load("assets/Images/Other/game_over2.png")
     scaled_img = scale(game_over_img, (Options.width, Options.height // 2))

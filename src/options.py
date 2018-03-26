@@ -15,7 +15,7 @@ def get_resolution():
         if os.name == "posix":
             # For Linux, including macOS. Is not tested on Mac
             # HACK: saves resolution to a file, get results and deletes the file
-            subprocess.Popen("xrandr  | grep \* | cut -d" " -f4 > resolution.txt", shell=True)
+            subprocess.call("xrandr  | grep \* | cut -d" " -f4 > resolution.txt")
             file = open("resolution.txt", "r")
             print(file.read())
             # file looks like this: "1920x1080"
@@ -25,7 +25,7 @@ def get_resolution():
                 warnings.warn("""\nThis is meant for testing cython on "Bash on Ubuntu on Windows"
                               where no screen is available and thus the xrandr returns an
                               empty string and the previous statement raises a ValueError.
-                              If you didn\"t expect this message; either there is
+                              If you didn't expect this message; either there is
                               something wrong with xrandr or it couldn"t find a screen.""")
                 return 1280, 720
             finally:

@@ -57,7 +57,7 @@ def main():
             break
     else:  # No break
         pygame.quit()
-        raise OverflowError("Couldn\"t fit ctrltext on screen")
+        raise OverflowError("Couldn't fit ctrltext on screen")
     while title_font_size > 0:
         title_font = pygame.font.Font("assets/Fonts/Halo3.ttf", title_font_size)
         title = title_font.render(" Zombie Survival ", 1, Colours.WHITE)
@@ -66,7 +66,7 @@ def main():
             break
     else:
         pygame.quit()
-        raise OverflowError("Couldn\"t fit titletext on screen")
+        raise OverflowError("Couldn't fit titletext on screen")
 
     while True:
         for event in pygame.event.get():

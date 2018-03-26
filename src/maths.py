@@ -176,7 +176,7 @@ class Vector:
 
     def magnitude(self):
         """returns length of vector
-        Pythagoras" theorem to find the length
+        Pythagoras' theorem to find the length
         Vector(6, 8).magnitude() = √(6² + 8²) = √100 = 10
         >>> Vector(3, 4).magnitude()
         5.0"""
