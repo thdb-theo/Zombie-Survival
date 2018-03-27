@@ -1,4 +1,4 @@
-# Zombie Survival 1.5.0
+# Zombie Survival 1.5.1
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fthdb-theo%2FZombie-Survival.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fthdb-theo%2FZombie-Survival?ref=badge_shield)
 
 
@@ -11,7 +11,7 @@ Tested on Windows and Ubuntu. Works perfectly on Windows, however there are some
 Clone the package with:
 `git clone https://github.com/thdb-theo/Zombie-Survival`
 
-Then enter the folder install the dependencies with `pip install -r requirements.txt`
+Then enter the folder and install the dependencies with `pip install -r requirements.txt`
 
 ---
 
