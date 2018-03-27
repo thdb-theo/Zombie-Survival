@@ -150,7 +150,7 @@ def game_over(screen, level):
         elif isinstance(e, KeyError):
             with open("src/high_score.json", "rb+") as f:
                 f.seek(-1, 2)  # HACK: Places the cursor on the last line and before the "}"
-                string = ", '{0}': {1}}}".format(Options.mapname, high_score)
+                string = ", \"{0}\": {1}}}".format(Options.mapname, high_score)
                 f.write(bytes(string, "utf-8"))
         else:
             raise e
@@ -207,12 +207,15 @@ class NextRoundCountdown:
     """A countdown between rounds
     params:
     time: the time of the pause between rounds in frames"""
-    text_x, text_y = None, None
+
+    colour = Colours.complementary(Options.loopcolour, Options.fillcolour)
+    text_colour = Colours.complementary(Options.loopcolour,
+                                        Options.fillcolour, colour)
 
     def __init__(self, time):
         self.finished = time
         self.time_passed = 0
-        self.colour = Colours.LIGHT_BLUE
+        self.text_x, self.text_y = None, None
 
     def update(self, screen):
         self.time_passed += 1
@@ -223,18 +226,18 @@ class NextRoundCountdown:
         x = Options.width // 2 - diameter // 2
         y = Options.height // 2 - diameter // 2
         rect = x, y, diameter, diameter
-        pygame.draw.arc(screen, self.colour, rect, start_angle, end_angle,
-                        diameter // 5)
-        time_left = (self.finished - self.time_passed) // Options.fps
-        formatted = "{0}".format(time_left + 1)
-        text_: str = get_text("info", "next_round").format(formatted)
+        pygame.draw.arc(screen, NextRoundCountdown.colour, rect, start_angle,
+                        end_angle, diameter // 5)
+        time_left = (self.finished - self.time_passed) / Options.fps
+        formatted = "{0}".format(int(time_left) + 1)
+        text_ = get_text("info", "next_round").format(formatted)
         if formatted == "1":
             text_ = get_text("info", "next_round_1_sec")
-        rendered = text_render(text_)
-        if NextRoundCountdown.text_x is None:
-            NextRoundCountdown.text_x = Options.width // 2 - rendered.get_rect().width // 2
-            NextRoundCountdown.text_y = Options.height // 2 - rendered.get_rect().height // 2
-        screen.blit(rendered, (NextRoundCountdown.text_x, NextRoundCountdown.text_y))
+        rendered = font.render(text_, 1, NextRoundCountdown.text_colour)
+        if self.text_x is None:
+            self.text_x = Options.width // 2 - rendered.get_rect().width // 2
+            self.text_y = Options.height // 2 - rendered.get_rect().height // 2
+        screen.blit(rendered, (self.text_x, self.text_y))
 
 
 if __name__ == "__main__":

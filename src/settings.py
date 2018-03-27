@@ -17,7 +17,7 @@ def get_text(name):
 
 class Application(tk.Frame):
     """
-    A settings window with tkinter
+    A settings window with tkinters
     Grid:
               0       1
          ---------|--------|
@@ -170,11 +170,17 @@ class Application(tk.Frame):
 
     def colour_picker(self):
         self.loopcolour, self.fillcolour = Options.loopcolour, Options.fillcolour
-        self.loopcolour_button = tk.Button(self, text=get_text("loopcolour"),
-                                      command=self.change_loopcolour, bg=Colours.get_hex(self.loopcolour))
+        self.loopcolour_button = tk.Button(self,
+                                           text=get_text("loopcolour"),
+                                           command=self.change_loopcolour,
+                                           bg=Colours.get_hex(self.loopcolour),
+                                           fg=Colours.contrasting(*self.loopcolour))
         self.loopcolour_button.grid(column=0, row=10, sticky="nwneswse")
-        self.fillcolour_button = tk.Button(self, text=get_text("fillcolour"),
-                                      command=self.change_fillcolour, bg=Colours.get_hex(self.fillcolour))
+        self.fillcolour_button = tk.Button(self,
+                                           text=get_text("fillcolour"),
+                                           command=self.change_fillcolour,
+                                           bg=Colours.get_hex(self.fillcolour),
+                                           fg=Colours.contrasting(*self.fillcolour))
         self.fillcolour_button.grid(column=1, row=10, sticky="nwneswse")
 
     def change_loopcolour(self):

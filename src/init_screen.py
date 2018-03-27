@@ -7,16 +7,7 @@ import pygame
 import init as _
 from options import Options, Colours
 
-try:
-    import pyqt_settings as _
-except ImportError:
-    settings_module = "settings"
-else:
-    settings_module = "settings" if Options.tk else "pyqt_settings"
-
-settings = __import__(settings_module)
-# if pyqt is successfull use pyqt unless Options.tk is True. If pyqt is unsuccessfull use tkinter
-
+import settings
 
 data = json.load(open("src/screen_text.json"))
 

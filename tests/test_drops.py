@@ -15,7 +15,7 @@ class TestDrops(unittest.TestCase):
         bullet = Bullet(Vector(0, 0), Vector(3, 0), 0, survivor)
         bullet.pos += bullet.vel
         before_4x = bullet.calc_dmg()
-        Drop.actives["4x"] = 1
+        Drop.actives["quad"] = 1
         after4x = bullet.calc_dmg()
         self.assertEqual(after4x / before_4x, 4.0)
         self.assertTrue(after4x > before_4x)

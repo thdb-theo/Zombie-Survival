@@ -5,9 +5,9 @@ from random import randint, random
 import sys
 import os
 sys.path.insert(0, os.getcwd() + "/src")
+
 from cython_ import angle_between as cyangle_between, collide as cycollide
 from python_ import angle_between as pyangle_between, collide as pycollide
-
 
 rect = namedtuple("rect", "x y w h")
 point = namedtuple("point", "x y")
@@ -16,7 +16,7 @@ point = namedtuple("point", "x y")
 class TestCython(unittest.TestCase):
     def test_cython_equal_python(self):
         args = 0, randint(1, 100000), -randint(1, 100000), random()
-        self.assertTrue(math.isclose(cyangle_between(*args), pyangle_between(*args), abs_tol=1e-5))
+        self.assertTrue(math.isclose(cyangle_between(*args), pyangle_between(*args), abs_tol=1e-3))
         self.assertEqual(cycollide(*args, *args), pycollide(*args, *args))
 
     def test_collide(self):
@@ -25,9 +25,8 @@ class TestCython(unittest.TestCase):
         self.assertTrue(cycollide(*rect1, *rect2))
         self.assertTrue(cycollide(*rect2, *rect1))
 
-        self.assertTrue(cycollide(*rect1, *rect1))
         rect1 = rect(x=0, y=0, w=3, h=3)
-        rect2 = rect(x=1, y=1, w=3, h=3)
+        self.assertTrue(cycollide(*rect1, *rect1))
     
     def test_angle_between(self):
         a = point(1, 5)

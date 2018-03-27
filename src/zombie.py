@@ -68,7 +68,7 @@ class Zombie(BaseClass):
     base_health = 100
     attack_range = Tile.length * 1.3  # Max distance from zombie for an attack, in pixels
     level = 1
-    init_round = 0 if Options.no_zombies else 10  # How many zombies spawn on round 1
+    init_round = 0 if Options.no_zombies else 1  # How many zombies spawn on round 1
     left_round = init_round
     PickUp.zombie_init_round = init_round
     cool_down, play_song = False, True

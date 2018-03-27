@@ -6,18 +6,16 @@ import warnings
 from random import uniform
 import colorsys
 import os
-import locale
 import subprocess
-
+import math
 
 def get_resolution():
         """Get resoltution of the screen"""
         if os.name == "posix":
             # For Linux, including macOS. Is not tested on Mac
             # HACK: saves resolution to a file, get results and deletes the file
-            subprocess.call("xrandr  | grep \* | cut -d" " -f4 > resolution.txt")
+            subprocess.Popen("xrandr  | grep \* | cut -d\" \" -f4 > resolution.txt", shell=True)
             file = open("resolution.txt", "r")
-            print(file.read())
             # file looks like this: "1920x1080"
             try:
                 return tuple(map(int, file.read().split("x")))
@@ -26,7 +24,7 @@ def get_resolution():
                               where no screen is available and thus the xrandr returns an
                               empty string and the previous statement raises a ValueError.
                               If you didn't expect this message; either there is
-                              something wrong with xrandr or it couldn"t find a screen.""")
+                              something wrong with xrandr or it couldn't find a screen.""")
                 return 1280, 720
             finally:
                 file.close()
@@ -87,16 +85,16 @@ class Colours:
         if colour is a string: get hex of the class attr with that name
         if colour is a collection with three ints: get hex value
         >>> Colours.get_hex("RED")
-        "#ff0000"
+        '#ff0000'
         >>> Colours.get_hex([0, 255, 0])
-        "#00ff00"
+        '#00ff00'
         """
         if isinstance(colour, str):
             return "#{0:02x}{1:02x}{2:02x}".format(*getattr(cls, colour.upper()))
         elif hasattr(colour, "__getitem__"):
             return "#{0:02x}{1:02x}{2:02x}".format(*colour)
         else:
-            raise ValueError
+            raise TypeError("Invalid colour argument: {}".format(colour))
 
     @classmethod
     def get_rgb(cls, colour):
@@ -112,16 +110,40 @@ class Colours:
             return tuple(int(colour[i: i + 2], 16) for i in (0, 2, 4))
         elif isinstance(colour, str):
             return getattr(cls, colour.upper())
+        else:
+            raise TypeError("Invalid colour argument: {}".format(colour))
 
-    @classmethod
-    def contrasting(cls, r, g, b):
+    @staticmethod
+    def contrasting(r, g, b):
         """return white (#ffffff) if the colour is dark and
         black (#000000) if the colour is light
+        Uses W3C's technque to find a colour's brightness
+        Source: https://www.w3.org/TR/AERT/#color-contrast
         :returns: hex as a string"""
-        if r + b + g < 255 * 1.5:
-            return "#ffffff"
-        else:
+        brighness = (r * 299 + g * 587 + b * 114) / 1000
+        print(brighness)
+        assert 0 <= brighness <= 256
+        if brighness > 128:
             return "#000000"
+        else:
+            return "#ffffff"
+
+    @classmethod
+    def complementary(cls, *colours):
+        while True:
+            new = cls.random(s=(0.5, 1))
+            too_close = False
+            for colour in colours:
+                if cls.colour_distance(colour, new) < 50:
+                    too_close = True
+            if not too_close:
+                return new
+
+    @staticmethod
+    def colour_distance(colour1, colour2):
+        x1, y1, z1 = colour1
+        x2, y2, z2 = colour2
+        return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2 + (z1 - z2) ** 2)
 
 
 parser = argparse.ArgumentParser("Zombie Survival")
@@ -162,8 +184,8 @@ class _Options:
         self.debug = _args.debug
         self.not_log = _args.not_log
         self.set_language(_args.language)
-        self.fillcolour = _args.fillcolour
-        self.loopcolour = _args.loopcolour
+        self.fillcolour = list(map(int, _args.fillcolour))
+        self.loopcolour = list(map(int, _args.loopcolour))
         self.opensettings = _args.opensettings
         self.tk = _args.tk
         self.stfu = _args.stfu
@@ -275,5 +297,15 @@ Options = _Options()
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-    print(Colours.get_hex("red"))
-    print(Colours.get_hex([255, 0, 0]))
+    best_sum = 10000
+    for r in range(256):
+        for g in range(256):
+            for b in range(256):
+                brighness = (r * 299 + g * 587 + b * 114) / 1000
+                if brighness > 129:
+                    if r + g + b < best_sum:
+                        best = r, g, b
+                        best_sum = r + g + b
+    print(best)
+    print(best_sum)
+

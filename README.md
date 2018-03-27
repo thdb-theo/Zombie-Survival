@@ -9,21 +9,9 @@ Tested on Windows and Ubuntu. Works perfectly on Windows, however there are some
 ### Installation
 
 Clone the package with:
-`git clone <https://github.com/thdb-theo/Zombie-Survival>`
+`git clone https://github.com/thdb-theo/Zombie-Survival`
 
 Then enter the folder install the dependencies with `pip install -r requirements.txt`
-
-#### Install PyQt4 for Windows
-
-Download PyQt4 for Python 3.6 64 bit called `PyQt4‑4.11.4‑cp36‑cp36m‑win_amd64.whl` from <https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyqt4>
-
-Then run `pip install PyQt4‑4.11.4‑cp36‑cp36m‑win_amd64.whl`
-
-If you have 32 bit Python, use `PyQt4‑4.11.4‑cp36‑cp36m‑win32.whl`
-
-#### Install PyQt4 for Linux
-
-Run `sudo apt-get install python-qt4`
 
 ---
 
