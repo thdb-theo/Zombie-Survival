@@ -33,6 +33,7 @@ class Tile:
         map_ = [x == "#" for x in file_str.replace("\n", "")]
 
     solid_nums = {i for i, x in enumerate(map_) if x}
+
     # Set of the indices of all solid tiles
 
     @classmethod
@@ -44,9 +45,9 @@ class Tile:
         This is usually caused by tile.py being initiated before
         init_screen.py or options.py.
         note that tile.py is initiated by e.g. miscellaneous.py
-        
+
         It could also be caused by the map file having a blank line at
-        the end, or some lines are longer than others."""
+        the end, or some lines being longer than others."""
         assert len(cls.map_) == Options.tiles_x * Options.tiles_y, dedent(error_msg)
         map_gen = iter(cls.map_)
         for y in range(0, Options.height, cls.length):
@@ -161,9 +162,9 @@ class Tile:
         tile_num: index of tile in Tile.instances"""
         if direction == 2:  # East
             return tile_num % Options.tiles_x != 0
-        if direction == 3:
-            return tile_num % Options.tiles_x != Options.tiles_x - 1  # West
-        return 0 < tile_num < cls.amnt_tiles  # North and South
+        if direction == 3:  # West
+            return tile_num % Options.tiles_x != Options.tiles_x - 1
+        return 0 <= tile_num <= cls.amnt_tiles  # North and South
 
     @classmethod
     def draw_all(cls, screen):
@@ -173,8 +174,17 @@ class Tile:
         for tile, i in cls.loop_set:
             draw_rect(screen, loopcolour, (*tile.pos, length * i, length))
 
+    @classmethod
+    def get_number(cls, pos):
+        """Return the index in Tile.instances of the tile pos is on
+        :param pos: a container with two items
+        >>> get_number([0, 0])
+        0"""
+        return int(pos[0] // cls.length + pos[1] // cls.length * Options.tiles_x)
+
 
 if __name__ == "__main__":
     Tile.create()
+    print(Tile.on_screen(0, 0))
     import doctest
     doctest.testmod()

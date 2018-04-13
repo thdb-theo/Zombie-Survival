@@ -68,12 +68,11 @@ class Zombie(BaseClass):
     base_health = 100
     attack_range = Tile.length * 1.3  # Max distance from zombie for an attack, in pixels
     level = 1
-    init_round = 0 if Options.no_zombies else 1  # How many zombies spawn on round 1
+    init_round = 0 if Options.no_zombies else 10  # How many zombies spawn on round 1
     left_round = init_round
     PickUp.zombie_init_round = init_round
     cool_down, play_song = False, True
     spawn_interval = Options.fps * 2  # Frames between spawns, decreses exponentially
-    AStarThread = None
 
     def __init__(self, x, y):
         self.direction = math.pi
@@ -204,9 +203,11 @@ class Zombie(BaseClass):
 
     def health_bar(self, surface):
         """Draw a health bar with rounded egdes above the zombie"""
-        colour = 170, 0, 0
+        colour = Colours.DARK_RED
         rect = pygame.Rect(
-            *(self.pos - (0, 12)), self.width * self.health / self.org_health, self.height / 6
+            *(self.pos - (0, 12)),
+            self.width * self.health / self.org_health,
+            self.height / 6
         )
         zeroed_rect = rect.copy()
         zeroed_rect.topleft = 0, 0
@@ -215,7 +216,7 @@ class Zombie(BaseClass):
 
         corners = zeroed_rect.inflate(-6, -6)
         for attribute in ("topleft", "topright", "bottomleft", "bottomright"):
-            pygame.draw.circle(image, colour, getattr(corners, attribute), 3)
+            pygame.draw.circle(image, colour, getattr(corners, attribute), rect.height // 2)
         image.fill(colour, zeroed_rect.inflate(-6, 0))
         image.fill(colour, zeroed_rect.inflate(0, -6))
 

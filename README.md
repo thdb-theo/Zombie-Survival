@@ -1,4 +1,4 @@
-# Zombie Survival 1.5.1
+# Zombie Survival 1.6.0
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fthdb-theo%2FZombie-Survival.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fthdb-theo%2FZombie-Survival?ref=badge_shield)
 
 

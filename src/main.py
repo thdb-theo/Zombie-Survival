@@ -39,15 +39,14 @@ def main_loop(survivor, clock):
     while survivor.health > 0:
         Tile.draw_all(display)
         interaction(display, survivor)
-        Zombie.spawn(display, total_frames, survivor)
-        survivor.movement()
-        text(display, survivor.health, Zombie.left_round + len(Zombie.instances),
-             clock.get_fps(), Zombie.level, survivor.ammo, Drop.actives)
         Bullet.update(display)
-        survivor.draw(display)
         Zombie.update(display, survivor)
         PickUp.update(display, survivor, total_frames)
         Drop.update(display, survivor)
+        survivor.update(display)
+        Zombie.spawn(display, total_frames, survivor)
+        text(display, survivor.health, Zombie.left_round + len(Zombie.instances),
+             clock.get_fps(), Zombie.level, survivor.ammo, Drop.actives)
         clock.tick(Options.fps)
         pygame.display.flip()
         total_frames += 1

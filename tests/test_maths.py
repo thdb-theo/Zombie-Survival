@@ -1,6 +1,7 @@
 import unittest
 import math
-from collections import Container, Iterable
+from random import random
+from collections import Iterable
 import sys
 import os
 sys.path.insert(0, os.getcwd() + "/src")
@@ -12,26 +13,21 @@ class TestVector(unittest.TestCase):
         v = Vector(3, 5.3)
         self.assertTrue(isinstance(v.x, int))
         self.assertTrue(isinstance(v.y, float))
-        v1 = Vector.from_pair([8.3, 1.3])
-        self.assertTrue(hasattr(v1, "y"))
 
     def test_get_and_setitem(self):
         v = Vector(3, 5.3)
-        self.assertEqual(v.x, v[0], v["x"])
-        self.assertEqual(v.y, v[1], v["y"])
+        self.assertEqual(v.x, v[0])
+        self.assertEqual(v.y, v[1])
         v.x = 3.2
         v.y = 5
-        self.assertEqual(v.x, v[0], v["x"])
-        self.assertEqual(v.y, v[1], v["y"])
+        self.assertEqual(v.x, v[0])
+        self.assertEqual(v.y, v[1])
         v[0] = 0.9
-        self.assertEqual(v.x, v[0], v["x"])
-        v["x"] = 4.6
-        self.assertEqual(v.x, v[0], v["x"])
+        self.assertEqual(v.x, v[0])
 
     def test_iter(self):
         v = Vector(2.0, 5.0)
         self.assertTrue(len(v) == 2)
-        self.assertIsInstance(v, Container)
         self.assertIsInstance(v, Iterable)
         self.assertTrue(5.0 in v)
 
@@ -43,7 +39,7 @@ class TestVector(unittest.TestCase):
         self.assertTrue(Vector(2.0, 1.0) == Vector(2, 1))
         self.assertTrue(v1 > v2)
         self.assertTrue(v1 == (4.3, 5.2))
-    
+
     def test_elem_wise(self):
         v1 = Vector(5, 2)
         v2 = Vector(1, 2)
@@ -73,6 +69,13 @@ class TestVector(unittest.TestCase):
         v2.x = 2.0
         self.assertEqual((v1-v2).manhattan_dist(), 3)
         self.assertEqual((v1-v1).manhattan_dist(), 0)
+        v3 = Vector(1, 0)
+        self.assertAlmostEqual(v3.rotate(math.pi/2), Vector(0, 1))
+        self.assertAlmostEqual(v3.rotate(-math.pi/2), Vector(0, -1))
+        v4 = Vector(2, 2)
+        self.assertAlmostEqual(v4.rotate(math.pi), Vector(-2, -2))
+        v5 = Vector(random(), random())
+        self.assertAlmostEqual(v5.rotate(2*math.pi), v5)
 
 
 if __name__ == "__main__":

@@ -1,10 +1,22 @@
 """Defines a Vector class, and some mathematical functions"""
 
-import math
+from math import cos, sin, atan2, sqrt, pi
+from random import randrange
+
+from recordclass import recordclass
+
+SMALL_PRIMES = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47,
+                53, 59, 61, 67, 71, 73, 79, 83, 89, 97}
 
 
-class Vector:
+class Vector(recordclass("Vector", "x y")):
     """Create a 2d Vector
+    Inherits:
+    A recordclass with name "Vector" and fields "x" and "y"
+    recordclass is a fast mutatable namedtuple
+    its documentation can be found here:
+    https://bitbucket.org/intellimath/recordclass/src/
+
     Parameters:
     x: The x coordinate
     y: The y coordinate
@@ -31,8 +43,18 @@ class Vector:
     Vector(x=7, y=9)
 
     Division is not defined, and * is overloaded to dot multiplication
-     >>> Vector(-5, 2) * Vector(-1, 8)
-     21
+    >>> Vector(-5, 2) * Vector(-1, 8)
+    21
+
+    For element-wise multiplication use self.scale(n)
+    >>> v = Vector(9, 6)
+    >>> v.scale(3)
+    Vector(x=27, y=18)
+
+    For element-wise division use self.scale(1/n)
+    >>> v = Vector(9, 6)
+    >>> v.scale(1/3)
+    Vector(x=3.0, y=2.0)
 
     The rich comparion methods, except eq and ne, are based on the length of the vectors
     eq and ne is based on the position
@@ -40,65 +62,6 @@ class Vector:
     >>> assert a < b
     >>> a, b = Vector(0, 1), Vector(0, -1)
     >>> assert a != b"""
-
-    __slots__ = "x", "y"
-
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-    @classmethod
-    def from_pair(cls, xy):
-        return cls(*xy)
-
-    def __getitem__(self, name):
-        if isinstance(name, int):
-            if name == 0:
-                return self.x
-            elif name == 1 or name == -1:
-                return self.y
-            else:
-                raise IndexError("Index out of range")
-        elif isinstance(name, str):
-            return getattr(self, name)
-        else:
-            raise TypeError("name must be str or int")
-
-    def __setitem__(self, name, value):
-        if isinstance(name, int):
-            if name == 0:
-                self.x = value
-            elif name == 1 or name == -1:
-                self.y = value
-            else:
-                raise IndexError("Index out of range")
-        elif isinstance(name, str):
-            setattr(self, name, value)
-        else:
-            raise TypeError("name must be str or int")
-        return self
-
-    def __iter__(self):
-        yield self.x
-        yield self.y
-
-    def __len__(self):
-        return 2
-
-    def __contains__(self, item):
-        return item == self.x or item == self.y
-
-    def __repr__(self):
-        return "Vector(x=%s, y=%s)" % (self.x, self.y)
-
-    def __str__(self):
-        return "<%s, %s>" % (self.x, self.y)
-
-    def __eq__(self, other):
-        return self.x == other[0] and self.y == other[1]
-
-    def __ne__(self, other):
-        return self.x != other[0] or self.y != other[1]
 
     def __add__(self, other):
         if hasattr(other, "__getitem__"):
@@ -180,7 +143,7 @@ class Vector:
         Vector(6, 8).magnitude() = √(6² + 8²) = √100 = 10
         >>> Vector(3, 4).magnitude()
         5.0"""
-        return math.sqrt(self.x ** 2 + self.y ** 2)
+        return sqrt(self.x ** 2 + self.y ** 2)
 
     __abs__ = magnitude
 
@@ -214,18 +177,63 @@ class Vector:
 
     def angle(self):
         """Angle of the vector in radians"""
-        return math.atan2(self.y, self.x)
+        return atan2(self.y, self.x)
+
+    def rotate(self, angle):
+        """Rotates the vector 'angle' radians anti-clockwise
+        is very prone to rounding errors
+        >>> v = Vector(1, 1)
+        >>> v.rotate(pi)
+        Vector(x=-1.0000000000000002, y=-0.9999999999999999)
+        """
+        x = cos(angle) * self.x - sin(angle) * self.y
+        y = sin(angle) * self.x + cos(angle) * self.y
+        return Vector(x, y)
+
+
+def isprime(n, k=10):
+    """test if n is a prime number
+    if n is less than 100, check if n is in a set of small primes
+    else check if n is prime using the Miller-Rabin test
+    >>> isprime(2) and isprime(961776667)
+    True
+    >>> isprime(1) or isprime(-2)
+    False"""
+    if n == 2:
+        return True
+    if not n % 2:
+        return False
+    if n < 100:
+        return n in SMALL_PRIMES
+
+    def check(a, s, d, n):
+        x = pow(a, d, n)
+        if x == 1:
+            return True
+        for i in range(s - 1):
+            if x == n - 1:
+                return True
+            x = pow(x, 2, n)
+        return x == n - 1
+    s = 0
+    d = n - 1
+    while not d % 2:
+        d >>= 1
+        s += 1
+    for i in range(k):
+        a = randrange(2, n - 1)
+        if not check(a, s, d, n):
+            return False
+    return True
 
 
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-    from functools import reduce
-    from operator import add
-    v = Vector(-3, 2)
-    u = Vector(2, -1)
-    print(reduce(add, [v, u]))
-    print(reduce(add, [u, v]))
-    print(sum(v, u))
-    print(sum(u, v))
+    print(isprime(100))
 
+    # l = []
+    # for i in range(100):
+    #     if isprime(i):
+    #         l.append(i)
+    # print(l)

@@ -69,7 +69,7 @@ class Drop(BaseClass):
         sound.set_volume(Options.volume)
 
     effects = full_ammo, quad_dmg, freeze, through_walls
-
+    probability = 2/3 if Options.debug else 9/10
     actives = {}
 
     def __init__(self, pos, type_):
@@ -80,7 +80,7 @@ class Drop(BaseClass):
 
     @classmethod
     def spawn(cls, pos):
-        if random.random() < 2/3 if Options.debug else 14/15:
+        if random.random() < cls.probability:
             return
         type_ = random.randint(0, len(cls.effects) - 1)
         cls(pos, type_)

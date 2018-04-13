@@ -9,6 +9,9 @@ import os
 import subprocess
 import math
 
+from maths import isprime
+
+
 def get_resolution():
         """Get resoltution of the screen"""
         if os.name == "posix":
@@ -60,6 +63,7 @@ class Colours:
     PINK = 255, 0, 255
     CYAN = 0, 255, 255
     LIGHT_BLUE = 26, 99, 206
+    DARK_RED = 170, 0, 0
 
     def __new__(cls, *args, **kwargs):
         raise TypeError("Colour is not callable")
@@ -121,7 +125,6 @@ class Colours:
         Source: https://www.w3.org/TR/AERT/#color-contrast
         :returns: hex as a string"""
         brighness = (r * 299 + g * 587 + b * 114) / 1000
-        print(brighness)
         assert 0 <= brighness <= 256
         if brighness > 128:
             return "#000000"
@@ -147,27 +150,30 @@ class Colours:
 
 
 parser = argparse.ArgumentParser("Zombie Survival")
-parser.add_argument("-f",  "--fps",         nargs="?", type=int,   default=60,                 help="The FPS cap")
-parser.add_argument("-m",  "--map",         nargs="?",             default="Pac-Man",          help="The map, available maps are in the Maps-folder")
-parser.add_argument("-v",  "--volume",      nargs="?", type=float, default=0.3,                help="Volume; a float between 0 and 1")
-parser.add_argument("-tl", "--tile_length", nargs="?", type=int,   default=None,               help="Length of a tile in pixels. 24, 36 and 48 are the best")
-parser.add_argument("-g",  "--gender",      nargs="?",             default="f",                help="Gender of the player; \"m\" for male, \"f\" for female")
-parser.add_argument("-l",  "--language",    nargs="?",             default="norsk",            help="Language of all displayed text; \"norsk\" or \"english\".")
-parser.add_argument("-fc", "--fillcolour",  nargs="?", type=tuple, default=Colours.LIGHT_GREY, help="The colour of the open tiles")
-parser.add_argument("-lc", "--loopcolour",  nargs="?", type=tuple, default=Colours.DARK_GREY,  help="the colour of the walls")
+parser.add_argument("-f",  "--fps",            nargs="?", type=int,   default=60,                 help="The FPS cap")
+parser.add_argument("-m",  "--map",            nargs="?",             default="Pac-Man",          help="The map, available maps are in the Maps-folder")
+parser.add_argument("-v",  "--volume",         nargs="?", type=float, default=0.3,                help="Volume; a float between 0 and 1")
+parser.add_argument("-tl", "--tile_length",    nargs="?", type=int,   default=None,               help="Length of a tile in pixels. 24, 36 and 48 are the best")
+parser.add_argument("-g",  "--gender",         nargs="?",             default="f",                help="Gender of the player; \"m\" for male, \"f\" for female")
+parser.add_argument("-l",  "--language",       nargs="?",             default="norsk",            help="Language of all displayed text; \"norsk\" or \"english\".")
+parser.add_argument("-fc", "--fillcolour",     nargs="+", type=int, default=Colours.LIGHT_GREY, help="The colour of the open tiles")
+parser.add_argument("-lc", "--loopcolour",     nargs="+", type=int, default=Colours.DARK_GREY,  help="The colour of the walls")
+parser.add_argument("-dl", "--night_darkness", nargs="?", type=int,   default=200,                help="How dark the night is; between 0 and 255, where 255 is completely dark")
+parser.add_argument("-t",  "--torch_darkness", nargs="?", type=int,   default=128,                help="How dark the torch is; between 0 and 255, where 255 is completely dark")
+parser.add_argument("-np", "--n_points",       nargs="?", type=int,   default=60,                 help="The number of points to make up the polygon which finds the players view")
+parser.add_argument("-li", "--line_incr",      nargs="?", type=float, default=None,               help="How much to increment the sightline between checks. High number makes it go through corners. Low numbers is less efficient. Defaults to tile length / 5")
 
 flags = parser.add_argument_group()
-flags.add_argument("-M",    "--mute",         action="store_true", help="Mute the game regardless of volume level")
-flags.add_argument("-L",    "--not_log",      action="store_true", help="Will log regardless of optimasation mode")
-flags.add_argument("-Z",    "--no_zombies",   action="store_true", help="Spawn no zombies, Debug mode must be active")
-flags.add_argument("-d",    "--debug",        action="store_true", help="Set debug mode, no high scores can be set")
-flags.add_argument("-s",    "--opensettings", action="store_true", help="open settings automatically")
-flags.add_argument("-tk",   "--tk",           action="store_true", help="Use tkinter even though pyqt is available")
-flags.add_argument("-stfu", "--stfu",         action="store_true", help="disable stdout")
-
+flags.add_argument("-M", "--mute",         action="store_true", help="Mute the game regardless of volume level")
+flags.add_argument("-L", "--not_log",      action="store_true", help="Will not log regardless of optimasation mode")
+flags.add_argument("-Z", "--no_zombies",   action="store_true", help="Spawn no zombies, Debug mode must be active")
+flags.add_argument("-d", "--debug",        action="store_true", help="Set debug mode, no high scores can be set")
+flags.add_argument("-s", "--opensettings", action="store_true", help="Open settings automatically")
+flags.add_argument("-n", "--night",        action="store_true", help="Use night mode")
+flags.add_argument("-p", "--pitch_black",  action="store_true", help="It is pitch black")
 _args, unknown = parser.parse_known_args()
 
-
+# noinspection PyAttributeOutsideInit
 class _Options:
     monitor_w, monitor_h = get_resolution()
 
@@ -183,12 +189,17 @@ class _Options:
         self.no_zombies = _args.no_zombies
         self.debug = _args.debug
         self.not_log = _args.not_log
+        self.night = _args.night
+        self.setpitchblack(_args.pitch_black)
+        self.n_points = _args.n_points
+        if _args.line_incr is None:
+            self.line_increment = self._tilelength / 5
+        else:
+            self.line_increment = _args.line_incr
         self.set_language(_args.language)
         self.fillcolour = list(map(int, _args.fillcolour))
         self.loopcolour = list(map(int, _args.loopcolour))
         self.opensettings = _args.opensettings
-        self.tk = _args.tk
-        self.stfu = _args.stfu
         self.assertions()
         try:
             self.warnings()
@@ -203,6 +214,20 @@ class _Options:
         self.volume *= (not new)
 
     mute = property(getmute, setmute)
+
+    def getpitchblack(self):
+        return self._pitch_black
+
+    def setpitchblack(self, new):
+        self._pitch_black = new
+        if new:
+            self.night_darkness = 255
+            self.torch_darkness = 128
+        else:
+            self.night_darkness = _args.night_darkness
+            self.torch_darkness = _args.torch_darkness
+
+    pitch_black = property(getpitchblack, setpitchblack)
 
     def getmapname(self):
         return self._mapname
@@ -271,17 +296,21 @@ class _Options:
         self.screen_size = self.width, self.height
 
     def assertions(self):
+        # TODO: Translate to English
         assert os.path.isfile(self.mappath), self.mappath + " finnes ikke.."
         assert 10 < self.fps < 180, "FPS må være mellom 10 og 180."
         assert 0 <= self.volume <= 1, "Volumet må være mellom 0 or 1, inkludert 0 og 1."
-        assert 11 < self.tile_length, "Flislengden må være mellom 11 og 100."
-        assert any(self.tile_length % i == 0 for i in range(2, self.tile_length)), \
-            "Flislengden kan ikke være et primtall."
+        assert 11 < self.tile_length < 100, "Flislengden må være mellom 11 og 100."
+        assert not isprime(self.tile_length), "Flislengden kan ikke være et primtall."
         assert self.gender in {"f", "m"}, "Kjønnet må være \"m\" eller \"f\"."
         assert (self.no_zombies and self.debug) or not self.no_zombies, \
             "Feilsøkingsmodus må være aktiv for å ha ingen zombier."
+        assert self.line_increment > 0, "-li må være et positivt tall"
+        assert 0 <= self.torch_darkness <= 255, "-dl må være mellom 0 og 255"
+        assert 0 <= self.night_darkness <= 255, "-tl må være mellom 0 og 255"
 
     def warnings(self):
+        # TODO: Translate to English
         assert self.tile_length % 12 == 0, "Flislengde bør være delelig med 12."
         assert 20 < self.fps < 69, \
             "FPS bør være mellom 20 og 69 for at zombienes fart er optimal."
@@ -289,6 +318,8 @@ class _Options:
             "Vinduet er bredere enn sjermen."
         assert self.tiles_y * self.tile_length < _Options.monitor_h, \
             "Vinduet er høyere enn sjermen."
+        assert self.night or not self.pitch_black, \
+            "Bekmørkt har ingen effekt om natt ikke er på"
 
 
 Options = _Options()
@@ -297,15 +328,3 @@ Options = _Options()
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-    best_sum = 10000
-    for r in range(256):
-        for g in range(256):
-            for b in range(256):
-                brighness = (r * 299 + g * 587 + b * 114) / 1000
-                if brighness > 129:
-                    if r + g + b < best_sum:
-                        best = r, g, b
-                        best_sum = r + g + b
-    print(best)
-    print(best_sum)
-

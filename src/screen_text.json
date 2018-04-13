@@ -42,6 +42,14 @@
       "norsk": "feils\u00F8kingsmodus",
       "english": "debug mode"
     },
+    "night": {
+      "norsk": "natt",
+      "english": "night"
+    },
+    "pitch_black": {
+      "norsk": "bekm\u00F8rkt",
+      "english": "pitch black"
+    },
     "male": {
       "norsk": "m",
       "english": "m"
