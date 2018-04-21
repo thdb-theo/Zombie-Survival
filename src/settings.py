@@ -5,8 +5,9 @@ import tkinter as tk
 from tkinter import messagebox
 
 from tkcolorpicker import askcolor
-from options import Options, Colours
 
+from options import Options
+from maths import Colour
 
 data = json.load(open("src/screen_text.json"))
 
@@ -210,35 +211,37 @@ class Application(tk.Frame):
         self.loopcolour_button = tk.Button(self,
                                            text=get_text("loopcolour"),
                                            command=self.change_loopcolour,
-                                           bg=Colours.get_hex(self.loopcolour),
-                                           fg=Colours.contrasting(*self.loopcolour))
+                                           bg=self.loopcolour.hex,
+                                           fg=self.loopcolour.contrasting().hex)
         c, r = self.my_grid["Loopcolour"]
 
         self.loopcolour_button.grid(column=c, row=r, sticky="nwneswse")
         self.fillcolour_button = tk.Button(self,
                                            text=get_text("fillcolour"),
                                            command=self.change_fillcolour,
-                                           bg=Colours.get_hex(self.fillcolour),
-                                           fg=Colours.contrasting(*self.fillcolour))
+                                           bg=self.fillcolour.hex,
+                                           fg=self.fillcolour.contrasting().hex)
         c, r = self.my_grid["Fillcolour"]
 
         self.fillcolour_button.grid(column=c, row=r, sticky="nwneswse")
 
     def change_loopcolour(self):
-        new_colour = askcolor(self.loopcolour, self)[0]
+        new_colour_tuple = askcolor(self.loopcolour, self)[0]
+        new_colour = Colour(*new_colour_tuple)
         if new_colour is None:  # If you press cancel
             return
         self.loopcolour = new_colour
-        self.loopcolour_button.config(bg=Colours.get_hex(new_colour),
-                                      fg=Colours.contrasting(*new_colour))
+        self.loopcolour_button.config(bg=new_colour.hex,
+                                      fg=new_colour.contrasting().hex)
 
     def change_fillcolour(self):
-        new_colour = askcolor(self.fillcolour, self)[0]
+        new_colour_tuple = askcolor(self.fillcolour, self)[0]
+        new_colour = Colour(*new_colour_tuple)
         if new_colour is None:  # If you press cancel
             return
         self.fillcolour = new_colour
-        self.fillcolour_button.config(bg=Colours.get_hex(new_colour),
-                                      fg=Colours.contrasting(*new_colour))
+        self.fillcolour_button.config(bg=new_colour.hex,
+                                      fg=new_colour.contrasting().hex)
 
     def exit(self):
         self.master.destroy()

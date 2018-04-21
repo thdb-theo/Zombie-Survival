@@ -57,8 +57,8 @@ class Bullet(BaseClass):
 
     new_keys = (0, -1), (0, 1), (-1, 0), (1, 0)
     vel2img = dict(zip(new_keys, new_dir_func.values()))
-    last_bullet_class = recordclass("bullet", "org_pos pos vel")
     # Exchange the keys of new_dir_func with new_keys
+    last_bullet_class = recordclass("bullet", "org_pos pos vel")
 
     def __init__(self, pos, vel, type_, survivor):
         if survivor.ammo_count[type_] <= 0:

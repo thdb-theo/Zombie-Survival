@@ -19,7 +19,7 @@ from drop import Drop
 pygame.mixer.music.load("assets/Audio/Other/theme.mp3")
 pygame.mixer.music.set_volume(Options.volume)
 
-display = pygame.display.set_mode(Options.screen_size, pygame.NOFRAME)
+display = pygame.display.set_mode(Options.screen_size)
 
 
 def main():

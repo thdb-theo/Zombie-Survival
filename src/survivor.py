@@ -1,7 +1,6 @@
 import logging
 from math import pi, radians
 from recordclass import recordclass
-from textwrap import dedent
 
 import pygame
 
@@ -43,7 +42,6 @@ class Survivor(BaseClass):
         # Equivalent to numpy.linspace(lower, upper, length)
 
     right_facing_vector = Vector(Options.line_increment, 0)
-
     surface = pygame.Surface(Options.screen_size, pygame.SRCALPHA)
     if pygame.display.get_surface() is not None:  # Only if the screen has been created
         surface.convert()
@@ -123,7 +121,7 @@ class Survivor(BaseClass):
         if "trans" in Drop.actives:
             for i in (0, -1):
                 angle = Survivor.angle_linspace[i]
-                vector = v.rotate(-self.direction-angle)
+                vector = v.rotated(-self.direction-angle)
                 p = vector.scale(max(Options.width, Options.height))
                 # scale it by width or height depending on which one is bigger
                 # To ensure that the point is outside of the screen
@@ -132,7 +130,7 @@ class Survivor(BaseClass):
             for angle in Survivor.angle_linspace:
                 this_line = line(self.get_centre(), self.direction + angle)
                 num = Tile.get_number(this_line.pos)
-                increment_vector = v.rotate(-this_line.angle)
+                increment_vector = v.rotated(-this_line.angle)
                 # -this_line.angle because of flipped y-axis
                 while num not in Tile.solid_nums and Tile.on_screen(self.direction, num):
                     this_line.pos += increment_vector

@@ -1,10 +1,10 @@
-# Zombie Survival 1.6.0
+# Zombie Survival 1.6.1
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fthdb-theo%2FZombie-Survival.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fthdb-theo%2FZombie-Survival?ref=badge_shield)
 
 
 A simple zombie survival game in pygame, heavily influenced by Call of Duty Zombies, but in 2d.
 
-Tested on Windows and Ubuntu. Works perfectly on Windows, however there are some audio issues on Ubuntu. Perhaps something with .mp3 files?
+Tested on Windows and Linux (Ubuntu and Mint)
 
 ### Installation
 

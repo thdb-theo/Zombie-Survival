@@ -5,7 +5,8 @@ import json
 import pygame
 
 import init as _
-from options import Options, Colours
+from options import Options
+from maths import WHITE
 
 import settings
 
@@ -38,11 +39,11 @@ def main():
     title_y = Options.height // 15
     while ctrl_font_size > 0:
         ctrl_font = pygame.font.Font("assets/Fonts/ModifiedDeadFontWalking.otf", ctrl_font_size)
-        move = ctrl_font.render(move_text, 1, Colours.WHITE)
-        shoot = ctrl_font.render(shoot_text, 1, Colours.WHITE)
-        weapon = ctrl_font.render(weapon_text, 1, Colours.WHITE)
-        set_text = ctrl_font.render(settings_text, 1, Colours.WHITE)
-        begin = ctrl_font.render(begin_text, 1, Colours.WHITE)
+        move = ctrl_font.render(move_text, 1, WHITE)
+        shoot = ctrl_font.render(shoot_text, 1, WHITE)
+        weapon = ctrl_font.render(weapon_text, 1, WHITE)
+        set_text = ctrl_font.render(settings_text, 1, WHITE)
+        begin = ctrl_font.render(begin_text, 1, WHITE)
         ctrl_font_size -= 1
         if begin.get_rect().width < Options.width:
             break
@@ -51,7 +52,7 @@ def main():
         raise OverflowError("Couldn't fit ctrltext on screen")
     while title_font_size > 0:
         title_font = pygame.font.Font("assets/Fonts/Halo3.ttf", title_font_size)
-        title = title_font.render(" Zombie Survival ", 1, Colours.WHITE)
+        title = title_font.render(" Zombie Survival ", 1, WHITE)
         title_font_size -= 1
         if title.get_rect().width < Options.width:
             break

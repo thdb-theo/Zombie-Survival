@@ -4,6 +4,7 @@ from options import Options
 from tile import Tile
 from drop import Drop
 
+
 class AStar:
     NSEW = -Options.tiles_x, Options.tiles_x, 1, -1  # Add to find tile in a direction
 

@@ -8,8 +8,8 @@ import pygame
 import init as _
 from astar import AStar
 from baseclass import BaseClass
-from maths import Vector
-from options import Options, Colours
+from maths import Vector, Colour, DARK_RED
+from options import Options
 from pickup import PickUp
 
 try:
@@ -93,7 +93,7 @@ class Zombie(BaseClass):
         Zombie.instances.add(self)
         self.path = []
         self.last_angle = 0.
-        self.path_colour = Colours.random(s=(0.5, 1))
+        self.path_colour = Colour.random(s=(0.5, 1))
         logging.debug("speed: %s type. %s", self.speed, self.type)
 
     def set_target(self, next_tile):
@@ -203,7 +203,7 @@ class Zombie(BaseClass):
 
     def health_bar(self, surface):
         """Draw a health bar with rounded egdes above the zombie"""
-        colour = Colours.DARK_RED
+        colour = DARK_RED
         rect = pygame.Rect(
             *(self.pos - (0, 12)),
             self.width * self.health / self.org_health,

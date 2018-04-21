@@ -4,6 +4,7 @@ import sys
 from math import pi
 import logging
 import pygame
+from datetime import datetime as dt
 
 import init as _
 from options import Options
@@ -77,6 +78,12 @@ def other(screen, survivor):
             if (Options.debug and event.key == pygame.K_r and
                     pygame.key.get_mods() & pygame.KMOD_CTRL):
                 full_ammo(survivor)
+
+            if (event.key == pygame.K_i and
+                    pygame.key.get_mods() & pygame.KMOD_CTRL):
+                date = str(dt.now()).replace(":", ".")
+                path = "assets/screenshots/{}.jpg".format(date)
+                pygame.image.save(screen, path)
 
 
 def shooting(survivor, keys):
