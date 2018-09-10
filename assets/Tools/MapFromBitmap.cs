@@ -24,7 +24,8 @@ namespace MapFromBitmap
             Bitmap bmp = new Bitmap(path);
             int[] nums = GetNums(args);
             var spawns = GetSpawns(bmp, nums);
-            var z_spawns = spawns[0]; var p_spawns = spawns[1];
+            var z_spawns = spawns[0];
+            var p_spawns = spawns[1];
             List<string> map = new List<string> { };
             for (int i = 0; i < bmp.Height * bmp.Width; i++)
             {
@@ -38,9 +39,9 @@ namespace MapFromBitmap
                     tile = ".";
                 int[] coordinate = new int[] { x, y };
 
-                if (ArrayInArrayOfArrays(z_spawns, coordinate))
+                if (IsArrayInArrayOfArrays(z_spawns, coordinate))
                     tile = "Z";
-                else if (ArrayInArrayOfArrays(p_spawns, coordinate))
+                else if (IsArrayInArrayOfArrays(p_spawns, coordinate))
                     tile = "P";
 
                 map.Add(tile);
@@ -64,9 +65,11 @@ namespace MapFromBitmap
                 while (current_spawns.Count() < nums[i])
                 {
                     int rnd = random_gen.Next(0, bmp.Width * bmp.Height);
-                    int[] coordinate = new int[] { rnd / bmp.Height, rnd % bmp.Height };
-                    var pixel = bmp.GetPixel(rnd / bmp.Height, rnd % bmp.Height);
-                    if ((!IsBlack(pixel)) && (!ArrayInArrayOfArrays(taken, coordinate)))
+                    int x = rnd / bmp.Height;
+                    int y = rnd % bmp.Height;
+                    int[] coordinate = new int[] { x, y };
+                    var pixel = bmp.GetPixel( x, y );
+                    if ((!IsBlack(pixel)) && (!IsArrayInArrayOfArrays(taken, coordinate)))
                     {
                         current_spawns.Add(coordinate);
                         taken.Add(coordinate);
@@ -81,8 +84,10 @@ namespace MapFromBitmap
         {
             int[] nums = new int[2];
 
-            if (args.Count() <= 1)
-                nums = new int[] { 5, 5 };
+            if (args.Count() <= 1 || args.Count() >= 4)
+            {
+                raise new ArgumentOutOfRangeException("Too many or too few arguments");
+            }
             else if (args.Count() == 2)
             {
                 nums[0] = int.Parse(args[1]);
@@ -97,15 +102,15 @@ namespace MapFromBitmap
             {
                 throw new ArgumentOutOfRangeException("Too many command line arguments");
             }
-
             return nums;
         }
+
         static bool IsBlack(Color pixel)
         {
             return pixel.R == 0 && pixel.G == 0 && pixel.B == 0;
         }
 
-        static bool ArrayInArrayOfArrays<T>(IList<T[]> array1, IList<T> array2)
+        static bool IsArrayInArrayOfArrays<T>(IList<T[]> array1, IList<T> array2)
         {
             foreach(var element in array1)
             {

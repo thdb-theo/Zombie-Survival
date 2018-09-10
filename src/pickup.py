@@ -1,6 +1,5 @@
 from functools import partial
 from random import random, randint, choice
-
 import pygame
 
 import init as _

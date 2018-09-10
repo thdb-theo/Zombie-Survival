@@ -70,12 +70,12 @@ class TestVector(unittest.TestCase):
         self.assertEqual((v1-v2).manhattan_dist(), 3)
         self.assertEqual((v1-v1).manhattan_dist(), 0)
         v3 = Vector(1, 0)
-        self.assertAlmostEqual(v3.rotate(math.pi/2), Vector(0, 1))
-        self.assertAlmostEqual(v3.rotate(-math.pi/2), Vector(0, -1))
+        self.assertAlmostEqual(v3.rotated(math.pi/2), Vector(0, 1))
+        self.assertAlmostEqual(v3.rotated(-math.pi/2), Vector(0, -1))
         v4 = Vector(2, 2)
-        self.assertAlmostEqual(v4.rotate(math.pi), Vector(-2, -2))
+        self.assertAlmostEqual(v4.rotated(math.pi), Vector(-2, -2))
         v5 = Vector(random(), random())
-        self.assertAlmostEqual(v5.rotate(2*math.pi), v5)
+        self.assertAlmostEqual(v5.rotated(2*math.pi), v5)
 
 
 if __name__ == "__main__":

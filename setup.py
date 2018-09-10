@@ -8,7 +8,7 @@ DESCRIPTION = "A Zombie Survival game in pygame"
 URL = "https://github.com/thdb-theo/zombie-survival"
 EMAIL = "theo.tollers@gmail.com"
 AUTHOR = "Theodor Tollersrud"
-VERSION = "1.6.1"
+VERSION = "1.6.2"
 
 with open("requirements.txt", encoding="utf-8") as file:
     REQUIRED = file.read().splitlines()

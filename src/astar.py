@@ -26,13 +26,14 @@ class AStar:
         heapq.heappush(self.open, (self.start.f, self.start))
 
     def get_neighbours(self, cell):
-        for direction, sur_tile_num in enumerate(cell.number + direction for direction in AStar.NSEW):
+        for cardinal, offset in enumerate(AStar.NSEW):
+            sur_tile_num = cell.number + offset
             try:
                 sur_tile = Tile.instances[sur_tile_num]
             except IndexError:
                 continue
             if (sur_tile.walkable and sur_tile not in self.closed and
-                    Tile.on_screen(direction, sur_tile_num)):
+                    Tile.on_screen(cardinal, sur_tile_num)):
                 yield sur_tile
 
     def get_heuristic(self, cell):

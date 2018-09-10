@@ -21,7 +21,7 @@ class TestCython(unittest.TestCase):
     @unittest.skipIf(no_cython, "Cython isn't available")
     def test_cython_equal_python(self):
         args = 0, randint(1, 100000), -randint(1, 100000), random()
-        self.assertTrue(math.isclose(cyangle_between(*args), pyangle_between(*args), abs_tol=1e-3))
+        self.assertTrue(math.isclose(cyangle_between(*args), pyangle_between(*args), abs_tol=1e-10))
         self.assertEqual(cycollide(*args, *args), pycollide(*args, *args))
 
     @unittest.skipIf(no_cython, "Cython isn't available")

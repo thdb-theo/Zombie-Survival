@@ -5,9 +5,10 @@ import tkinter as tk
 from tkinter import messagebox
 
 from tkcolorpicker import askcolor
-
+import pygame as pg
 from options import Options
 from maths import Colour
+from colours import RED
 
 data = json.load(open("src/screen_text.json"))
 
@@ -80,7 +81,7 @@ class Application(tk.Frame):
         self.colour_picker()
         c, r = self.my_grid["Discard"]
         tk.Button(self, text=get_text("discard"),
-                  fg="red", command=self.exit).grid(
+                  fg=RED.hex, command=self.exit).grid(
                       column=c, row=r, sticky="nwneswse")
         c, r = self.my_grid["Commit"]
         tk.Button(self, text=get_text("commit"),
@@ -250,8 +251,8 @@ class Application(tk.Frame):
 
 def main():
     root = tk.Tk()
-    root.bind("<Control-c>", sys.exit)
     app = Application(master=root)
+    root.bind("<Control-c>", lambda _: (pg.quit(), app.exit(), sys.exit()))
     app.mainloop()
     return app.changed
 

@@ -7,7 +7,7 @@ import logging
 from options import Options
 
 
-pygame.mixer.pre_init(44100, -16, 1, 512)  # Makes all gun sound play
+pygame.mixer.pre_init(44100, -16, 1, 512)  # Makes all gun sounds play
 # Without this, only some play because they are so close together
 
 pygame.init()

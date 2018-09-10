@@ -8,14 +8,17 @@ import pygame
 import init as _
 from astar import AStar
 from baseclass import BaseClass
-from maths import Vector, Colour, DARK_RED
+from maths import Vector, Colour
 from options import Options
 from pickup import PickUp
+from colours import DARK_RED, BLACK, TRANSPARENT
 
 try:
     from cython_ import angle_between
+    logging.debug("Using Cython")
 except ImportError:
     from python_ import angle_between
+    logging.debug("Not using Cython")
 from miscellaneous import stats, rotated, further_than, scale, \
     NextRoundCountdown
 from tile import Tile
@@ -23,7 +26,7 @@ from drop import Drop
 
 
 def _get_vel_list():
-    """Get the tuple from which a zombie"s vel will be determined
+    """Get the tuple from which a zombie's velosity will be determined
     Example:
     >>> Options.speed = 4
     >>> Tile.length = 32
@@ -53,9 +56,8 @@ class Zombie(BaseClass):
     y: y coordinate of zombie"""
     instances = set()  # set of all zombies
     with open(Options.mappath) as file:
-        spawn_tiles = [
-            i for i, x in enumerate(file.read().replace("\n", "")) if x == "Z"
-        ]
+        map_string = file.read().replace("\n", "")
+        spawn_tiles = [i for i, x in enumerate(map_string) if x == "Z"]
     imgs = tuple(scale(pygame.image.load("assets/Images/Zombies/zombie{}.png".format(i)))
                  for i in range(1, 5))
     speed_tuple = _get_vel_list()
@@ -96,7 +98,7 @@ class Zombie(BaseClass):
         self.path_colour = Colour.random(s=(0.5, 1))
         logging.debug("speed: %s type. %s", self.speed, self.type)
 
-    def set_target(self, next_tile):
+    def set_target(self, next_tile: "Tile"):
         self.to = next_tile.pos
         angle = angle_between(*self.pos, *next_tile.pos)
         assert angle % (math.pi / 2) == 0., "angle: %s to: %s pos: %s mod %s" % (
@@ -113,7 +115,7 @@ class Zombie(BaseClass):
                 stats["Zombies Killed"] += 1
                 continue
 
-            screen.blit(zmb.img, zmb.pos)
+            screen.blit(zmb.img, zmb.pos.as_ints())
             zmb.health_bar(surface=screen)  # Health bar with rounded edges
             if Options.debug:
                 for tile in zmb.path:
@@ -139,7 +141,7 @@ class Zombie(BaseClass):
         cls.instances -= del_zmbs
 
     @classmethod
-    def spawn(cls, screen, totalframes, survivor):
+    def spawn(cls, screen, totalframes: int, survivor):
         """Spawning and rounds"""
         if Options.no_zombies:
             return
@@ -156,9 +158,9 @@ class Zombie(BaseClass):
                     sound.set_volume(Options.volume)
                     sound.play()
                 cls.play_song = not cls.play_song  # Loop True and False, only play every other spawn
-                further_than_ = partial(
+                partialled_further_than = partial(
                     further_than, survivor=survivor, min_dist=150)
-                valid_tiles = list(filter(further_than_, cls.spawn_tiles))
+                valid_tiles = list(filter(partialled_further_than, cls.spawn_tiles))
                 if not valid_tiles:
                     valid_tiles.extend(cls.spawn_tiles)
                 spawn_idx = choice(valid_tiles)
@@ -195,7 +197,7 @@ class Zombie(BaseClass):
             if cls.cool_down:
                 cls.cooldown_counter.update(screen)
 
-    def rotate(self, new_dir):
+    def rotate(self, new_dir: float):
         """Rotate self.img, set self.direction to new_dir
         :param new_dir: The angle to rotate self clockwise from the x-axis in radians"""
         self.img = rotated(self.org_img, new_dir)
@@ -212,7 +214,7 @@ class Zombie(BaseClass):
         zeroed_rect = rect.copy()
         zeroed_rect.topleft = 0, 0
         image = pygame.Surface(rect.size).convert_alpha()
-        image.fill((0, 0, 0, 0))
+        image.fill(TRANSPARENT)
 
         corners = zeroed_rect.inflate(-6, -6)
         for attribute in ("topleft", "topright", "bottomleft", "bottomright"):

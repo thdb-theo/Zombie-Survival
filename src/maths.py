@@ -1,23 +1,17 @@
 """Defines a Vector class, and some mathematical functions"""
 
 from math import (cos, sin, atan2, sqrt, pi, floor, exp, isclose, degrees,
-                  radians)
+                  radians, inf)
 from random import randrange, random, uniform
-
-import pygame
-from recordclass import recordclass
+from dataclasses import dataclass
+from colorsys import rgb_to_hls, rgb_to_hsv, hls_to_rgb, hsv_to_rgb
 
 SMALL_PRIMES = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47,
                 53, 59, 61, 67, 71, 73, 79, 83, 89, 97}
 
-
-class Vector(recordclass("Vector", "x y")):
+@dataclass
+class Vector:
     """Create a 2d Vector
-    Inherits:
-    A recordclass with name "Vector" and fields "x" and "y"
-    recordclass is a fast mutatable namedtuple
-    its source code can be found here:
-    https://bitbucket.org/intellimath/recordclass/src/
 
     Parameters:
     x: The x coordinate
@@ -65,6 +59,18 @@ class Vector(recordclass("Vector", "x y")):
     >>> assert a < b
     >>> a, b = Vector(0, 1), Vector(0, -1)
     >>> assert a != b"""
+    x: float
+    y: float
+
+    def __iter__(self):
+        yield self.x
+        yield self.y
+
+    def __getitem__(self, idx):
+        return (self.x, self.y)[idx]
+
+    def __len__(self):
+        return 2
 
     @classmethod
     def random_unit_vector(cls):
@@ -117,7 +123,7 @@ class Vector(recordclass("Vector", "x y")):
             return Vector(self.x * scalar_or_x, self.y * scalar_or_x)
         return Vector(self.x * scalar_or_x, self.y * y)
 
-    def dot(self, other):
+    def dot(self, other: "Vector"):
         return self.x * other.x + self.y * other.y
 
     __mul__ = __rmul__ = dot
@@ -190,7 +196,10 @@ class Vector(recordclass("Vector", "x y")):
         """Angle of the vector in radians"""
         return atan2(self.y, self.x)
 
-    def rotate(self, angle):
+    def polar(self):
+        return self.magnitude(), self.angle()
+
+    def rotate(self, angle: float):
         """Rotates the vector 'angle' radians anti-clockwise
         is very prone to rounding errors
         >>> v = Vector(1, 1)
@@ -202,8 +211,8 @@ class Vector(recordclass("Vector", "x y")):
         self.x = cos(angle) * x - sin(angle) * y
         self.y = sin(angle) * x + cos(angle) * y
 
-    def rotated(self, angle):
-        """Rotates a vector 'angle' radians anti-clockwise
+    def rotated(self, angle: float):
+        """Returns a vector rotated 'angle' radians anti-clockwise
         is very prone to rounding errors
         >>> v = Vector(1, 1)
         >>> v.rotated(pi)
@@ -212,6 +221,12 @@ class Vector(recordclass("Vector", "x y")):
         x = cos(angle) * self.x - sin(angle) * self.y
         y = sin(angle) * self.x + cos(angle) * self.y
         return Vector(x, y)
+
+
+@dataclass
+class Ray:
+    pos: Vector
+    angle: float
 
 
 def isprime(n, k=10):
@@ -251,35 +266,10 @@ def isprime(n, k=10):
     return True
 
 
-def dcos(x):
-    """return the cosine of x degrees"""
-    return cos(radians(x))
-
-
-def dsin(x):
-    """Return the sine of x degrees"""
-    return sin(radians(x))
-
-
-def datan2(x, y):
-    """return atan2(x, y) as degrees from 0 to 360"""
-    return degrees(atan2(x, y) % (2 * pi))
-
-
-class NameSpace:
-    def __init__(self, a):
-        self.__dict__ = a
-
-    def __str__(self):
-        return str(self.__dict__)
-
-
-class Colour():
+class Colour:
     def __init__(self, *args):
         if len(args) == 1:
             s = args[0]
-            if s == "random":
-                s = Colour.random().hex
             self.r = int(s[1:3], 16)
             self.g = int(s[3:5], 16)
             self.b = int(s[5:7], 16)
@@ -294,27 +284,33 @@ class Colour():
         return 3
 
     def __getitem__(self, item):
-        if isinstance(item, int):
+        if isinstance(item, (int, slice)):
             return self.rgb[item]
         elif isinstance(item, str):
             return getattr(self, item)
         else:
-            raise TypeError
+            raise TypeError("list indices must be integers, strings or slices, not " + type(item).__name__)
 
-    def euclidean_distance(self, other):
+    def euclidean_distance(self, other: "Colour"):
         x1, y1, z1 = self
         x2, y2, z2 = other
         return sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2 + (z1 - z2) ** 2)
 
-    def ciede2000(self, other):
+    def ciede2000(self, other: "Colour"):
         """Uses CIE's formula to find the differnce between two colours
         Takes into consideration that the eye is better at differenciating
         some colours than others
-        Source: http://www2.ece.rochester.edu/~gsharma/ciede2000/ciede2000noteCRNA.pdf
+        Formula source: http://www2.ece.rochester.edu/~gsharma/ciede2000/ciede2000noteCRNA.pdf
         :parameter other: Colour
         :rtype float"""
-        c1 = NameSpace(dict(zip(["L", "a", "b"], self.lab)))
-        c2 = NameSpace(dict(zip(["L", "a", "b"], other.lab)))
+        class A:
+            pass
+        c1 = A()
+        c2 = A()
+        for i in range(3):
+            setattr(c1, "Lab"[i], self.lab[i])
+            setattr(c2, "Lab"[i], other.lab[i])
+
         k_L = 1
         k_C = 1
         k_H = 1
@@ -326,8 +322,8 @@ class Colour():
         c2.aA = (1 + G) * c2.a
         c1.CA = sqrt(c1.aA ** 2 + c1.b ** 2)
         c2.CA = sqrt(c2.aA ** 2 + c2.b ** 2)
-        c1.hA = 0 if c1.b == c1.aA == 0 else datan2(c1.b, c1.aA)
-        c2.hA = 0 if c2.b == c2.aA == 0 else datan2(c2.b, c2.aA)
+        c1.hA = 0 if c1.b == c1.aA == 0 else degrees(atan2(c1.b, c1.aA) % (2 * pi))
+        c2.hA = 0 if c2.b == c2.aA == 0 else degrees(atan2(c2.b, c2.aA) % (2 * pi))
         deltaLA = c2.L - c1.L
         deltaCA = c2.CA - c1.CA
         if c1.C * c2.C == 0:
@@ -340,7 +336,7 @@ class Colour():
             deltahA = c2.hA - c1.hA + 360
         else:
             raise ValueError("c1: %s, c2: %s" % (c1, c2))
-        deltaHA = 2 * sqrt(c1.CA * c2.CA) * dsin(deltahA / 2)
+        deltaHA = 2 * sqrt(c1.CA * c2.CA) * sin(radians(deltahA / 2))
         avgLA = (c1.L + c2.L) / 2
         avgCA = abs(c1.CA + c2.CA) / 2
 
@@ -357,18 +353,18 @@ class Colour():
             avghA = (addhA - 360) / 2
         else:
             raise ValueError("c1: %s, c2: %s" % (c1, c2))
-        T = 1 - 0.17 * dcos(avghA - 30) + 0.24 * dcos(2 * avghA) \
-            + 0.32 * dcos(3 * avghA + 6) - 0.20 * dcos(4 * avghA - 63)
+        T = 1 - 0.17 * cos(radians(avghA - 30)) + 0.24 * cos(radians(2 * avghA)) \
+            + 0.32 * cos(radians((3 * avghA + 6))) - 0.2 * cos(radians(4 * avghA - 63))
         delta_theta = 30 * exp(-(((avghA - 275) / 25) ** 2))
         under_root = avgCA ** 7 / (avgCA ** 7 + 25 ** 7)
-        if isclose(under_root, 0, abs_tol=1e-5) and under_root < 0:
+        if under_root <= 0:
             R_c = 0
         else:
             R_c = 2 * sqrt(under_root)
         S_L = 1 + (0.015 * (avgLA - 50) ** 2) / (sqrt(20 + (avgLA - 50) ** 2))
         S_C = 1 + 0.045 * avgCA
         S_H = 1 + 0.015 * avgCA * T
-        R_T = -dsin(2 * delta_theta) * R_c
+        R_T = -sin(radians(2 * delta_theta)) * R_c
         term1 = (deltaLA / (k_L * S_L)) ** 2
         term2 = (deltaCA / (k_C * S_C)) ** 2
         term3 = (deltaHA / (k_H * S_H)) ** 2
@@ -384,56 +380,29 @@ class Colour():
         (1.0, 0.0, 0.0)
         >>> Colour(51, 204, 153).normalise()
         (0.2, 0.8, 0.6)"""
-        return self.r / 255, self.g / 255, self.b / 255
+        return self.r / 255., self.g / 255., self.b / 255.
 
     @classmethod
     def from_normalised(cls, r, g, b):
+        """From normalised RGB colour
+        >>> str(Colour.from_normalised(1., 0.5, 0.))
+        'Colour(r=255, g=127, b=0)'"""
         return cls(*map(lambda x: int(x * 255), [r, g, b]))
 
     @classmethod
     def from_hsv(cls, h, s, v):
-        i = floor(h * 6)
-        f = h * 6 - i
-        p = v * (1 - s)
-        q = v * (1 - f * s)
-        t = v * (1 - (1 - f) * s)
-
-        r, g, b = [
-            (v, t, p),
-            (q, v, p),
-            (p, v, t),
-            (p, q, v),
-            (t, p, v),
-            (v, p, q),
-        ][int(i % 6)]
-
-        return cls.from_normalised(r, g, b)
+        """To hsv colour space
+        https://en.wikipedia.org/wiki/HSL_and_HSV"""
+        return cls.from_normalised(*hsv_to_rgb(h, s, v))
 
     @classmethod
-    def from_hsl(cls, h, s, l):
-        def hue_to_rgb(p, q, t):
-            t += 1 if t < 0 else 0
-            t -= 1 if t > 1 else 0
-            if t < 1 / 6:
-                return p + (q - p) * 6 * t
-            if t < 1 / 2:
-                return q
-            if t < 2 / 3:
-                return p + (q - p) * (2 / 3 - t) * 6
-            return p
-
-        if s == 0:
-            r, g, b = l, l, l
-        else:
-            q = l * (1 + s) if l < 0.5 else l + s - l * s
-            p = 2 * l - q
-            r = hue_to_rgb(p, q, h + 1 / 3)
-            g = hue_to_rgb(p, q, h)
-            b = hue_to_rgb(p, q, h - 1 / 3)
-        return cls.from_normalised(r, g, b)
+    def from_hls(cls, h, l, s):
+        return cls.from_normalised(*hls_to_rgb(h, l, s))
 
     @classmethod
     def from_lab(cls, L, a, b):
+        """From CIELAB (aka Lab) colour space
+        https://en.wikipedia.org/wiki/CIELAB_color_space"""
         ref_x, ref_y, ref_z = 95.047, 100.000, 108.883
         var_Y = (L + 16) / 116
         var_X = a / 500 + var_Y
@@ -477,14 +446,12 @@ class Colour():
         else:
             var_B = 12.92 * var_B
 
-        sR = var_R * 255
-        sG = var_G * 255
-        sB = var_B * 255
-
-        return cls(sR, sG, sB)
+        return cls.from_normalised(var_R, var_G, var_B)
 
     @classmethod
     def from_cmyk(cls, c, m, y, k):
+        """From CMYK colour model
+        https://en.wikipedia.org/wiki/CMYK_color_model"""
         r = 255 * (1 - c) * (1 - k)
         g = 255 * (1 - m) * (1 - k)
         b = 255 * (1 - y) * (1 - k)
@@ -492,54 +459,26 @@ class Colour():
 
     @property
     def hex(self):
+        """To web colour (aka hex)
+        https://en.wikipedia.org/wiki/Web_colors"""
         return "#{0.r:02x}{0.g:02x}{0.b:02x}".format(self)
 
     @property
     def hsv(self):
-        r, g, b = self.normalise()
-        high = max(r, g, b)
-        low = min(r, g, b)
-        h, s, v = high, high, high
-
-        d = high - low
-        s = 0 if high == 0 else d / high
-
-        if high == low:
-            h = 0.0
-        else:
-            h = {
-                r: (g - b) / d + (6 if g < b else 0),
-                g: (b - r) / d + 2,
-                b: (r - g) / d + 4,
-            }[high]
-            h /= 6
-
-        return h, s, v
+        """To hsv colour space
+        https://en.wikipedia.org/wiki/HSL_and_HSV"""
+        return rgb_to_hsv(*self)
 
     @property
-    def hsl(self):
-        r, g, b = self.normalise()
-        high = max(r, g, b)
-        low = min(r, g, b)
-        h, s, v = ((high + low) / 2,) * 3
-
-        if high == low:
-            h = 0.0
-            s = 0.0
-        else:
-            d = high - low
-            s = d / (2 - high - low) if low > 0.5 else d / (high + low)
-            h = {
-                r: (g - b) / d + (6 if g < b else 0),
-                g: (b - r) / d + 2,
-                b: (r - g) / d + 4,
-            }[high]
-            h /= 6
-
-        return h, s, v
+    def hls(self):
+        """To HSL colour space
+        https://en.wikipedia.org/wiki/HSL_and_HSV"""
+        return rgb_to_hls(*self)
 
     @property
     def hcl(self):
+        """To hcl colour space
+        https://en.wikipedia.org/wiki/HCL_color_space"""
         r, b, g = self.rgb
         min_rgb = min(r, b, g)
         max_rgb = max(r, b, g)
@@ -553,6 +492,8 @@ class Colour():
 
     @property
     def lab(self):
+        """To CIELAB (aka Lab) colour space
+        https://en.wikipedia.org/wiki/CIELAB_color_space"""
         var_R, var_G, var_B = self.normalise()
 
         if var_R > 0.04045:
@@ -600,6 +541,8 @@ class Colour():
 
     @property
     def cmyk(self):
+        """To CMYK colour model
+        https://en.wikipedia.org/wiki/CMYK_color_model"""
         r_f, g_f, b_f = self.normalise()
         k = 1 - max(r_f, g_f, b_f)
         c = (1 - r_f - k) / (1 - k)
@@ -608,24 +551,25 @@ class Colour():
         return c, m, y, k
 
     @classmethod
-    def random(cls, h=(0, 1), s=(0, 1), l=(0, 1)):
+    def random(cls, h=(0, 1), l=(0, 1), s=(0, 1)):
         """Returns a random colour in rgb
         Params:
         ---------------------------------------------
         h: The uniform from which it gets a random hue
         s: The uniform from which it gets a random saturation
-        l: The uniform from which it gets a random lightness
+        l: The uniform from which it gets a random lightness"""
+        hls = uniform(*h), uniform(*l), uniform(*s)
+        return cls.from_hls(*hls)
 
-        :rtype: tuple"""
-        hsl = uniform(*h), uniform(*s), uniform(*l)
-        return cls.from_hsl(*hsl)
+    @classmethod
+    def random_rgb(cls):
+        return cls(randrange(0, 256), randrange(0, 256), randrange(0, 256))
 
     def contrasting(self):
         """return white (#ffffff) if the colour is dark and
         black (#000000) if the colour is light
         Uses W3C's technque to find a colour's brightness
-        Source: https://www.w3.org/TR/AERT/#color-contrast
-        :returns: hex as a string"""
+        Source: https://www.w3.org/TR/AERT/#color-contrast"""
         r, g, b = self
         brighness = (r * 299 + g * 587 + b * 114) / 1000
         assert 0 <= brighness <= 256
@@ -635,65 +579,29 @@ class Colour():
             return Colour("#ffffff")
 
     @classmethod
-    def complementary(cls, *colours):
-        """Return a random colour that is a certain distance away
-        from the colours in the 3d plain"""
+    def complementary(cls, *colours: "Colour", decrement=0.005):
+        """Return a random colour that looks as different from the
+        colours as possible
+        The way it does this is creating a random colour and checking the
+        difference. If it is not different enough, check new colour and decrement the
+        required difference. This way it will not find the most different colour,
+        but something that is different enough for my use."""
         len_colours = len(colours)
-        tolerance = 80
+        tolerance = 120
         while True:
             i = 0
-            new = cls.random()
+            new = cls.random_rgb()
             for colour in colours:
                 d = colour.ciede2000(new)
-                if d > tolerance:
-                    i += 1
-            if i == len_colours:
+                if d < tolerance:
+                    tolerance -= decrement
+                    break
+            else:  # No break
                 return new
-            else:
-                tolerance -= 0.01
-
-
-BLACK = Colour(0, 0, 0)
-WHITE = Colour(255, 255, 255)
-DARK_GREY = Colour(40, 40, 40)
-LIGHT_GREY = Colour(105, 105, 105)
-RED = Colour(255, 0, 0)
-GREEN = Colour(0, 255, 0)
-BLUE = Colour(0, 0, 255)
-YELLOW = Colour(255, 255, 0)
-PINK = Colour(255, 0, 255)
-CYAN = Colour(0, 255, 255)
-LIGHT_BLUE = Colour(26, 99, 206)
-DARK_RED = Colour(170, 0, 0)
-
-
-def _test_complementary():
-    import pygame, sys, time
-    pygame.init()
-    text_colours = [Colour.random() for _ in range(40)]
-    screen = pygame.display.set_mode([250, 20 + 12 * len(text_colours)])
-    clock = pygame.time.Clock()
-    font = pygame.font.SysFont("consolas", 12)
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-        t1 = time.time()
-        comp_color = Colour.complementary(*text_colours)
-        print(time.time() - t1)
-        screen.fill(comp_color)
-        y = 10
-        for text_colour in text_colours:
-            text = font.render(str(text_colour), 1, text_colour)
-            screen.blit(text, [30, y])
-            y += 12
-
-        pygame.display.flip()
-        clock.tick(0.6)
-
 
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-    _test_complementary()
+    c = Colour.random()
+    print(c.ciede2000(c))
+    _test_complementary(20, 12, fps=60)

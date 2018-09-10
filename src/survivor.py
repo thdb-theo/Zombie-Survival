@@ -1,13 +1,11 @@
 import logging
 from math import pi, radians
-from recordclass import recordclass
-
 import pygame
 
 import init as _
 from options import Options
 from baseclass import BaseClass
-from maths import Vector
+from maths import Vector, Ray
 from miscellaneous import rotated, scale
 from tile import Tile
 from drop import Drop
@@ -28,7 +26,7 @@ class Survivor(BaseClass):
     imgs = {d: scale(pygame.image.load(
         "assets/Images/Players/player_{0}_{1}.png"
             .format(Options.gender, d))) for d in "nsew"}
-    human_fov = radians(130)
+    human_fov = radians(130)  # 130 degrees in radians
     # Information on the internet on the FOV varies vastly. From 100 deg to 200 deg
     # Some sources include our far peripheral vision, some don't, for example.
     # I found that 130 deg looks natural
@@ -42,9 +40,9 @@ class Survivor(BaseClass):
         # Equivalent to numpy.linspace(lower, upper, length)
 
     right_facing_vector = Vector(Options.line_increment, 0)
-    surface = pygame.Surface(Options.screen_size, pygame.SRCALPHA)
+    night_surface = pygame.Surface(Options.screen_size, pygame.SRCALPHA)
     if pygame.display.get_surface() is not None:  # Only if the screen has been created
-        surface.convert()
+        night_surface.convert()
     darkness_rect = pygame.Rect(0, 0, Options.width, Options.height)
     darkness_colour = (0, 0, 0, Options.night_darkness)
     torch_colour = (0, 0, 0, Options.torch_darkness)
@@ -54,7 +52,7 @@ class Survivor(BaseClass):
         self.direction = pi / 2
         self.img = Survivor.imgs[dir2chr[self.direction]]
         super().__init__(x, y)
-        self.health = 100 << 10 * Options.debug  # 100 if not debug, else 10*2**10
+        self.health = 100 if not Options.debug else 10**7
         self.vel = Vector(0, 0)
         self.init_ammo_count = 100, 50, 150, 50
         self.ammo_count = list(self.init_ammo_count)
@@ -83,9 +81,9 @@ class Survivor(BaseClass):
         gun_pos = {pi: (-q, h), 0: (h + q, h), pi * 1.5: (h, w), pi * 0.5: (h, -h)}
         gun_img = Survivor.guns[self.current_gun]
         gun_img_rotated = rotated(gun_img, self.direction)
-        screen.blit(gun_img_rotated, self.pos + gun_pos[self.direction])
+        screen.blit(gun_img_rotated, (self.pos + gun_pos[self.direction]).as_ints())
 
-    def rotate(self, new_dir):
+    def rotate(self, new_dir: float):
         """If new_dir isn't self.direction, update self.img to new_dir
         :param new_dir: direction of player in radians"""
         if self.direction != new_dir:
@@ -115,8 +113,7 @@ class Survivor(BaseClass):
         logging.debug("self.pos: %s, self.to: %s", self.to, self.pos)
 
     def night_mode(self, screen):
-        points = [self.get_centre()]
-        line = recordclass("line", "pos angle")
+        points = [self.get_centre(),]
         v = Survivor.right_facing_vector
         if "trans" in Drop.actives:
             for i in (0, -1):
@@ -128,17 +125,17 @@ class Survivor(BaseClass):
                 points.append(p)
         else:
             for angle in Survivor.angle_linspace:
-                this_line = line(self.get_centre(), self.direction + angle)
-                num = Tile.get_number(this_line.pos)
-                increment_vector = v.rotated(-this_line.angle)
-                # -this_line.angle because of flipped y-axis
+                ray = Ray(self.get_centre(), self.direction + angle)
+                num = Tile.get_number(ray.pos)
+                increment_vector = v.rotated(-ray.angle)
+                # -ray.angle because of flipped y-axis
                 while num not in Tile.solid_nums and Tile.on_screen(self.direction, num):
-                    this_line.pos += increment_vector
-                    num = Tile.get_number(this_line.pos)
-                points.append(this_line.pos)
-        pygame.draw.rect(Survivor.surface, Survivor.darkness_colour, Survivor.darkness_rect)
-        pygame.draw.polygon(Survivor.surface, Survivor.torch_colour, points)
-        screen.blit(Survivor.surface, (0, 0))
+                    ray.pos += increment_vector
+                    num = Tile.get_number(ray.pos)
+                points.append(ray.pos)
+        pygame.draw.rect(Survivor.night_surface, Survivor.darkness_colour, Survivor.darkness_rect)
+        pygame.draw.polygon(Survivor.night_surface, Survivor.torch_colour, points)
+        screen.blit(Survivor.night_surface, (0, 0))
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-"""various functions that don't fit in any other file"""
+"""various functions and classes that don't fit in any other file"""
 
 import math
 import sys
@@ -6,12 +6,13 @@ from functools import partial
 import logging
 import json
 from collections import OrderedDict
-
+from types import FunctionType
 import pygame
 
 import init as _
 from options import Options
-from maths import Colour, WHITE, BLACK
+from maths import Colour, Vector
+from colours import WHITE, BLACK
 from tile import Tile
 
 stats = {"Zombies Killed": 0,
@@ -23,11 +24,11 @@ clock = pygame.time.Clock()
 data = json.load(open("src/screen_text.json"))
 
 
-def get_text(area, name):
+def get_text(area: str, name: str):
     return data[area][name][Options.language]
 
 
-def make_partialable(func):
+def make_partialable(func: FunctionType):
     def wrapper(a, b, c=None):
         try:
             return func(a, b, c)
@@ -43,32 +44,30 @@ flip = make_partialable(pygame.transform.flip)
 
 new_dir_func = OrderedDict((
     [math.pi / 2, partial(rotate, b=270)],
-    [math.pi * 3 / 2, partial(rotate, b=90)],
+    [math.pi * 1.5, partial(rotate, b=90)],
     [math.pi, lambda x: x],
     [0, partial(flip, b=True, c=False)]
 ))
-
-
 # transform image from angle in radians
 # Because the zombie image is facing east the rotation angle is π rad less.
-# rotating upwards would be π/2 - π = -π/2 which when is equivalent of rotating by 3π/2
+# rotating upwards would be π/2 - π = -π/2 which when is equivalent of rotating by π*1.5
 # because pygame doesn't allow negative angles
 
 
 def rotated(img, new_dir):
-    """Rotates img new_dir radians"""
+    """img rotated new_dir radians"""
     return new_dir_func[new_dir](img)
 
 
-def further_than(tile_idx, survivor, min_dist):
+def further_than(tile_idx: int, survivor, min_dist: float):
     """Return True if a tile is further than min_dist away from survivor, else False"""
-    tile = Tile.instances[tile_idx].pos
-    dist = (survivor.pos - tile).magnitude()
+    tile = Tile.instances[tile_idx]
+    dist = (survivor.pos - tile.pos).magnitude()
     return dist > min_dist
 
 
 def scale(img, size=Tile.size):
-    if isinstance(size[0], float):
+    if isinstance(size, Vector):
         return pygame.transform.scale(img, size.as_ints())
     else:
         return pygame.transform.scale(img, size)
@@ -102,8 +101,8 @@ def text(screen, health, len_zombies, fps, level, ammo, power_ups):
                 (Options.width - text_width * len(round_text_f), 0))
     ammo_text_f = ammo_text.format(ammo)
     screen.blit(text_render(ammo_text_f), (
-    Options.width - text_width * len(ammo_text_f),
-    Options.height - text_height))
+        Options.width - text_width * len(ammo_text_f),
+        Options.height - text_height))
     fps_text_f = fps_text.format("{0:.2f}".format(fps))
     screen.blit(text_render(fps_text_f), (0, Options.height - text_height))
     power_up_text_f = power_up_text.format(
@@ -112,7 +111,7 @@ def text(screen, health, len_zombies, fps, level, ammo, power_ups):
                 (0, Options.height - text_height * 2))
 
 
-def pause(screen, level):
+def pause(screen, level: int):
     """Pauses the game until p is pressed
     red cross quit the game
     escape show results"""
@@ -132,7 +131,7 @@ def pause(screen, level):
         clock.tick(5)
 
 
-def game_over(screen, level):
+def game_over(screen, level: int):
     """The screen after the game is over
     Display stats and all time high score"""
 
@@ -230,6 +229,10 @@ class NextRoundCountdown:
     wheel_colour = Colour.complementary(Options.loopcolour, Options.fillcolour)
     text_colour = Colour.complementary(Options.loopcolour,
                                        Options.fillcolour, wheel_colour)
+    logging.debug("wheel: %s, text: %s, diff: %s",
+                  wheel_colour,
+                  text_colour,
+                  wheel_colour.ciede2000(text_colour))
 
     def __init__(self, time):
         self.finished = time

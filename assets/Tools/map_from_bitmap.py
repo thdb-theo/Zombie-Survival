@@ -17,13 +17,13 @@ assert len(spawns) == 2, spawns
 
 class MapFromBitmap:
     """Create a .txt map file from a .bmp bitmap file
-    The .bmp must be in the /assets/Help/bitmaps/ folder
-    Run the file from /assets/Help/
-    The .txt is called output.txt and is placed in /assets/Help/
+    The .bmp must be in the /assets/Tools/bitmaps/ folder
+    Run the file from /assets/Tools/
+    The .txt is called output.txt and is placed in /assets/Tools/
 
     Params:
-    str filename_: the name of the .bmp expluding .bmp
-    tuple[int] num_spawns: a tuple where the int is the number of
+    str filename_: the name of the .bmp excluding .bmp
+    tuple[int] num_spawns: a tuple where the first is the number of
         zombie spawns and the second is pickup spawns
 
     Raises:
@@ -32,7 +32,7 @@ class MapFromBitmap:
     """
     blacks = {0, (0, 0, 0), (0, 0, 0, 0)}  # Some files hsave different values
     # for black. This is monochrome, RGB, and RGBA respectivly
-    cwd = os.getcwd()
+    cwd = os.getcwd()  # current working directory
 
     def __init__(self, filename_, num_spawns=(5, 5)):
         img_path = MapFromBitmap.cwd + "/bitmaps/{}.bmp".format(filename_)
@@ -66,8 +66,7 @@ class MapFromBitmap:
         if self.as_str:
             raise RuntimeError("Already created file")
         for i in range(self.height * self.width):
-            y, x = divmod(i, self.width)
-            coordinate = x, y
+            y, x = coordinate = divmod(i, self.width)
             pixel = self.img.getpixel(coordinate)
             tile = "#" if is_black(pixel) else "."
             if coordinate in self.z_spawns:

@@ -5,6 +5,7 @@ from math import pi
 import logging
 import pygame
 from datetime import datetime as dt
+from typing import List
 
 import init as _
 from options import Options
@@ -16,7 +17,7 @@ from tile import Tile
 from drop import full_ammo, Drop
 
 
-def walking(survivor, keys):
+def walking(survivor, keys: List[int]):
     if survivor.to is not None:  # If the survivor is between two tiles
         return
     if keys[pygame.K_w]:  # North
@@ -86,8 +87,7 @@ def other(screen, survivor):
                 pygame.image.save(screen, path)
 
 
-def shooting(survivor, keys):
-
+def shooting(survivor, keys: List[int]):
     if keys[pygame.K_LEFT]:
         survivor.rotate(pi)
         Bullet(survivor.centre, Vector(-Options.bullet_vel, 0), survivor.current_gun, survivor)

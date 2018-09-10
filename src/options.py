@@ -6,38 +6,40 @@ import warnings
 import sys
 import os
 import subprocess
-from maths import isprime, Colour, LIGHT_GREY, DARK_GREY
-try:
-    from PIL import ImageGrab
-except ImportError:  # Only available on Windows and Mac
-    pass
+from maths import isprime, Colour
+from colours import LIGHT_GREY, DARK_GREY
 
 
 def get_resolution():
     """Get resoltution of the screen"""
     if sys.platform in {"darwin", "win32", "cygwin"}:
-        # Mac and Windows
+        # MacOS and Windows
         # This takes a screenshot and returns its size
+        from PIL import ImageGrab
         screenshot = ImageGrab.grab()
         s = screenshot.size
         return s
-    # HACK: saves resolution to a file, get results and deletes the file
-    subprocess.run("xrandr  | grep \* | cut -d\" \" -f4 > resolution.txt",
-                   shell=True)
-    file = open("resolution.txt", "r")
-    # file looks like this: "1920x1080"
-    try:
-        return tuple(map(int, file.read().split("x")))
-    except ValueError:
-        warnings.warn("""\nThis is meant for testing cython on "Bash on Ubuntu on Windows"
-                          where no screen is available and thus the xrandr returns an
-                          empty string and the previous statement raises a ValueError.
-                          If you didn't expect this message; either there is
-                          something wrong with xrandr or it couldn't find a screen.""")
-        return 1280, 720
-    finally:
-        file.close()
-        os.remove("resolution.txt")  # delete the file
+    else:
+        # Linux
+        # HACK: saves resolution to a file, get results and deletes the file
+        subprocess.run("xrandr  | grep \* | cut -d\" \" -f4 > resolution.txt",
+                       shell=True)
+        file = open("resolution.txt", "r")
+        # file looks like this: "1920x1080"
+        try:
+            return tuple(map(int, file.read().split("x")))
+        except ValueError:
+            warnings.warn("""\nThis warning is meant for testing cython on
+                          'Bash on Ubuntu on Windows' where no screen is
+                          available and thus the xrandr returns an empty string
+                          and the previous statement raises a ValueError.
+                          If you didn't expect this message, there is either
+                          something wrong with xrandr or it couldn't find a
+                          screen.""")
+            return 1280, 720
+        finally:
+            file.close()
+            os.remove("resolution.txt")  # deletes the file
 
 
 parser = argparse.ArgumentParser("Zombie Survival")
@@ -121,7 +123,7 @@ class _Options:
     def getmute(self):
         return self._mute
 
-    def setmute(self, new):
+    def setmute(self, new: float):
         self._mute = new
         self.volume *= (not new)
 
@@ -130,7 +132,7 @@ class _Options:
     def getpitchblack(self):
         return self._pitch_black
 
-    def setpitchblack(self, new):
+    def setpitchblack(self, new: int):
         self._pitch_black = new
         if new:
             self.night_darkness = 255
@@ -144,7 +146,7 @@ class _Options:
     def getmapname(self):
         return self._mapname
 
-    def setmapname(self, new):
+    def setmapname(self, new: str):
         self._mapname = new
         self.mappath = "assets/Maps/{}".format(self.mapname)
         with open(self.mappath) as file:
@@ -155,8 +157,8 @@ class _Options:
             if self.tiles_x == -1:
                 # If the file is one line
                 self.tiles_x = len(file_str)
-            self.tiles_y = file_str.count(
-                "\n") + 1  # +1 because there is no "\n" on the last line
+            self.tiles_y = file_str.count("\n") + 1
+            # +1 because there is no "\n" on the last line
         if hasattr(self, "_tilelength"):
             self.update_size()
 
@@ -165,7 +167,7 @@ class _Options:
     def gettilelength(self):
         return self._tilelength
 
-    def settilelength(self, new):
+    def settilelength(self, new: int):
         if new is None:
             tile_length_width = _Options.monitor_w // self.tiles_x
             tile_length_width -= tile_length_width % 12
@@ -183,7 +185,7 @@ class _Options:
     def getfps(self):
         return self._fps
 
-    def setfps(self, new):
+    def setfps(self, new: int):
         self._fps = new
         self.update_speeds()
 
@@ -192,7 +194,7 @@ class _Options:
     def get_language(self):
         return self._language
 
-    def set_language(self, lang):
+    def set_language(self, lang: str):
         self._language = lang
 
     language = property(get_language, set_language)
@@ -241,6 +243,4 @@ Options = _Options()
 
 if __name__ == "__main__":
     import doctest
-
     doctest.testmod()
-

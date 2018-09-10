@@ -5,7 +5,7 @@ import pygame
 import init as _
 from baseclass import BaseClass
 from options import Options
-
+from maths import Vector
 try:
     from cython_ import collide
 except ImportError:
@@ -72,14 +72,14 @@ class Drop(BaseClass):
     probability = 2/3 if Options.debug else 9/10
     actives = {}
 
-    def __init__(self, pos, type_):
+    def __init__(self, pos: Vector, type_: int):
         self.type_ = type_
         self.countdown = Options.fps * 5
         Drop.instances.add(self)
         super().__init__(*pos)
 
     @classmethod
-    def spawn(cls, pos):
+    def spawn(cls, pos: Vector):
         if random.random() < cls.probability:
             return
         type_ = random.randint(0, len(cls.effects) - 1)
@@ -93,7 +93,7 @@ class Drop(BaseClass):
             if drop.countdown == 0:
                 del_drops.add(drop)
                 continue
-            screen.blit(cls.imgs[drop.type_], drop.pos)
+            screen.blit(cls.imgs[drop.type_], drop.pos.as_ints())
             if collide(*drop.pos, *drop._size, *survivor.pos, *survivor._size):
                 cls.effects[drop.type_](survivor)
                 cls.sounds[drop.type_].play()

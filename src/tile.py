@@ -3,6 +3,7 @@
 import random
 from itertools import groupby
 from textwrap import dedent
+from typing import Container
 
 import pygame
 
@@ -49,6 +50,7 @@ class Tile:
         It could also be caused by the map file having a blank line at
         the end, or some lines being longer than others."""
         assert len(cls.map_) == Options.tiles_x * Options.tiles_y, dedent(error_msg)
+        assert not cls.instances, "Tile.create has already been called"
         map_gen = iter(cls.map_)
         for y in range(0, Options.height, cls.length):
             for x in range(0, Options.width, cls.length):
@@ -131,9 +133,11 @@ class Tile:
     def __eq__(self, other):
         return self is other
 
-    def __str__(self):
+    def __repr__(self):
         return "Tile: pos=%s, num=%s, walkable=%s" \
                % (self.pos, self.number, self.walkable)
+
+    __str__ = __repr__
 
     @classmethod
     def random_open_tile(cls):
@@ -153,7 +157,7 @@ class Tile:
                    key=lambda x: (self.pos - x.pos).magnitude_squared())
 
     @classmethod
-    def on_screen(cls, direction, tile_num):
+    def on_screen(cls, direction: int, tile_num: int):
         """Return False if the tile is outside of the screen else True
         A direction is needed as a tile on the right border is outside
         if the direction is west
@@ -175,16 +179,16 @@ class Tile:
             draw_rect(screen, loopcolour, (*tile.pos, length * i, length))
 
     @classmethod
-    def get_number(cls, pos):
+    def get_number(cls, pos: Container):
         """Return the index in Tile.instances of the tile pos is on
         :param pos: a container with two items
-        >>> get_number([0, 0])
+        >>> Tile.get_number([0, 0])
         0"""
         return int(pos[0] // cls.length + pos[1] // cls.length * Options.tiles_x)
 
 
 if __name__ == "__main__":
     Tile.create()
-    print(Tile.on_screen(0, 0))
+    print(len(Tile.instances))
     import doctest
     doctest.testmod()

@@ -6,14 +6,14 @@ import pygame
 
 import init as _
 from options import Options
-from maths import WHITE
+from colours import WHITE
 
 import settings
 
 data = json.load(open("src/screen_text.json"))
 
 
-def get_text(name):
+def get_text(name: str):
     return data["init"][name][Options.language]
 
 
