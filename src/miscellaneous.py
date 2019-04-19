@@ -7,12 +7,14 @@ import logging
 import json
 from collections import OrderedDict
 from types import FunctionType
+import time
+
 import pygame
 
 import init as _
 from options import Options
-from maths import Colour, Vector
-from colours import WHITE, BLACK
+from maths import Vector
+from color import Color, WHITE, BLACK
 from tile import Tile
 
 stats = {"Zombies Killed": 0,
@@ -34,7 +36,6 @@ def make_partialable(func: FunctionType):
             return func(a, b, c)
         except TypeError:
             return func(a, b)
-
     return wrapper
 
 
@@ -59,7 +60,7 @@ def rotated(img, new_dir):
     return new_dir_func[new_dir](img)
 
 
-def further_than(tile_idx: int, survivor, min_dist: float):
+def further_than(tile_idx, survivor, min_dist):
     """Return True if a tile is further than min_dist away from survivor, else False"""
     tile = Tile.instances[tile_idx]
     dist = (survivor.pos - tile.pos).magnitude()
@@ -85,7 +86,7 @@ round_text = get_text("info", "round")
 ammo_text = get_text("info", "ammo")
 fps_text = get_text("info", "fps")
 power_up_text = get_text("info", "power_up")
-logging.debug("font size: %s, text_height: %s, text_width: %s",
+logging.info("font size: %s, text_height: %s, text_width: %s",
               Options.width // 30, text_height, text_width)
 
 
@@ -213,8 +214,7 @@ def game_over(screen, level: int):
     screen.blit(accuracy, accuracy_pos)
     pygame.display.flip()
 
-    pygame.time.wait(
-        1000)  # wait 1 second so event like moving when you died don't quit
+    pygame.time.wait(1000)  # wait 1 second so event like moving when you died don't quit
     pygame.event.clear()  # clear events while waiting
     pygame.event.wait()  # for for an event
     pygame.quit()
@@ -225,15 +225,12 @@ class NextRoundCountdown:
     """A countdown between rounds
     params:
     time: the time of the pause between rounds in frames"""
-
-    wheel_colour = Colour.complementary(Options.loopcolour, Options.fillcolour)
-    text_colour = Colour.complementary(Options.loopcolour,
-                                       Options.fillcolour, wheel_colour)
-    logging.debug("wheel: %s, text: %s, diff: %s",
-                  wheel_colour,
-                  text_colour,
-                  wheel_colour.ciede2000(text_colour))
-
+    t1 = time.time()
+    wheel_color, diff1 = Color.complementary(Options.loopcolor, Options.fillcolor)
+    text_color, diff2 = Color.complementary(Options.loopcolor,
+                                       Options.fillcolor, wheel_color)
+    logging.info("wheel: %s, text: %s, diff1: %s, diff2: %s, time: %s",
+                  wheel_color, text_color, diff1, diff2, time.time() - t1)
     def __init__(self, time):
         self.finished = time
         self.time_passed = 0
@@ -248,14 +245,14 @@ class NextRoundCountdown:
         x = Options.width // 2 - diameter // 2
         y = Options.height // 2 - diameter // 2
         rect = x, y, diameter, diameter
-        pygame.draw.arc(screen, NextRoundCountdown.wheel_colour, rect,
+        pygame.draw.arc(screen, NextRoundCountdown.wheel_color, rect,
                         start_angle, end_angle, diameter // 5)
         time_left = (self.finished - self.time_passed) / Options.fps
         formatted = "{0}".format(int(time_left) + 1)
         text_ = get_text("info", "next_round").format(formatted)
         if formatted == "1":
             text_ = get_text("info", "next_round_1_sec")
-        rendered = font.render(text_, 1, NextRoundCountdown.text_colour)
+        rendered = font.render(text_, 1, NextRoundCountdown.text_color)
         if self.text_x is None:
             self.text_x = Options.width // 2 - rendered.get_rect().width // 2
             self.text_y = Options.height // 2 - rendered.get_rect().height // 2

@@ -6,7 +6,7 @@ import pygame
 
 import init as _
 from options import Options
-from colours import WHITE
+from color import WHITE
 
 import settings
 
@@ -22,6 +22,8 @@ def middle_of_screen(text):
 
 
 def main():
+    if Options.skip_intro:
+        return
     screen = pygame.display.set_mode(Options.screen_size)
     clock = pygame.time.Clock()
     intro_img = pygame.image.load("assets/Images/Other/intro.jpg")

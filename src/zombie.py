@@ -4,21 +4,22 @@ from functools import partial
 from random import randint, choice
 
 import pygame
+from randomcolor import RandomColor
 
 import init as _
 from astar import AStar
 from baseclass import BaseClass
-from maths import Vector, Colour
+from maths import Vector
 from options import Options
 from pickup import PickUp
-from colours import DARK_RED, BLACK, TRANSPARENT
+from color import Color, DARK_RED, BLACK, TRANSPARENT
 
 try:
     from cython_ import angle_between
-    logging.debug("Using Cython")
+    logging.info("Using Cython")
 except ImportError:
     from python_ import angle_between
-    logging.debug("Not using Cython")
+    logging.info("Not using Cython")
 from miscellaneous import stats, rotated, further_than, scale, \
     NextRoundCountdown
 from tile import Tile
@@ -61,7 +62,7 @@ class Zombie(BaseClass):
     imgs = tuple(scale(pygame.image.load("assets/Images/Zombies/zombie{}.png".format(i)))
                  for i in range(1, 5))
     speed_tuple = _get_vel_list()
-    logging.debug("zombie speeds: %s", speed_tuple)
+    logging.info("zombie speeds: %s", speed_tuple)
     health_func_tuple = (lambda h: h, lambda h: h / 2,
                          lambda h: h * 1.2, lambda h: h * 4)
     new_round_song = pygame.mixer.Sound("assets/Audio/Other/new_round_short.ogg")
@@ -70,7 +71,7 @@ class Zombie(BaseClass):
     base_health = 100
     attack_range = Tile.length * 1.3  # Max distance from zombie for an attack, in pixels
     level = 1
-    init_round = 0 if Options.no_zombies else 10  # How many zombies spawn on round 1
+    init_round = 0 if Options.no_zombies else 1 if Options.debug else 10  # How many zombies spawn on round 1
     left_round = init_round
     PickUp.zombie_init_round = init_round
     cool_down, play_song = False, True
@@ -95,8 +96,8 @@ class Zombie(BaseClass):
         Zombie.instances.add(self)
         self.path = []
         self.last_angle = 0.
-        self.path_colour = Colour.random(s=(0.5, 1))
-        logging.debug("speed: %s type. %s", self.speed, self.type)
+        self.path_color = Color(RandomColor().generate(luminosity="light")[0])
+        logging.info("speed: %s type. %s", self.speed, self.type)
 
     def set_target(self, next_tile: "Tile"):
         self.to = next_tile.pos
@@ -119,7 +120,7 @@ class Zombie(BaseClass):
             zmb.health_bar(surface=screen)  # Health bar with rounded edges
             if Options.debug:
                 for tile in zmb.path:
-                    pygame.draw.circle(screen, zmb.path_colour, tile.get_centre(), Tile.length // 3)
+                    pygame.draw.circle(screen, zmb.path_color, tile.get_centre(), Tile.length // 3)
 
             zmb_to_survivor_dist = (survivor.pos - zmb.pos).magnitude()
 
@@ -166,7 +167,7 @@ class Zombie(BaseClass):
                 spawn_idx = choice(valid_tiles)
                 spawn_node = Tile.instances[spawn_idx]
                 cls(*spawn_node.pos)
-                logging.debug("spawn_idx: %s, spawn_node: %s, valid: %s, survivor: %s",
+                logging.info("spawn_idx: %s, spawn_node: %s, valid: %s, survivor: %s",
                               spawn_idx, spawn_node.pos, valid_tiles, survivor.pos)
         elif not (cls.instances or cls.cool_down):  # Round is over, start cooldown
             cls.cool_down = int(totalframes +
@@ -176,7 +177,7 @@ class Zombie(BaseClass):
             cooldown_time = cls.cool_down - totalframes
             cls.cooldown_counter = NextRoundCountdown(
                 cls.new_round_song_length * Options.fps)
-            logging.debug("Round over, start cooldown; cooldown: %s frames, %s sec",
+            logging.info("Round over, start cooldown; cooldown: %s frames, %s sec",
                           cooldown_time, cooldown_time // Options.fps)
 
         elif totalframes == cls.cool_down:  # Cooldown is over, start round
@@ -190,7 +191,7 @@ class Zombie(BaseClass):
             PickUp.zombie_init_round = cls.init_round
             PickUp.init_round = cls.level // 2 + 3
             PickUp.left_round = PickUp.init_round
-            logging.debug("level: %s, base health: %s, Zombies: %s, Pick-Ups: %s, Interval: %s",
+            logging.info("level: %s, base health: %s, Zombies: %s, Pick-Ups: %s, Interval: %s",
                           cls.level, cls.base_health, cls.init_round, PickUp.init_round, cls.spawn_interval)
 
         else:
@@ -205,7 +206,7 @@ class Zombie(BaseClass):
 
     def health_bar(self, surface):
         """Draw a health bar with rounded egdes above the zombie"""
-        colour = DARK_RED
+        color = DARK_RED
         rect = pygame.Rect(
             *(self.pos - (0, 12)),
             self.width * self.health / self.org_health,
@@ -218,9 +219,9 @@ class Zombie(BaseClass):
 
         corners = zeroed_rect.inflate(-6, -6)
         for attribute in ("topleft", "topright", "bottomleft", "bottomright"):
-            pygame.draw.circle(image, colour, getattr(corners, attribute), rect.height // 2)
-        image.fill(colour, zeroed_rect.inflate(-6, 0))
-        image.fill(colour, zeroed_rect.inflate(0, -6))
+            pygame.draw.circle(image, color, getattr(corners, attribute), rect.height // 2)
+        image.fill(color, zeroed_rect.inflate(-6, 0))
+        image.fill(color, zeroed_rect.inflate(0, -6))
 
         surface.blit(image, rect)
 

@@ -12,6 +12,7 @@ from options import Options
 from maths import Vector
 
 
+
 class Tile:
     """Create a tile
     Tile.create() creates all tiles that fit in the map
@@ -173,10 +174,10 @@ class Tile:
     @classmethod
     def draw_all(cls, screen):
         """Fill the screen in light tiles, then draws the solid tiles over"""
-        screen.fill(Options.fillcolour)
-        length, loopcolour, draw_rect = cls.length, Options.loopcolour, pygame.draw.rect
+        screen.fill(Options.fillcolor)
+        length, loopcolor, draw_rect = cls.length, Options.loopcolor, pygame.draw.rect
         for tile, i in cls.loop_set:
-            draw_rect(screen, loopcolour, (*tile.pos, length * i, length))
+            draw_rect(screen, loopcolor, (*tile.pos, length * i, length))
 
     @classmethod
     def get_number(cls, pos: Container):

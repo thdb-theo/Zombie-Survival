@@ -15,6 +15,7 @@ Clone the package with:
 Then enter the folder and install the dependencies with `pip install -r requirements.txt`
 
 Alternatively use `python3` and `pip3` if that is how python is installed.
+
 ---
 
 To run the game enter: `python src/main.py`

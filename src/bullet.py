@@ -82,7 +82,7 @@ class Bullet(BaseClass):
         self.img = Bullet.vel2img[self.vel_as_signs](Bullet.images[type_])
         super().__init__(*pos, Bullet.width, Bullet.height)
         Bullet.last_bullet = [pos, pos.copy(), vel]
-        logging.debug('pos: %s, vel: %s, type: %s, dist: %s, last_bullet: %s, sign: %s' +
+        logging.info('pos: %s, vel: %s, type: %s, dist: %s, last_bullet: %s, sign: %s' +
                       'survivor pos: %s',
                       pos, vel, type_, dist, Bullet.last_bullet, self.vel_as_signs, survivor.pos)
 
@@ -119,7 +119,7 @@ class Bullet(BaseClass):
                     dmg = bullet.calc_dmg()
                     assert dmg > 0
                     zombie.health -= dmg
-                    logging.debug('type %s, dmg %s, dmg_drop %s, zh %s, 4xd: %s',
+                    logging.info('type %s, dmg %s, dmg_drop %s, zh %s, 4xd: %s',
                                   bullet.type, dmg, bullet.dmg_drop, zombie.health,
                                   'quad' in Drop.actives)
                     bullet.dmg_drop /= 1.1

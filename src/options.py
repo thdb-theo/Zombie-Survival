@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
-"""options and constants for the whole module and a colour class"""
+"""options and constants for the whole module and a color class"""
 
 import argparse
 import warnings
 import sys
 import os
 import subprocess
-from maths import isprime, Colour
-from colours import LIGHT_GREY, DARK_GREY
+from random import randrange
+
+from maths import isprime
+from color import Color, LIGHT_GREY, DARK_GREY, BLACK
 
 
 def get_resolution():
@@ -42,6 +44,11 @@ def get_resolution():
             os.remove("resolution.txt")  # deletes the file
 
 
+def view_maps():
+    print("\n".join(os.listdir("assets/Maps/")))
+    sys.exit()
+
+
 parser = argparse.ArgumentParser("Zombie Survival")
 parser.add_argument("-f", "--fps", nargs="?", type=int, default=60,
                     help="The FPS cap")
@@ -55,20 +62,22 @@ parser.add_argument("-g", "--gender", nargs="?", default="f",
                     help="Gender of the player; \"m\" for male, \"f\" for female")
 parser.add_argument("-l", "--language", nargs="?", default="norsk",
                     help="Language of all displayed text; \"norsk\" or \"english\".")
-parser.add_argument("-fc", "--fillcolour", nargs="?", type=str,
-                    default=LIGHT_GREY.hex,
-                    help="The colour of the open tiles")
-parser.add_argument("-lc", "--loopcolour", nargs="?", type=str,
-                    default=DARK_GREY.hex, help="The colour of the walls")
+parser.add_argument("-fg", "--fillcolor", nargs="?", type=str,
+                    default=LIGHT_GREY.get_rgb_hex(),
+                    help="The color of the open tiles")
+parser.add_argument("-bg", "--loopcolor", nargs="?", type=str,
+                    default=DARK_GREY.get_rgb_hex(), help="The color of the walls")
 parser.add_argument("-dl", "--night_darkness", nargs="?", type=int,
                     default=200,
                     help="How dark the night is; between 0 and 255, where 255 is completely dark")
 parser.add_argument("-t", "--torch_darkness", nargs="?", type=int, default=128,
                     help="How dark the torch is; between 0 and 255, where 255 is completely dark")
-parser.add_argument("-np", "--n_points", nargs="?", type=int, default=60,
+parser.add_argument("-np", "--n_points", nargs="?", type=int, default=100,
                     help="The number of points to make up the polygon which finds the players view")
 parser.add_argument("-li", "--line_incr", nargs="?", type=float, default=None,
-                    help="How much to increment the sightline between checks. High number makes it go through corners. Low numbers is less efficient. Defaults to tile length / 5")
+                    help="How much to increment the sightline between checks. High number makes it go through corners. Low numbers is less efficient. Defaults to tile length / 10")
+
+parser.add_argument("--help_maps", action="store_true", help="View available maps")
 
 flags = parser.add_argument_group()
 flags.add_argument("-M", "--mute", action="store_true",
@@ -81,17 +90,20 @@ flags.add_argument("-d", "--debug", action="store_true",
                    help="Set debug mode, no high scores can be set")
 flags.add_argument("-s", "--opensettings", action="store_true",
                    help="Open settings automatically")
+flags.add_argument("-S", "--skip_intro", action="store_true", help="skip intro screen")
 flags.add_argument("-n", "--night", action="store_true", help="Use night mode")
 flags.add_argument("-p", "--pitch_black", action="store_true",
                    help="It is pitch black")
+flags.add_argument("-r", "--random_tile_color", action="store_true", help="random tile colors")
 _args, unknown = parser.parse_known_args()
 
 
 # noinspection PyAttributeOutsideInit
 class _Options:
     monitor_w, monitor_h = get_resolution()
-
     def __init__(self):
+        if _args.help_maps:
+            view_maps()
         self.setmapname(_args.map + ".txt")
         self.settilelength(_args.tile_length)
         self.setfps(_args.fps)
@@ -104,16 +116,21 @@ class _Options:
         self.debug = _args.debug
         self.not_log = _args.not_log
         self.night = _args.night
-        self.setpitchblack(_args.pitch_black)
         self.n_points = _args.n_points
         if _args.line_incr is None:
-            self.line_increment = self._tilelength / 5
+            self.line_increment = self._tilelength / 10
         else:
             self.line_increment = _args.line_incr
         self.set_language(_args.language)
-        self.fillcolour = Colour(_args.fillcolour)
-        self.loopcolour = Colour(_args.loopcolour)
+        if _args.random_tile_color:
+            self.fillcolor = Color(*(randrange(0, 256) for _ in range(3)))
+            self.loopcolor = Color(*(randrange(0, 256) for _ in range(3)))
+        else:
+            self.fillcolor = Color(_args.fillcolor)
+            self.loopcolor = Color(_args.loopcolor)
+        self.setpitchblack(_args.pitch_black)
         self.opensettings = _args.opensettings
+        self.skip_intro = _args.skip_intro
         self.assertions()
         try:
             self.warnings()
@@ -132,7 +149,7 @@ class _Options:
     def getpitchblack(self):
         return self._pitch_black
 
-    def setpitchblack(self, new: int):
+    def setpitchblack(self, new: bool):
         self._pitch_black = new
         if new:
             self.night_darkness = 255

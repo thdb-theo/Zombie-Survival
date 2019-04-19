@@ -63,7 +63,7 @@ def other(screen, survivor):
             pygame.quit()
             sys.exit()
         if event.type == pygame.KEYDOWN:
-            logging.debug("key %s", pygame.key.name(event.key))
+            logging.info("key %s", pygame.key.name(event.key))
             if event.key == pygame.K_e:
                 survivor.current_gun += 1
                 survivor.current_gun %= 4  # loop 0, 1, 2, 3

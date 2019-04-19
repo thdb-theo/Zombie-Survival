@@ -1,12 +1,12 @@
 """This file initiate the game"""
 import logging
-
-import pygame
+from contextlib import redirect_stdout
+with redirect_stdout(None):  # To remove the pygame hello message
+    import pygame
 
 import init as _
 from options import Options
 from init_screen import main; main()  # This must run before tile.py is run
-
 from miscellaneous import text, game_over
 from zombie import Zombie
 from survivor import Survivor
@@ -15,6 +15,8 @@ from pickup import PickUp
 from interaction import interaction
 from tile import Tile
 from drop import Drop
+from color import BLACK
+from astar import AStar
 
 pygame.mixer.music.load("assets/Audio/Other/theme.mp3")
 pygame.mixer.music.set_volume(Options.volume)
@@ -27,8 +29,10 @@ def main():
     Tile.create()
     survivor = Survivor(*Tile.random_open_tile())
     clock = pygame.time.Clock()
-    logging.debug("options: %s", Options.__dict__)
-    logging.debug("monitor: w=%s, h=%s", Options.monitor_w, Options.monitor_h)
+    if Options.pitch_black:
+        Options.loopcolor = BLACK
+    logging.info("options: %s", Options.__dict__)
+    logging.info("monitor: w=%s, h=%s", Options.monitor_w, Options.monitor_h)
     pygame.mixer.music.play(loops=-1)
     main_loop(survivor, clock)
     game_over(display, Zombie.level)

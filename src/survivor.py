@@ -44,8 +44,8 @@ class Survivor(BaseClass):
     if pygame.display.get_surface() is not None:  # Only if the screen has been created
         night_surface.convert()
     darkness_rect = pygame.Rect(0, 0, Options.width, Options.height)
-    darkness_colour = (0, 0, 0, Options.night_darkness)
-    torch_colour = (0, 0, 0, Options.torch_darkness)
+    darkness_color = (0, 0, 0, Options.night_darkness)
+    torch_color = (0, 0, 0, Options.torch_darkness)
 
     def __init__(self, x, y):
         self.current_gun = 0
@@ -110,7 +110,7 @@ class Survivor(BaseClass):
     def set_target(self, next_tile):
         """Set the tile to which the survivor will be moving to next_tile"""
         self.to = next_tile.pos
-        logging.debug("self.pos: %s, self.to: %s", self.to, self.pos)
+        logging.info("self.pos: %s, self.to: %s", self.to, self.pos)
 
     def night_mode(self, screen):
         points = [self.get_centre(),]
@@ -133,8 +133,8 @@ class Survivor(BaseClass):
                     ray.pos += increment_vector
                     num = Tile.get_number(ray.pos)
                 points.append(ray.pos)
-        pygame.draw.rect(Survivor.night_surface, Survivor.darkness_colour, Survivor.darkness_rect)
-        pygame.draw.polygon(Survivor.night_surface, Survivor.torch_colour, points)
+        pygame.draw.rect(Survivor.night_surface, Survivor.darkness_color, Survivor.darkness_rect)
+        pygame.draw.polygon(Survivor.night_surface, Survivor.torch_color, points)
         screen.blit(Survivor.night_surface, (0, 0))
 
 

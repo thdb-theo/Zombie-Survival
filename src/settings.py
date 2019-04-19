@@ -7,8 +7,7 @@ from tkinter import messagebox
 from tkcolorpicker import askcolor
 import pygame as pg
 from options import Options
-from maths import Colour
-from colours import RED
+from color import Color, RED
 
 data = json.load(open("src/screen_text.json"))
 
@@ -35,7 +34,7 @@ class Application(tk.Frame):
      8     volume | volume slider
      9   Tile len | Tile len slider
     10        Div by 12
-    11 Fillcolour | Loopcolour
+    11 Fillcolor | Loopcolor
     12     Commit | Discard
     """
 
@@ -59,7 +58,7 @@ class Application(tk.Frame):
                         "volume":      (0,  8), "volume slider":   (1, 8),
                         "tile_length": (0,  9), "Tile len slider": (1, 9),
                         "Div by 12":   (0, 10),
-                        "Fillcolour":  (0, 11), "Loopcolour":     (1, 11),
+                        "Fillcolor":  (0, 11), "Loopcolor":     (1, 11),
                         "Commit":      (0, 12), "Discard":        (1, 12)}
         self.create_widgets()
 
@@ -78,10 +77,10 @@ class Application(tk.Frame):
         self.volume_slider()
         self.tile_length_slider()
         self.tile_length_nearest12()
-        self.colour_picker()
+        self.color_picker()
         c, r = self.my_grid["Discard"]
         tk.Button(self, text=get_text("discard"),
-                  fg=RED.hex, command=self.exit).grid(
+                  fg=RED.get_rgb_hex(), command=self.exit).grid(
                       column=c, row=r, sticky="nwneswse")
         c, r = self.my_grid["Commit"]
         tk.Button(self, text=get_text("commit"),
@@ -104,8 +103,8 @@ class Application(tk.Frame):
         Options.no_zombies = self.is_no_zmbs.get()
         Options.debug = self.is_debug.get()
         Options.language = self.language.get()
-        Options.loopcolour = self.loopcolour
-        Options.fillcolour = self.fillcolour
+        Options.loopcolor = self.loopcolor
+        Options.fillcolor = self.fillcolor
         try:
             Options.assertions()
         except AssertionError as e:
@@ -207,42 +206,42 @@ class Application(tk.Frame):
         else:
             self.tile_length.set(curr_tile_length + 12 - tl_mod12)
 
-    def colour_picker(self):
-        self.loopcolour, self.fillcolour = Options.loopcolour, Options.fillcolour
-        self.loopcolour_button = tk.Button(self,
-                                           text=get_text("loopcolour"),
-                                           command=self.change_loopcolour,
-                                           bg=self.loopcolour.hex,
-                                           fg=self.loopcolour.contrasting().hex)
-        c, r = self.my_grid["Loopcolour"]
+    def color_picker(self):
+        self.loopcolor, self.fillcolor = Options.loopcolor, Options.fillcolor
+        self.loopcolor_button = tk.Button(self,
+                                           text=get_text("loopcolor"),
+                                           command=self.change_loopcolor,
+                                           bg=self.loopcolor.get_rgb_hex(),
+                                           fg=self.loopcolor.contrasting().get_rgb_hex())
+        c, r = self.my_grid["Loopcolor"]
 
-        self.loopcolour_button.grid(column=c, row=r, sticky="nwneswse")
-        self.fillcolour_button = tk.Button(self,
-                                           text=get_text("fillcolour"),
-                                           command=self.change_fillcolour,
-                                           bg=self.fillcolour.hex,
-                                           fg=self.fillcolour.contrasting().hex)
-        c, r = self.my_grid["Fillcolour"]
+        self.loopcolor_button.grid(column=c, row=r, sticky="nwneswse")
+        self.fillcolor_button = tk.Button(self,
+                                           text=get_text("fillcolor"),
+                                           command=self.change_fillcolor,
+                                           bg=self.fillcolor.get_rgb_hex(),
+                                           fg=self.fillcolor.contrasting().get_rgb_hex())
+        c, r = self.my_grid["Fillcolor"]
 
-        self.fillcolour_button.grid(column=c, row=r, sticky="nwneswse")
+        self.fillcolor_button.grid(column=c, row=r, sticky="nwneswse")
 
-    def change_loopcolour(self):
-        new_colour_tuple = askcolor(self.loopcolour, self)[0]
-        new_colour = Colour(*new_colour_tuple)
-        if new_colour is None:  # If you press cancel
+    def change_loopcolor(self):
+        new_color_tuple = askcolor(self.loopcolor, self)[0]
+        new_color = Color(*new_color_tuple)
+        if new_color is None:  # If you press cancel
             return
-        self.loopcolour = new_colour
-        self.loopcolour_button.config(bg=new_colour.hex,
-                                      fg=new_colour.contrasting().hex)
+        self.loopcolor = new_color
+        self.loopcolor_button.config(bg=new_color.get_rgb_hex(),
+                                      fg=new_color.contrasting().get_rgb_hex())
 
-    def change_fillcolour(self):
-        new_colour_tuple = askcolor(self.fillcolour, self)[0]
-        new_colour = Colour(*new_colour_tuple)
-        if new_colour is None:  # If you press cancel
+    def change_fillcolor(self):
+        new_color_tuple = askcolor(self.fillcolor, self)[0]
+        new_color = Color(*new_color_tuple)
+        if new_color is None:  # If you press cancel
             return
-        self.fillcolour = new_colour
-        self.fillcolour_button.config(bg=new_colour.hex,
-                                      fg=new_colour.contrasting().hex)
+        self.fillcolor = new_color
+        self.fillcolor_button.config(bg=new_color.get_rgb_hex(),
+                                      fg=new_color.contrasting().get_rgb_hex())
 
     def exit(self):
         self.master.destroy()

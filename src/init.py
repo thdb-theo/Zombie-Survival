@@ -3,6 +3,9 @@
 import pygame
 import os
 import logging
+import sys
+
+sys.path.append("/src/")
 
 from options import Options
 
@@ -15,7 +18,7 @@ pygame.mixer.init()
 pygame.display.set_caption("Zombie Survival")
 
 if not Options.not_log:
-    logging.basicConfig(filename="src/logging.log", level=logging.NOTSET,
+    logging.basicConfig(filename="src/logging.log", level=logging.INFO,
                         filemode="w",
                         format="%(asctime)s:%(msecs)03d %(filename)s "
                         "%(levelname)s %(funcName)s -> %(message)s",
